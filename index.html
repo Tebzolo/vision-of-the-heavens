@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>The Vision of the Heavens — Scripture</title>
+<meta name="description" content="Read the whole Bible with the Books of Enoch and Jubilees, in a golden throne-room reading experience. Engineered by Tebogo Maruping.">
+<meta name="author" content="Tebogo Maruping">
+<!-- PWA / installable app -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1a1206">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Vision of Heavens">
+<link rel="apple-touch-icon" href="icon-180.png">
+<style>
+  :root{
+    /* Golden throne-room palette: deep amber-brown ground, gold accents,
+       tongues of fire, warm starlight. */
+    --night:#1a1206;
+    --night-2:#241803;
+    --abyss:#0c0802;
+    --crystal:#ffe6a8;       /* gilded light, formerly crystal */
+    --crystal-dim:#c9a14e;
+    --fire:#ffd98a;          /* "streams of flaming fire" */
+    --fire-deep:#e7a23c;
+    --ember:#c9712d;
+    --ink:#fdf3da;           /* warm starlight text */
+    --ink-soft:#cdb588;
+    --line:rgba(231,200,120,.20);
+    --line-bright:rgba(255,217,138,.42);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Iowan Old Style','Palatino Linotype','Book Antiqua',Georgia,serif;
+    color:var(--ink);
+    min-height:100vh;
+    line-height:1.78;
+    -webkit-font-smoothing:antialiased;
+    position:relative;
+    overflow-x:hidden;
+    background:
+      radial-gradient(1100px 800px at 50% 38%, rgba(120,86,30,.30) 0%, rgba(80,56,18,.12) 34%, transparent 64%),
+      radial-gradient(1200px 700px at 50% -10%, #3a2a08 0%, #241803 36%, var(--night) 66%, var(--abyss) 100%);
+  }
+  /* Star-field: layered fixed dots. Intro: fade in first, then twinkle. */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      radial-gradient(1.4px 1.4px at 20% 30%, rgba(255,240,205,.9), transparent 60%),
+      radial-gradient(1.2px 1.2px at 70% 20%, rgba(255,240,205,.7), transparent 60%),
+      radial-gradient(1px 1px at 40% 70%, rgba(255,224,150,.8), transparent 60%),
+      radial-gradient(1.6px 1.6px at 85% 60%, rgba(255,217,138,.7), transparent 60%),
+      radial-gradient(1px 1px at 15% 80%, rgba(255,240,205,.6), transparent 60%),
+      radial-gradient(1.2px 1.2px at 60% 85%, rgba(255,224,150,.6), transparent 60%),
+      radial-gradient(1px 1px at 92% 28%, rgba(255,240,205,.7), transparent 60%),
+      radial-gradient(1.3px 1.3px at 33% 12%, rgba(255,217,138,.6), transparent 60%);
+    opacity:0;
+    animation:starsIn 1.6s ease forwards, twinkle 7s 1.6s ease-in-out infinite;
+  }
+  /* Aurora / fire glow. Intro: rise from below after the stars. */
+  body::after{
+    content:"";position:fixed;left:0;right:0;bottom:0;height:55vh;z-index:0;
+    pointer-events:none;
+    background:
+      radial-gradient(60% 120% at 50% 120%, rgba(231,162,60,.20), transparent 70%),
+      radial-gradient(40% 90% at 20% 130%, rgba(201,113,45,.16), transparent 70%),
+      radial-gradient(45% 100% at 80% 130%, rgba(201,161,78,.16), transparent 70%);
+    opacity:0;transform:translateY(40%);
+    animation:auroraRise 1.8s 1s cubic-bezier(.2,.7,.2,1) forwards,
+              drift 16s 2.8s ease-in-out infinite alternate;
+  }
+  @keyframes starsIn{from{opacity:0}to{opacity:.85}}
+  @keyframes auroraRise{from{opacity:0;transform:translateY(40%)}to{opacity:1;transform:translateY(0)}}
+  @keyframes twinkle{0%,100%{opacity:.85}50%{opacity:.55}}
+  @keyframes drift{0%{transform:translateX(-3%) scale(1.02)}100%{transform:translateX(3%) scale(1.06)}}
+
+  /* The lofty throne, seen faintly through the gold haze behind everything. */
+  .throne-bg{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    display:flex;align-items:flex-start;justify-content:center;
+    padding-top:2vh;
+    opacity:0;
+    animation:throneReveal 2.4s 1.4s cubic-bezier(.2,.7,.2,1) forwards;
+  }
+  .throne-bg svg{
+    width:min(760px,96vw);height:auto;
+    filter:drop-shadow(0 0 60px rgba(231,162,60,.35));
+    animation:throneBreathe 9s 3.8s ease-in-out infinite;
+  }
+  @keyframes throneReveal{from{opacity:0;transform:translateY(3%) scale(1.04)}to{opacity:.5;transform:none}}
+  @keyframes throneBreathe{0%,100%{filter:drop-shadow(0 0 50px rgba(231,162,60,.28))}50%{filter:drop-shadow(0 0 80px rgba(255,217,138,.45))}}
+
+  header{
+    position:relative;z-index:2;text-align:center;
+    padding:4rem 1.4rem 1.4rem;max-width:760px;margin:0 auto;
+  }
+  .eyebrow{
+    font-size:.72rem;letter-spacing:.42em;text-transform:uppercase;
+    color:var(--fire);opacity:.85;margin-bottom:1rem;text-indent:.42em;
+    animation:riseIn .9s 1.7s both cubic-bezier(.2,.7,.2,1);
+  }
+  h1{
+    font-size:clamp(2.1rem,6vw,3.4rem);
+    font-weight:400;letter-spacing:.015em;line-height:1.1;
+    color:#fff6e2;
+    text-shadow:0 0 26px rgba(255,224,150,.35), 0 0 60px rgba(231,162,60,.18);
+    animation:riseIn 1s 1.85s both cubic-bezier(.2,.7,.2,1), titleGlow 6s 3s ease-in-out infinite;
+  }
+  @keyframes titleGlow{
+    0%,100%{text-shadow:0 0 26px rgba(255,224,150,.32), 0 0 60px rgba(231,162,60,.16)}
+    50%{text-shadow:0 0 34px rgba(255,224,150,.5), 0 0 80px rgba(231,162,60,.28)}
+  }
+  .subtitle{
+    margin-top:.9rem;color:var(--ink-soft);font-style:italic;
+    font-size:1.02rem;letter-spacing:.01em;
+    animation:riseIn 1s 2s both cubic-bezier(.2,.7,.2,1);
+  }
+  .rule{
+    width:120px;height:0;margin:1.7rem auto 0;border:0;
+    border-top:1px solid var(--line-bright);position:relative;
+    animation:ruleGrow 1.1s 2.15s both ease;
+  }
+  @keyframes ruleGrow{from{width:0;opacity:0}to{width:120px;opacity:1}}
+  .rule::after{
+    content:"\2727";position:absolute;top:-.85em;left:50%;
+    transform:translateX(-50%);color:var(--fire);font-size:.95rem;
+    text-shadow:0 0 12px rgba(255,217,138,.7);
+    animation:starPulse 4s 3.2s ease-in-out infinite;
+  }
+  @keyframes starPulse{
+    0%,100%{text-shadow:0 0 12px rgba(255,217,138,.6);transform:translateX(-50%) scale(1)}
+    50%{text-shadow:0 0 22px rgba(255,217,138,1);transform:translateX(-50%) scale(1.18)}
+  }
+
+  main{position:relative;z-index:2;max-width:760px;margin:0 auto;padding:1rem 1.4rem 4rem;}
+
+  /* Controls */
+  .controls{
+    display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;
+    justify-content:center;margin-bottom:.4rem;
+  }
+  .seg{display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center;
+    animation:riseIn .7s 2.3s both cubic-bezier(.2,.7,.2,1);}
+  .chip{
+    font-size:.82rem;letter-spacing:.05em;
+    padding:.44rem 1rem;border-radius:30px;
+    border:1px solid var(--line);background:rgba(255,224,150,.04);
+    color:var(--ink-soft);cursor:pointer;font-family:inherit;
+    position:relative;overflow:hidden;
+    transition:color .25s, border-color .25s, box-shadow .25s,
+               background .25s, transform .18s cubic-bezier(.2,.7,.2,1);
+  }
+  .chip:hover{border-color:var(--crystal-dim);color:var(--ink);
+    box-shadow:0 0 14px rgba(255,224,150,.15);transform:translateY(-2px);}
+  .chip:active{transform:translateY(0) scale(.96);}
+  /* press ripple */
+  .chip::after{
+    content:"";position:absolute;left:50%;top:50%;width:6px;height:6px;
+    border-radius:50%;background:rgba(255,217,138,.55);
+    transform:translate(-50%,-50%) scale(0);opacity:0;pointer-events:none;
+  }
+  .chip.rippling::after{animation:ripple .55s ease-out;}
+  .chip[aria-pressed="true"]{
+    background:linear-gradient(180deg, rgba(255,217,138,.25), rgba(231,162,60,.15));
+    color:#fff4dd;border-color:var(--fire-deep);
+    box-shadow:0 0 18px rgba(231,162,60,.3);
+    animation:tabGlow 3.2s ease-in-out infinite;
+  }
+  @keyframes ripple{
+    0%{transform:translate(-50%,-50%) scale(0);opacity:.7}
+    100%{transform:translate(-50%,-50%) scale(34);opacity:0}
+  }
+  @keyframes tabGlow{
+    0%,100%{box-shadow:0 0 16px rgba(231,162,60,.28)}
+    50%{box-shadow:0 0 26px rgba(231,162,60,.55), 0 0 40px rgba(255,217,138,.2)}
+  }
+  @keyframes riseIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+  .selrow{
+    display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;
+    justify-content:center;margin:1.2rem 0 .4rem;
+    color:var(--ink-soft);font-size:.9rem;
+    animation:riseIn .7s 2.45s both cubic-bezier(.2,.7,.2,1);
+  }
+  .selrow label{letter-spacing:.04em;}
+
+  .picker{
+    display:flex;flex-wrap:wrap;gap:.6rem .8rem;align-items:end;
+    justify-content:center;margin:.4rem 0;
+    padding:1rem 1.1rem;border:1px solid var(--line);border-radius:10px;
+    background:rgba(42,30,8,.5);backdrop-filter:blur(2px);
+    color:var(--ink-soft);font-size:.9rem;
+    animation:riseIn .7s 2.6s both cubic-bezier(.2,.7,.2,1);
+  }
+  .picker.swap{animation:swapIn .45s ease both;}
+  @keyframes swapIn{from{opacity:0;transform:translateY(8px) scale(.99)}to{opacity:1;transform:none}}
+  .picker span{display:flex;flex-direction:column;gap:.3rem;}
+  .picker label{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--crystal-dim);}
+  .picker select{min-width:7.5rem;}
+  .picker #chapsel,.picker #versesel{min-width:5rem;}
+  .picker #goto{padding:.55rem 1.2rem;align-self:end;}
+  select{
+    font-family:inherit;font-size:.92rem;color:var(--ink);
+    background:rgba(26,18,4,.85);border:1px solid var(--line);
+    border-radius:6px;padding:.5rem .8rem;cursor:pointer;
+  }
+  select option{background:#241803;color:var(--ink);}
+  select:focus-visible,button:focus-visible{
+    outline:2px solid var(--fire);outline-offset:2px;
+  }
+
+  /* Cloudy heavenly frame around the reading window */
+  .reader-frame{
+    position:relative;margin-top:2.6rem;padding:34px 22px 26px;
+    animation:readerIn 1.1s 2.75s both cubic-bezier(.2,.7,.2,1);
+  }
+  /* billowing cloud border, built from soft overlapping puffs */
+  .reader-frame::before{
+    content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+    border-radius:40px;
+    background:
+      radial-gradient(34px 26px at 8% 12%, rgba(255,240,210,.9), rgba(255,228,168,.35) 60%, transparent 72%),
+      radial-gradient(46px 32px at 24% 6%, rgba(255,240,210,.85), rgba(255,224,150,.30) 60%, transparent 74%),
+      radial-gradient(40px 30px at 44% 9%, rgba(255,240,210,.8), rgba(255,224,150,.28) 60%, transparent 74%),
+      radial-gradient(48px 32px at 66% 6%, rgba(255,240,210,.85), rgba(255,224,150,.30) 60%, transparent 74%),
+      radial-gradient(38px 28px at 88% 12%, rgba(255,240,210,.9), rgba(255,228,168,.35) 60%, transparent 72%),
+      radial-gradient(34px 30px at 95% 40%, rgba(255,238,205,.8), rgba(255,224,150,.26) 60%, transparent 74%),
+      radial-gradient(40px 30px at 92% 80%, rgba(255,238,205,.8), rgba(255,224,150,.26) 60%, transparent 74%),
+      radial-gradient(46px 30px at 70% 95%, rgba(255,238,205,.78), rgba(255,224,150,.24) 60%, transparent 74%),
+      radial-gradient(48px 30px at 42% 96%, rgba(255,238,205,.78), rgba(255,224,150,.24) 60%, transparent 74%),
+      radial-gradient(44px 30px at 20% 94%, rgba(255,238,205,.78), rgba(255,224,150,.24) 60%, transparent 74%),
+      radial-gradient(34px 30px at 5% 78%, rgba(255,238,205,.8), rgba(255,224,150,.26) 60%, transparent 74%),
+      radial-gradient(34px 30px at 8% 42%, rgba(255,238,205,.8), rgba(255,224,150,.26) 60%, transparent 74%);
+    filter:drop-shadow(0 0 16px rgba(255,217,138,.45));
+    animation:cloudDrift 14s ease-in-out infinite alternate;
+  }
+  @keyframes cloudDrift{
+    0%{transform:scale(1)}
+    100%{transform:scale(1.012)}
+  }
+
+  /* The seven lamps of fire before the throne */
+  .lamps{
+    position:absolute;top:-6px;left:0;right:0;z-index:3;
+    display:flex;justify-content:center;gap:clamp(18px,5vw,46px);
+    pointer-events:none;
+  }
+  .lamp{
+    width:9px;height:14px;border-radius:50% 50% 48% 48%;
+    background:radial-gradient(circle at 50% 70%, #fff6e2, #ffd98a 45%, #e7a23c 75%, #c9712d 100%);
+    box-shadow:0 0 10px 2px rgba(255,217,138,.8), 0 0 22px 4px rgba(231,162,60,.5);
+    transform-origin:50% 100%;
+    animation:flameFlicker 1.6s ease-in-out infinite;
+  }
+  .lamp:nth-child(2){animation-delay:.2s} .lamp:nth-child(3){animation-delay:.45s}
+  .lamp:nth-child(4){animation-delay:.1s} .lamp:nth-child(5){animation-delay:.55s}
+  .lamp:nth-child(6){animation-delay:.3s} .lamp:nth-child(7){animation-delay:.5s}
+  @keyframes flameFlicker{
+    0%,100%{transform:scaleY(1) scaleX(1);opacity:.92}
+    40%{transform:scaleY(1.25) scaleX(.9);opacity:1}
+    70%{transform:scaleY(.92) scaleX(1.05);opacity:.85}
+  }
+
+  /* Seraphim at the upper corners */
+  .seraph{
+    position:absolute;width:clamp(64px,13vw,92px);height:auto;z-index:3;
+    top:-30px;opacity:.9;
+    filter:drop-shadow(0 0 10px rgba(255,217,138,.5));
+    animation:seraphHover 6s ease-in-out infinite;
+  }
+  .seraph-l{left:-14px;transform:scaleX(1)}
+  .seraph-r{right:-14px;transform:scaleX(-1)}
+  @keyframes seraphHover{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+  .seraph-r{animation:seraphHoverR 6s ease-in-out infinite}
+  @keyframes seraphHoverR{0%,100%{transform:scaleX(-1) translateY(0)}50%{transform:scaleX(-1) translateY(-5px)}}
+
+  /* The crystal window — Enoch standing at the wall of crystals,
+     looking into the house of fire. */
+  .reader{
+    position:relative;z-index:1;
+    border-radius:14px;padding:2.9rem 2.3rem;min-height:260px;
+    display:flex;flex-direction:column;justify-content:center;
+    background:
+      linear-gradient(180deg, rgba(40,28,8,.86), rgba(18,12,3,.9));
+    border:1px solid var(--line-bright);
+    box-shadow:
+      0 0 0 1px rgba(231,162,60,.12),
+      0 18px 60px -20px rgba(0,0,0,.7),
+      inset 0 0 70px rgba(201,161,78,.08);
+    overflow:hidden;
+  }
+  /* crystalline sheen sweeping slowly across the glass */
+  .reader::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(115deg,
+      transparent 30%, rgba(255,224,150,.10) 48%,
+      rgba(255,217,138,.08) 52%, transparent 70%);
+    background-size:300% 300%;
+    animation:sheen 12s ease-in-out infinite;
+  }
+  /* fiery base-light, the streams of flaming fire beneath the throne */
+  .reader::after{
+    content:"";position:absolute;left:0;right:0;bottom:0;height:40%;
+    pointer-events:none;
+    background:radial-gradient(120% 80% at 50% 130%,
+      rgba(231,162,60,.22), rgba(201,113,45,.07) 45%, transparent 70%);
+  }
+  @keyframes sheen{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+  @keyframes readerIn{from{opacity:0;transform:translateY(24px) scale(.985)}to{opacity:1;transform:none}}
+
+  /* Passage + reference fade/rise in when content changes */
+  .verse-enter{animation:verseIn .55s cubic-bezier(.2,.7,.2,1) both;}
+  .verse-leave{animation:verseOut .25s ease both;}
+  @keyframes verseIn{
+    0%{opacity:0;transform:translateY(14px);filter:blur(3px)}
+    100%{opacity:1;transform:none;filter:blur(0)}
+  }
+  @keyframes verseOut{0%{opacity:1}100%{opacity:0;transform:translateY(-8px)}}
+  .ref-enter{animation:fadeIn .6s .1s both;}
+  .loading-pulse{animation:loadingPulse 1.2s ease-in-out infinite;}
+  @keyframes loadingPulse{0%,100%{opacity:.45}50%{opacity:.85}}
+
+  .ref{
+    position:relative;z-index:1;
+    font-variant:small-caps;letter-spacing:.16em;
+    color:var(--fire);font-size:.98rem;margin-bottom:1.2rem;text-align:center;
+    text-shadow:0 0 16px rgba(255,217,138,.35);
+  }
+  .passage{
+    position:relative;z-index:1;
+    font-size:clamp(1.35rem,3.6vw,1.7rem);
+    line-height:1.72;text-align:center;color:#fdf3da;font-weight:400;
+    text-shadow:0 1px 20px rgba(201,161,78,.25);
+  }
+  .hint{color:var(--ink-soft);font-style:italic;font-size:1.12rem;line-height:1.7;}
+
+  .actions{
+    display:flex;gap:.7rem;flex-wrap:wrap;justify-content:center;margin-top:2rem;
+    animation:riseIn .7s 2.95s both cubic-bezier(.2,.7,.2,1);
+  }
+  .offlineinfo{
+    text-align:center;color:var(--ink-soft);font-size:.78rem;
+    margin-top:.9rem;font-style:italic;letter-spacing:.02em;min-height:1.1em;
+  }
+  button.act{
+    font-family:inherit;cursor:pointer;font-size:.95rem;
+    padding:.74rem 1.5rem;border-radius:8px;
+    border:1px solid var(--line);background:rgba(255,224,150,.05);
+    color:var(--ink);
+    transition:border-color .25s, box-shadow .25s, background .25s,
+               transform .18s cubic-bezier(.2,.7,.2,1);
+  }
+  button.act:hover{border-color:var(--crystal-dim);
+    box-shadow:0 0 16px rgba(255,224,150,.18);transform:translateY(-2px);}
+  button.act:active{transform:translateY(0) scale(.97);}
+  button.primary{
+    background:linear-gradient(180deg, var(--fire), var(--fire-deep));
+    color:#2a1c06;border-color:var(--fire-deep);font-weight:600;
+    box-shadow:0 0 22px rgba(231,162,60,.4);
+    animation:primaryPulse 3.5s 3.2s ease-in-out infinite;
+  }
+  button.primary:hover{box-shadow:0 0 32px rgba(231,162,60,.65);transform:translateY(-2px);}
+  @keyframes primaryPulse{
+    0%,100%{box-shadow:0 0 18px rgba(231,162,60,.35)}
+    50%{box-shadow:0 0 30px rgba(231,162,60,.6)}
+  }
+  button.act[aria-pressed="true"]{
+    background:linear-gradient(180deg, rgba(255,217,138,.25), rgba(231,162,60,.15));
+    color:#fff4dd;border-color:var(--fire-deep);
+  }
+
+  footer{
+    position:relative;z-index:2;max-width:760px;margin:0 auto;text-align:center;
+    color:var(--ink-soft);font-size:.8rem;line-height:1.7;padding:1.6rem 1.4rem 3rem;
+  }
+  footer .meta{opacity:.65;font-size:.74rem;margin-top:.5rem;}
+  footer .credit{
+    margin-top:.7rem;font-size:.86rem;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--fire);
+    text-shadow:0 0 14px rgba(255,217,138,.4);
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition-duration:.001ms!important}
+    /* Force final visible state for anything that animates in */
+    body::before{opacity:.85!important}
+    body::after{opacity:1!important;transform:none!important}
+    .throne-bg{opacity:.5!important;transform:none!important}
+    .reader-frame::before,.lamp,.seraph{animation:none!important;opacity:1!important;transform:none!important}
+    .seraph-r{transform:scaleX(-1)!important}
+    .eyebrow,h1,.subtitle,.rule,.seg,.selrow,.picker,.reader,.actions,
+    .passage,.ref{opacity:1!important;transform:none!important;filter:none!important;width:auto}
+    .rule{width:120px}
+  }
+</style>
+</head>
+<body>
+
+<div class="throne-bg" aria-hidden="true">
+  <svg viewBox="0 0 760 760" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="halo" cx="50%" cy="40%" r="55%">
+        <stop offset="0%" stop-color="#fff3d2" stop-opacity="0.9"/>
+        <stop offset="35%" stop-color="#ffd98a" stop-opacity="0.5"/>
+        <stop offset="70%" stop-color="#e7a23c" stop-opacity="0.18"/>
+        <stop offset="100%" stop-color="#e7a23c" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="goldV" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#ffe6a8"/>
+        <stop offset="55%" stop-color="#e7a23c"/>
+        <stop offset="100%" stop-color="#9c6a22"/>
+      </linearGradient>
+      <linearGradient id="goldEdge" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#9c6a22"/>
+        <stop offset="50%" stop-color="#ffe6a8"/>
+        <stop offset="100%" stop-color="#9c6a22"/>
+      </linearGradient>
+    </defs>
+
+    <!-- radiant halo behind the throne -->
+    <circle cx="380" cy="300" r="300" fill="url(#halo)"/>
+
+    <!-- rays of light -->
+    <g stroke="url(#goldEdge)" stroke-width="2" opacity="0.35">
+      <line x1="380" y1="300" x2="380" y2="20"/>
+      <line x1="380" y1="300" x2="180" y2="70"/>
+      <line x1="380" y1="300" x2="580" y2="70"/>
+      <line x1="380" y1="300" x2="90" y2="240"/>
+      <line x1="380" y1="300" x2="670" y2="240"/>
+      <line x1="380" y1="300" x2="250" y2="40"/>
+      <line x1="380" y1="300" x2="510" y2="40"/>
+    </g>
+
+    <!-- stepped dais -->
+    <g fill="url(#goldV)" opacity="0.9">
+      <rect x="210" y="600" width="340" height="34" rx="6"/>
+      <rect x="250" y="566" width="260" height="34" rx="6"/>
+      <rect x="288" y="532" width="184" height="34" rx="6"/>
+    </g>
+
+    <!-- the throne: high back, seat, arms -->
+    <g fill="url(#goldV)" stroke="url(#goldEdge)" stroke-width="2">
+      <!-- tall back -->
+      <path d="M320 180 Q380 150 440 180 L452 470 L308 470 Z"/>
+      <!-- crowning arch -->
+      <path d="M312 196 Q380 120 448 196 L440 182 Q380 150 320 182 Z" opacity="0.95"/>
+      <!-- seat -->
+      <rect x="296" y="446" width="168" height="44" rx="8"/>
+      <!-- arms -->
+      <rect x="286" y="396" width="26" height="96" rx="8"/>
+      <rect x="448" y="396" width="26" height="96" rx="8"/>
+      <!-- finials -->
+      <circle cx="299" cy="392" r="15"/>
+      <circle cx="461" cy="392" r="15"/>
+    </g>
+
+    <!-- inner glow on the seat (the One who sits) -->
+    <ellipse cx="380" cy="360" rx="64" ry="96" fill="url(#halo)" opacity="0.85"/>
+  </svg>
+</div>
+
+<header>
+  <p class="eyebrow">The Vision of the Heavens</p>
+  <h1>And I looked, and saw a lofty throne</h1>
+  <p class="subtitle">Scripture, read slowly, as through a wall of crystal.</p>
+  <hr class="rule">
+</header>
+
+<main>
+  <div class="controls" role="group" aria-label="Choose a book">
+    <div class="seg">
+      <button class="chip" data-t="all" aria-pressed="true">All</button>
+      <button class="chip" data-t="old" aria-pressed="false">Old Testament</button>
+      <button class="chip" data-t="new" aria-pressed="false">New Testament</button>
+      <button class="chip" data-t="enoch" aria-pressed="false">Enoch</button>
+      <button class="chip" data-t="jubilees" aria-pressed="false">Jubilees</button>
+      <button class="chip" data-t="heavens" aria-pressed="false">Vision of the Heavens</button>
+    </div>
+  </div>
+
+  <div class="selrow">
+    <span>
+      <label for="langsel">Language</label>
+      <select id="langsel">
+        <option value="en">English</option>
+        <option value="zu">isiZulu</option>
+        <option value="ve">Tshiven&#x1E13;a</option>
+        <option value="af">Afrikaans</option>
+        <option value="tn">Setswana</option>
+        <option value="ts">Xitsonga</option>
+      </select>
+    </span>
+    <span>
+      <label for="voicesel">Voice</label>
+      <select id="voicesel">
+        <option value="auto">Auto (best available)</option>
+      </select>
+    </span>
+  </div>
+
+  <div class="picker" role="group" aria-label="Go to a specific passage">
+    <span>
+      <label for="booksel">Book</label>
+      <select id="booksel"></select>
+    </span>
+    <span>
+      <label for="chapsel">Chapter</label>
+      <select id="chapsel"></select>
+    </span>
+    <span>
+      <label for="versesel">Verse</label>
+      <select id="versesel"></select>
+    </span>
+    <button class="act" id="goto">Go</button>
+  </div>
+
+  <div class="reader-frame">
+    <!-- The seven lamps of fire burning before the throne (Rev 4:5) -->
+    <div class="lamps" aria-hidden="true">
+      <span class="lamp"></span><span class="lamp"></span><span class="lamp"></span>
+      <span class="lamp"></span><span class="lamp"></span><span class="lamp"></span>
+      <span class="lamp"></span>
+    </div>
+
+    <!-- Seraphim, each with six wings (Isaiah 6:2), guarding the corners -->
+    <svg class="seraph seraph-l" viewBox="0 0 120 120" aria-hidden="true">
+      <g fill="none" stroke="url(#seraphGold)" stroke-width="2.4" stroke-linecap="round">
+        <!-- upper wings (covering the face) -->
+        <path d="M60 52 Q26 24 14 44 Q34 46 56 60"/>
+        <path d="M60 52 Q94 24 106 44 Q86 46 64 60"/>
+        <!-- middle wings (outspread) -->
+        <path d="M60 64 Q24 60 10 78 Q36 78 57 70"/>
+        <path d="M60 64 Q96 60 110 78 Q84 78 63 70"/>
+        <!-- lower wings (covering the feet) -->
+        <path d="M60 74 Q40 92 44 112 Q56 96 60 84"/>
+        <path d="M60 74 Q80 92 76 112 Q64 96 60 84"/>
+      </g>
+      <!-- body / halo -->
+      <circle cx="60" cy="58" r="7" fill="url(#seraphHalo)"/>
+      <defs>
+        <linearGradient id="seraphGold" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffe6a8"/><stop offset="100%" stop-color="#c9712d"/>
+        </linearGradient>
+        <radialGradient id="seraphHalo" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fff6e2"/><stop offset="100%" stop-color="#e7a23c" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+    </svg>
+    <svg class="seraph seraph-r" viewBox="0 0 120 120" aria-hidden="true">
+      <g fill="none" stroke="url(#seraphGold)" stroke-width="2.4" stroke-linecap="round">
+        <path d="M60 52 Q26 24 14 44 Q34 46 56 60"/>
+        <path d="M60 52 Q94 24 106 44 Q86 46 64 60"/>
+        <path d="M60 64 Q24 60 10 78 Q36 78 57 70"/>
+        <path d="M60 64 Q96 60 110 78 Q84 78 63 70"/>
+        <path d="M60 74 Q40 92 44 112 Q56 96 60 84"/>
+        <path d="M60 74 Q80 92 76 112 Q64 96 60 84"/>
+      </g>
+      <circle cx="60" cy="58" r="7" fill="url(#seraphHalo)"/>
+    </svg>
+
+    <section class="reader" aria-live="polite">
+      <div class="ref" id="ref"></div>
+      <p class="passage hint" id="passage">
+        The whole Bible is here \u2014 choose a book, chapter and verse, or simply read the next passage. Take your time.
+      </p>
+    </section>
+  </div>
+
+  <div class="actions">
+    <button class="act primary" id="next">Next passage</button>
+    <button class="act" id="read">Read aloud</button>
+    <button class="act" id="autoplay" aria-pressed="false">Auto-advance: off</button>
+    <button class="act" id="download" aria-pressed="false">Download for offline use</button>
+    <button class="act" id="loadfile">Load Bible from file</button>
+    <input type="file" id="fileinput" accept=".json,application/json" style="display:none">
+  </div>
+  <p class="offlineinfo" id="offlineinfo"></p>
+</main>
+
+<footer>
+  <div id="label">A place to read.</div>
+  <div class="credit">Engineered by Tebogo Maruping</div>
+  <div class="meta">
+    Bible: complete World English Bible (Public Domain), loaded from getbible.net.
+    Enoch &amp; Jubilees: R.H. Charles, 1913 (Public Domain), bundled offline.
+  </div>
+</footer>
+
+<script>
+/* ===== Verse bank (injected) ===== */
+var SCRIPTURE = [
+  // ----- OLD TESTAMENT -----
+  {t:"old", ref:"Genesis 1:1", text:"In the beginning, God created the heavens and the earth."},
+  {t:"old", ref:"Genesis 1:3", text:"God said, \u201CLet there be light,\u201D and there was light."},
+  {t:"old", ref:"Exodus 20:3", text:"You shall have no other gods before me."},
+  {t:"old", ref:"Deuteronomy 6:5", text:"You shall love Yahweh your God with all your heart, with all your soul, and with all your might."},
+  {t:"old", ref:"Joshua 1:9", text:"Be strong and courageous. Don\u2019t be afraid. Don\u2019t be dismayed, for Yahweh your God is with you wherever you go."},
+  {t:"old", ref:"Psalm 23:1", text:"Yahweh is my shepherd; I shall lack nothing."},
+  {t:"old", ref:"Psalm 23:4", text:"Even though I walk through the valley of the shadow of death, I will fear no evil, for you are with me."},
+  {t:"old", ref:"Psalm 27:1", text:"Yahweh is my light and my salvation. Whom shall I fear?"},
+  {t:"old", ref:"Psalm 46:1", text:"God is our refuge and strength, a very present help in trouble."},
+  {t:"old", ref:"Psalm 51:10", text:"Create in me a clean heart, O God. Renew a right spirit within me."},
+  {t:"old", ref:"Psalm 119:105", text:"Your word is a lamp to my feet, and a light for my path."},
+  {t:"old", ref:"Proverbs 3:5", text:"Trust in Yahweh with all your heart, and don\u2019t lean on your own understanding."},
+  {t:"old", ref:"Proverbs 18:10", text:"Yahweh\u2019s name is a strong tower: the righteous run to him, and are safe."},
+  {t:"old", ref:"Isaiah 40:31", text:"Those who wait for Yahweh will renew their strength. They will mount up with wings like eagles."},
+  {t:"old", ref:"Isaiah 41:10", text:"Don\u2019t be afraid, for I am with you. Don\u2019t be dismayed, for I am your God. I will strengthen you."},
+  {t:"old", ref:"Isaiah 53:5", text:"But he was pierced for our transgressions. He was crushed for our iniquities. By his wounds we are healed."},
+  {t:"old", ref:"Jeremiah 29:11", text:"\u201CFor I know the thoughts that I think toward you,\u201D says Yahweh, \u201Cthoughts of peace, and not of evil, to give you hope and a future.\u201D"},
+  {t:"old", ref:"Lamentations 3:22", text:"It is because of Yahweh\u2019s loving kindnesses that we are not consumed, because his compassion doesn\u2019t fail."},
+  {t:"old", ref:"Micah 6:8", text:"He has shown you, O man, what is good. What does Yahweh require of you but to act justly, to love mercy, and to walk humbly with your God?"},
+  {t:"old", ref:"Habakkuk 3:19", text:"Yahweh, the Lord, is my strength. He makes my feet like deer\u2019s feet, and enables me to go in high places."},
+
+  // ----- NEW TESTAMENT -----
+  {t:"new", ref:"Matthew 5:14", text:"You are the light of the world. A city located on a hill can\u2019t be hidden."},
+  {t:"new", ref:"Matthew 6:33", text:"But seek first God\u2019s Kingdom and his righteousness; and all these things will be given to you as well."},
+  {t:"new", ref:"Matthew 11:28", text:"Come to me, all you who labor and are heavily burdened, and I will give you rest."},
+  {t:"new", ref:"Mark 12:30", text:"You shall love the Lord your God with all your heart, with all your soul, with all your mind, and with all your strength."},
+  {t:"new", ref:"John 1:1", text:"In the beginning was the Word, and the Word was with God, and the Word was God."},
+  {t:"new", ref:"John 3:16", text:"For God so loved the world, that he gave his only born Son, that whoever believes in him should not perish, but have eternal life."},
+  {t:"new", ref:"John 8:12", text:"I am the light of the world. He who follows me will not walk in the darkness, but will have the light of life."},
+  {t:"new", ref:"John 14:6", text:"I am the way, the truth, and the life. No one comes to the Father, except through me."},
+  {t:"new", ref:"Acts 1:8", text:"You will receive power when the Holy Spirit has come upon you. You will be witnesses to me."},
+  {t:"new", ref:"Romans 5:8", text:"But God commends his own love toward us, in that while we were yet sinners, Christ died for us."},
+  {t:"new", ref:"Romans 8:28", text:"We know that all things work together for good for those who love God, for those who are called according to his purpose."},
+  {t:"new", ref:"Romans 8:38", text:"For I am persuaded that neither death, nor life, nor angels, nor principalities, nor powers, will be able to separate us from God\u2019s love."},
+  {t:"new", ref:"Romans 10:9", text:"If you will confess with your mouth that Jesus is Lord, and believe in your heart that God raised him from the dead, you will be saved."},
+  {t:"new", ref:"1 Corinthians 13:4", text:"Love is patient and is kind. Love doesn\u2019t envy. Love doesn\u2019t brag, is not proud."},
+  {t:"new", ref:"2 Corinthians 5:17", text:"Therefore if anyone is in Christ, he is a new creation. The old things have passed away. Behold, all things have become new."},
+  {t:"new", ref:"Galatians 2:20", text:"I have been crucified with Christ, and it is no longer I who live, but Christ lives in me."},
+  {t:"new", ref:"Ephesians 2:8", text:"For by grace you have been saved through faith, and that not of yourselves; it is the gift of God."},
+  {t:"new", ref:"Philippians 4:13", text:"I can do all things through Christ who strengthens me."},
+  {t:"new", ref:"Hebrews 11:1", text:"Now faith is assurance of things hoped for, proof of things not seen."},
+  {t:"new", ref:"Revelation 3:20", text:"Behold, I stand at the door and knock. If anyone hears my voice and opens the door, then I will come in to him."},
+
+  // ----- BOOK OF ENOCH (1 Enoch) — R.H. Charles 1913, Public Domain -----
+  {t:"enoch", ref:"1 Enoch 1:8", text:"But with the righteous he will make peace, and will protect the elect, and mercy shall be upon them. And they shall all belong to God, and they shall be prospered, and they shall all be blessed."},
+  {t:"enoch", ref:"1 Enoch 1:9", text:"Behold, he comes with ten thousands of his holy ones, to execute judgement upon all, and to destroy all the ungodly, and to convict all flesh of all the works of their ungodliness."},
+  {t:"enoch", ref:"1 Enoch 5:7", text:"But for the elect there shall be light and joy and peace, and they shall inherit the earth."},
+  {t:"enoch", ref:"1 Enoch 14:24", text:"And until then I had been prostrate on my face, trembling: and the Lord called me with his own mouth, and said to me: Come hither, Enoch, and hear my word."},
+  {t:"enoch", ref:"1 Enoch 39:9", text:"And in those days my eyes saw the place of the elect ones of righteousness and faith, and righteousness shall prevail in their days, and the righteous and elect shall be without number before him for ever and ever."},
+  {t:"enoch", ref:"1 Enoch 48:1", text:"And in that place I saw the fountain of righteousness which was inexhaustible: and around it were many fountains of wisdom; and all the thirsty drank of them, and were filled with wisdom."},
+  {t:"enoch", ref:"1 Enoch 58:3", text:"And the righteous shall be in the light of the sun, and the elect in the light of eternal life: the days of their life shall be unending, and the days of the holy without number."},
+  {t:"enoch", ref:"1 Enoch 104:2", text:"Be hopeful; for aforetime ye were put to shame through ill and affliction; but now ye shall shine as the lights of heaven, ye shall shine and ye shall be seen, and the portals of heaven shall be opened to you."},
+
+  // ----- BOOK OF JUBILEES — R.H. Charles 1913, Public Domain -----
+  {t:"jubilees", ref:"Jubilees 1:15", text:"And after this they will turn to me from amongst the Gentiles with all their heart and with all their soul and with all their strength, and I will gather them from amongst all the Gentiles."},
+  {t:"jubilees", ref:"Jubilees 1:19", text:"And they prayed and said: O Lord my God, do not forsake thy people and thy inheritance, so that they should wander in the error of their hearts."},
+  {t:"jubilees", ref:"Jubilees 1:23", text:"And I will create in them a holy spirit, and I will cleanse them so that they shall not turn away from me from that day unto eternity."},
+  {t:"jubilees", ref:"Jubilees 2:1", text:"Write the complete history of the creation, how in six days the Lord God finished all his works and all that he created, and kept Sabbath on the seventh day."},
+  {t:"jubilees", ref:"Jubilees 12:19", text:"My God, Most High, thou alone art my God, and thee and thy dominion have I chosen. And thou hast created all things, and all things that are the work of thy hands."},
+  {t:"jubilees", ref:"Jubilees 20:2", text:"That they should observe the way of the Lord, that they should work righteousness, and each love his neighbour, and act on this manner amongst all men."},
+  {t:"jubilees", ref:"Jubilees 22:6", text:"Blessed be the Most High God, the God of all, who hath created me; and he created all, and to him will I cleave."},
+  {t:"jubilees", ref:"Jubilees 36:7", text:"That ye fear him and worship him, and that each love his brother with affection and righteousness, and that neither desire evil against his brother from henceforth for ever."}
+];
+/* ===== End verse bank ===== */
+
+/* Language metadata: book labels + speech locale.
+   Verse text stays in verified English; labels localize. */
+var LANGS = {
+  en:{label:"English", locale:"en-ZA", names:{old:"Old Testament", new:"New Testament", enoch:"Book of Enoch", jubilees:"Book of Jubilees"}},
+  zu:{label:"isiZulu", locale:"zu-ZA", names:{old:"ITestamente Elidala", new:"ITestamente Elisha", enoch:"INcwadi ka-Enoke", jubilees:"INcwadi yamaJubili"}},
+  af:{label:"Afrikaans", locale:"af-ZA", names:{old:"Ou Testament", new:"Nuwe Testament", enoch:"Boek van Henog", jubilees:"Boek van Jubilee\u00EB"}},
+  ve:{label:"Tshiven\u1E13a", locale:"ve-ZA", names:{old:"Thestamennde ya Kale", new:"Thestamennde Ntswa", enoch:"Bugu \u013Aa Enoke", jubilees:"Bugu \u013Aa Majubili"}},
+  tn:{label:"Setswana", locale:"tn-ZA", names:{old:"Tesetamente e Kgologolo", new:"Tesetamente e Nt\u0161ha", enoch:"Buka ya ga Enoke", jubilees:"Buka ya Dijubili"}},
+  ts:{label:"Xitsonga", locale:"ts-ZA", names:{old:"Testamente ya Khale", new:"Testamente Leyintshwa", enoch:"Buku ya Enoke", jubilees:"Buku ya Tijubili"}}
+};
+
+/* ===== Vision of the Heavens =====
+   Passages across the whole canon about the heavens: their creation, God's
+   throne, the angelic host, worship before the throne, events that took
+   place in heaven, and the heaven to come. References are grouped by theme.
+   Verse TEXT is fetched from the same source the rest of the Bible uses
+   (network or a loaded file); these entries supply book/chapter/verse and
+   a short theme label. */
+var HEAVENS_REFS = [
+  // --- The heavens created and established ---
+  { ref:"Genesis 1:1",     theme:"The heavens created" },
+  { ref:"Genesis 1:8",     theme:"The firmament called Heaven" },
+  { ref:"Genesis 2:1",     theme:"The heavens finished" },
+  { ref:"Psalms 19:1",     theme:"The heavens declare God's glory" },
+  { ref:"Psalms 33:6",     theme:"The heavens made by His word" },
+  { ref:"Psalms 8:3",      theme:"The work of His fingers" },
+  { ref:"Isaiah 40:22",    theme:"He stretches out the heavens" },
+  { ref:"Isaiah 66:1",     theme:"Heaven is God's throne" },
+  { ref:"Nehemiah 9:6",    theme:"The host of heaven worships" },
+
+  // --- God's throne and the heavenly court ---
+  { ref:"1 Kings 22:19",   theme:"The host of heaven by the throne" },
+  { ref:"Psalms 11:4",     theme:"The LORD's throne in heaven" },
+  { ref:"Psalms 103:19",   theme:"His throne established in the heavens" },
+  { ref:"Isaiah 6:1",      theme:"The Lord on a lofty throne" },
+  { ref:"Isaiah 6:2",      theme:"The seraphim above the throne" },
+  { ref:"Isaiah 6:3",      theme:"Holy, holy, holy" },
+  { ref:"Ezekiel 1:26",    theme:"The likeness of a throne" },
+  { ref:"Ezekiel 1:28",    theme:"The appearance of the glory" },
+  { ref:"Daniel 7:9",      theme:"The Ancient of Days is seated" },
+  { ref:"Daniel 7:10",     theme:"Thousands ministered to Him" },
+
+  // --- The angelic host and their activity ---
+  { ref:"Psalms 148:2",    theme:"All His angels praise Him" },
+  { ref:"Psalms 103:20",   theme:"Angels who do His word" },
+  { ref:"Daniel 10:13",    theme:"Michael, one of the chief princes" },
+  { ref:"Luke 2:13",       theme:"A multitude of the heavenly host" },
+  { ref:"Hebrews 12:22",   theme:"Myriads of angels gathered" },
+  { ref:"Hebrews 1:14",    theme:"Ministering spirits sent forth" },
+
+  // --- Events that happened in heaven ---
+  { ref:"Job 1:6",         theme:"The sons of God present themselves" },
+  { ref:"Job 38:7",        theme:"The morning stars sang together" },
+  { ref:"Luke 10:18",      theme:"Satan fallen like lightning" },
+  { ref:"Revelation 12:7", theme:"War broke out in heaven" },
+  { ref:"Revelation 12:8", theme:"No longer a place for them" },
+  { ref:"Revelation 12:9", theme:"The great dragon thrown down" },
+
+  // --- Christ ascended and seated in heaven ---
+  { ref:"Acts 1:9",        theme:"Taken up, a cloud received Him" },
+  { ref:"Acts 1:11",       theme:"He will come as you saw Him go" },
+  { ref:"Acts 7:55",       theme:"The glory of God, Jesus standing" },
+  { ref:"Ephesians 1:20",  theme:"Seated at His right hand in heaven" },
+  { ref:"Hebrews 4:14",    theme:"A high priest passed through the heavens" },
+  { ref:"Hebrews 9:24",    theme:"Christ entered heaven itself" },
+
+  // --- Worship before the throne (Revelation's vision) ---
+  { ref:"Revelation 4:1",  theme:"A door opened in heaven" },
+  { ref:"Revelation 4:2",  theme:"A throne set in heaven" },
+  { ref:"Revelation 4:6",  theme:"The four living creatures" },
+  { ref:"Revelation 4:8",  theme:"Holy, holy, holy, day and night" },
+  { ref:"Revelation 4:11", theme:"Worthy are You, our Lord" },
+  { ref:"Revelation 5:11", theme:"The voice of many angels" },
+  { ref:"Revelation 5:13", theme:"Every creature gives praise" },
+  { ref:"Revelation 7:9",  theme:"A great multitude before the throne" },
+  { ref:"Revelation 8:1",  theme:"Silence in heaven" },
+
+  // --- The new heaven ---
+  { ref:"Isaiah 65:17",    theme:"New heavens and a new earth" },
+  { ref:"2 Peter 3:13",    theme:"We look for new heavens" },
+  { ref:"Revelation 21:1", theme:"A new heaven and a new earth" },
+  { ref:"Revelation 21:2", theme:"The holy city coming down" },
+  { ref:"Revelation 21:3", theme:"God's dwelling with man" },
+  { ref:"Revelation 22:5", theme:"The Lord gives them light" }
+];
+
+var $ = function(id){ return document.getElementById(id); };
+var filter = "all";
+var lang = "en";
+var current = null;
+var chosenVoiceURI = "auto";
+var autoOn = false;
+var autoTimer = null;
+
+/* ===== Full World English Bible, fetched on demand =====
+   Two public-domain sources (primary + fallback). Chapters are cached in
+   memory and in IndexedDB, so once downloaded they work offline. The
+   "Download for offline use" button pre-fetches the whole Bible.
+   Enoch & Jubilees are always bundled offline. */
+// [number, name, testament, chapterCount]
+var VERSE_COUNTS = {
+"Genesis":[31,25,24,26,32,22,24,22,29,32,32,20,18,24,21,16,27,33,38,18,34,24,20,67,34,35,28,32,22,33,26,20,29,22,35,43,23,24,33,27,38,18,34,24,20,67,34,35,28,32],
+"Exodus":[22,25,22,31,23,30,25,32,35,29,10,51,22,31,27,36,16,27,25,26,36,31,33,18,40,37,21,43,46,38,18,35,23,35,35,38,29,31,43,38],
+"Leviticus":[17,16,17,35,19,30,38,36,24,20,47,8,59,57,33,34,16,30,37,27,24,33,44,23,55,46,34],
+"Numbers":[54,34,51,49,31,27,89,26,23,36,35,16,33,45,41,50,13,32,22,29,35,41,30,25,18,65,23,31,40,16,54,42,56,29,34,13],
+"Deuteronomy":[46,37,29,49,33,25,26,20,29,22,32,32,18,29,23,22,20,22,21,20,23,30,25,22,19,19,26,68,29,20,30,52,29,12],
+"Joshua":[18,24,17,24,15,27,26,35,27,43,23,24,33,15,63,10,18,28,51,9,45,34,16,33],
+"Judges":[36,23,31,24,31,40,25,35,57,18,40,15,25,20,20,31,13,31,30,48,25],
+"Ruth":[22,23,18,22],
+"1 Samuel":[28,36,21,22,12,21,17,22,27,27,15,25,23,52,35,23,58,30,24,42,15,23,29,22,44,25,12,25,11,31,13],
+"2 Samuel":[27,32,39,12,25,23,29,18,13,19,27,31,39,33,37,23,29,33,43,26,22,51,39,25],
+"1 Kings":[53,46,28,34,18,38,51,66,28,29,43,33,34,31,34,34,24,46,21,43,29,53],
+"2 Kings":[18,25,27,44,27,33,20,29,37,36,21,21,25,29,38,20,41,37,37,21,26,20,37,20,30],
+"1 Chronicles":[54,55,24,43,26,81,40,40,44,14,47,40,14,17,29,43,27,17,19,8,30,19,32,31,31,32,34,21,30],
+"2 Chronicles":[17,18,17,22,14,42,22,18,31,19,23,16,22,15,19,14,19,34,11,37,20,12,21,27,28,23,9,27,36,27,21,33,25,33,27,23],
+"Ezra":[11,70,13,24,17,22,28,36,15,44],
+"Nehemiah":[11,20,32,23,19,19,73,18,38,39,36,47,31],
+"Esther":[22,23,15,17,14,14,10,17,32,3],
+"Job":[22,13,26,21,27,30,21,22,35,22,20,25,28,22,35,22,16,21,29,29,34,30,17,25,6,14,23,28,25,31,40,22,33,37,16,33,24,41,30,24,34,17],
+"Psalms":[6,12,8,8,12,10,17,9,20,18,7,8,6,7,5,11,15,50,14,9,13,31,6,10,22,12,14,9,11,12,24,11,22,22,28,12,40,22,13,17,13,11,5,26,17,11,9,14,20,23,19,9,6,7,23,13,11,11,17,12,8,12,11,10,13,20,7,35,36,5,24,20,28,23,10,12,20,72,13,19,16,8,18,12,13,17,7,18,52,17,16,15,5,23,11,13,12,9,9,5,8,28,22,35,45,48,43,13,31,7,10,10,9,8,18,19,2,29,176,7,8,9,4,8,5,6,5,6,8,8,3,18,3,3,21,26,9,8,24,13,10,7,12,15,21,10,20,14,9,6],
+"Proverbs":[33,22,35,27,23,35,27,36,18,32,31,28,25,35,33,33,28,24,29,30,31,29,35,34,28,28,27,28,27,33,31],
+"Ecclesiastes":[18,26,22,16,20,12,29,17,18,20,10,14],
+"Song of Solomon":[17,17,11,16,16,13,13,14],
+"Isaiah":[31,22,26,6,30,13,25,22,21,34,16,6,22,32,9,14,14,7,25,6,17,25,18,23,12,21,13,29,24,33,9,20,24,17,10,22,38,22,8,31,29,25,28,28,25,13,15,22,26,11,23,15,12,17,13,12,21,14,21,22,11,12,19,12,25,24],
+"Jeremiah":[19,37,25,31,31,30,34,22,26,25,23,17,27,22,21,21,27,23,15,18,14,30,40,10,38,24,22,17,32,24,40,44,26,22,19,32,21,28,18,16,18,22,13,30,5,28,7,47,39,46,64,34],
+"Lamentations":[22,22,66,22,22],
+"Ezekiel":[28,10,27,17,17,14,27,18,11,22,25,28,23,23,8,63,24,32,14,49,32,31,49,27,17,21,36,26,21,26,18,32,33,31,15,38,28,23,29,49,26,20,27,31,25,24,23,35],
+"Daniel":[21,49,30,37,31,28,28,27,27,21,45,13],
+"Hosea":[11,23,5,19,15,11,16,14,17,15,12,14,16,9],
+"Joel":[20,32,21],
+"Amos":[15,16,15,13,27,14,17,14,15],
+"Obadiah":[21],
+"Jonah":[17,10,10,11],
+"Micah":[16,13,12,13,15,16,20],
+"Nahum":[15,13,19],
+"Habakkuk":[17,20,19],
+"Zephaniah":[18,15,20],
+"Haggai":[15,23],
+"Zechariah":[21,13,10,14,11,15,14,23,17,12,17,14,9,21],
+"Malachi":[14,17,18,6],
+"Matthew":[25,23,17,25,48,34,29,34,38,42,30,50,58,36,39,28,27,35,30,34,46,46,39,51,46,75,66,20],
+"Mark":[45,28,35,41,43,56,37,38,50,52,33,44,37,72,47,20],
+"Luke":[80,52,38,44,39,49,50,56,62,42,54,59,35,35,32,31,37,43,48,47,38,71,56,53],
+"John":[51,25,36,54,47,71,53,59,41,42,57,50,38,31,27,33,26,40,42,31,25],
+"Acts":[26,47,26,37,42,15,60,40,43,48,30,25,52,28,41,40,34,28,41,38,40,30,35,27,27,32,44,31],
+"Romans":[32,29,31,25,21,23,25,39,33,21,36,21,14,23,33,27],
+"1 Corinthians":[31,16,23,21,13,20,40,13,27,33,34,31,13,40,58,24],
+"2 Corinthians":[24,17,18,18,21,18,16,24,15,18,33,21,14],
+"Galatians":[24,21,29,31,26,18],
+"Ephesians":[23,22,21,32,33,24],
+"Philippians":[30,30,21,23],
+"Colossians":[29,23,25,18],
+"1 Thessalonians":[10,20,13,18,28],
+"2 Thessalonians":[12,17,18],
+"1 Timothy":[20,15,16,16,25,21],
+"2 Timothy":[18,26,17,22],
+"Titus":[16,15,15],
+"Philemon":[25],
+"Hebrews":[14,18,19,16,14,20,28,13,28,39,40,29,25],
+"James":[27,26,18,17,20],
+"1 Peter":[25,25,22,19,14],
+"2 Peter":[21,22,18],
+"1 John":[10,29,24,21,21],
+"2 John":[13],
+"3 John":[14],
+"Jude":[25],
+"Revelation":[20,29,22,11,14,17,17,13,21,11,19,17,18,20,8,21,18,24,21,15,27,21]
+};
+
+var BIBLE_BOOKS = [
+  [1,"Genesis","old",50],[2,"Exodus","old",40],[3,"Leviticus","old",27],[4,"Numbers","old",36],
+  [5,"Deuteronomy","old",34],[6,"Joshua","old",24],[7,"Judges","old",21],[8,"Ruth","old",4],
+  [9,"1 Samuel","old",31],[10,"2 Samuel","old",24],[11,"1 Kings","old",22],[12,"2 Kings","old",25],
+  [13,"1 Chronicles","old",29],[14,"2 Chronicles","old",36],[15,"Ezra","old",10],[16,"Nehemiah","old",13],
+  [17,"Esther","old",10],[18,"Job","old",42],[19,"Psalms","old",150],[20,"Proverbs","old",31],
+  [21,"Ecclesiastes","old",12],[22,"Song of Solomon","old",8],[23,"Isaiah","old",66],[24,"Jeremiah","old",52],
+  [25,"Lamentations","old",5],[26,"Ezekiel","old",48],[27,"Daniel","old",12],[28,"Hosea","old",14],
+  [29,"Joel","old",3],[30,"Amos","old",9],[31,"Obadiah","old",1],[32,"Jonah","old",4],
+  [33,"Micah","old",7],[34,"Nahum","old",3],[35,"Habakkuk","old",3],[36,"Zephaniah","old",3],
+  [37,"Haggai","old",2],[38,"Zechariah","old",14],[39,"Malachi","old",4],
+  [40,"Matthew","new",28],[41,"Mark","new",16],[42,"Luke","new",24],[43,"John","new",21],
+  [44,"Acts","new",28],[45,"Romans","new",16],[46,"1 Corinthians","new",16],[47,"2 Corinthians","new",13],
+  [48,"Galatians","new",6],[49,"Ephesians","new",6],[50,"Philippians","new",4],[51,"Colossians","new",4],
+  [52,"1 Thessalonians","new",5],[53,"2 Thessalonians","new",3],[54,"1 Timothy","new",6],[55,"2 Timothy","new",4],
+  [56,"Titus","new",3],[57,"Philemon","new",1],[58,"Hebrews","new",13],[59,"James","new",5],
+  [60,"1 Peter","new",5],[61,"2 Peter","new",3],[62,"1 John","new",5],[63,"2 John","new",1],
+  [64,"3 John","new",1],[65,"Jude","new",1],[66,"Revelation","new",22]
+];
+var BOOK_BY_NAME = {};
+for (var bi=0; bi<BIBLE_BOOKS.length; bi++){ BOOK_BY_NAME[BIBLE_BOOKS[bi][1]] = BIBLE_BOOKS[bi]; }
+
+var chapterCache = {};   // in-memory: "40/3" -> [{verse, text}, ...]
+function isBibleBook(name){ return !!BOOK_BY_NAME[name]; }
+
+/* ---- Source endpoints (primary + fallback) ----
+   Both serve the public-domain World English Bible.
+   Primary: getBible v2, per-chapter JSON  { verses:[{verse,text}] }
+   Fallback: wldeh bible-api on jsDelivr, per-chapter JSON { data:[{verseId,verse,text}] } */
+function urlPrimary(num, chap){ return "https://api.getbible.net/v2/web/" + num + "/" + chap + ".json"; }
+function urlFallback(num, chap){
+  // wldeh dataset is keyed by lowercase book name with hyphens
+  var b = BIBLE_BOOKS[num-1];
+  var slug = b[1].toLowerCase().replace(/\s+/g,"-");
+  return "https://cdn.jsdelivr.net/gh/wldeh/bible-api/bibles/en-web/books/" + slug + "/chapters/" + chap + ".json";
+}
+function urlBibleApi(num, chap){
+  var b = BIBLE_BOOKS[num-1];
+  return "https://bible-api.com/" + encodeURIComponent(b[1] + " " + chap) + "?translation=web";
+}
+function parsePrimary(data){
+  return (data && data.verses) ? data.verses.map(function(v){
+    return { verse:+v.verse, text:(v.text||"").replace(/\s+/g," ").trim() };
+  }) : [];
+}
+function parseFallback(data){
+  var arr = (data && (data.data || data.verses)) || [];
+  return arr.map(function(v){
+    return { verse:+(v.verse), text:(v.text||"").replace(/\s+/g," ").trim() };
+  }).filter(function(v){ return v.verse && v.text; });
+}
+function parseBibleApi(data){
+  var arr = (data && data.verses) || [];
+  return arr.map(function(v){
+    return { verse:+(v.verse), text:(v.text||"").replace(/\s+/g," ").trim() };
+  }).filter(function(v){ return v.verse && v.text; });
+}
+var lastFetchError = "";
+
+/* Ingest a full-Bible JSON file the user supplies, so everything works
+   offline with zero network. Accepts the getBible whole-translation shape:
+   { translation:..., books:[ {nr, name, chapters:[ {chapter, verses:[{verse,text}] } ]} ] }
+   Also tolerates a flat { "books":{...} } or an array of books. */
+function ingestBible(json){
+  var map = {};
+  var books = json.books || json;            // array or object
+  var list = Array.isArray(books) ? books : Object.keys(books).map(function(k){ return books[k]; });
+  list.forEach(function(bk){
+    var num = bk.nr || bk.book_nr || bk.number;
+    // resolve book number by name if needed
+    if (!num && bk.name && BOOK_BY_NAME[bk.name]) num = BOOK_BY_NAME[bk.name][0];
+    if (!num) return;
+    var chapters = bk.chapters || [];
+    var clist = Array.isArray(chapters) ? chapters : Object.keys(chapters).map(function(k){ return chapters[k]; });
+    clist.forEach(function(ch){
+      var cnum = ch.chapter || ch.nr;
+      var verses = (ch.verses||[]).map(function(v){
+        return { verse:+v.verse, text:(v.text||"").replace(/\s+/g," ").trim() };
+      }).filter(function(v){ return v.verse && v.text; });
+      if (cnum && verses.length) map[num + "/" + cnum] = verses;
+    });
+  });
+  return map;
+}
+function loadBibleFile(file){
+  var info = $("offlineinfo");
+  info.textContent = "Reading file\u2026";
+  var reader = new FileReader();
+  reader.onload = function(){
+    try{
+      var json = JSON.parse(reader.result);
+      var map = ingestBible(json);
+      var n = Object.keys(map).length;
+      if (!n) throw new Error("no chapters found");
+      LOADED_BIBLE = map;
+      // also persist into IndexedDB for next time
+      Object.keys(map).forEach(function(k){ chapterCache[k] = map[k]; idbSet(k, map[k]); });
+      info.textContent = "Loaded " + n + " chapters from file \u2014 full Bible now available offline.";
+      next();
+    }catch(e){
+      info.textContent = "Couldn\u2019t read that file (" + e.message + "). Expected a World English Bible JSON.";
+    }
+  };
+  reader.onerror = function(){ info.textContent = "Couldn\u2019t open the file."; };
+  reader.readAsText(file);
+}
+
+/* ---- IndexedDB store for offline use ---- */
+var DB_NAME = "scripture-cache", STORE = "chapters", db = null;
+function openDB(){
+  return new Promise(function(res, rej){
+    if (db) return res(db);
+    if (!("indexedDB" in window)) return rej("no-idb");
+    var rq = indexedDB.open(DB_NAME, 1);
+    rq.onupgradeneeded = function(){ rq.result.createObjectStore(STORE); };
+    rq.onsuccess = function(){ db = rq.result; res(db); };
+    rq.onerror = function(){ rej(rq.error); };
+  });
+}
+function idbGet(key){
+  return openDB().then(function(d){
+    return new Promise(function(res){
+      var rq = d.transaction(STORE,"readonly").objectStore(STORE).get(key);
+      rq.onsuccess = function(){ res(rq.result || null); };
+      rq.onerror = function(){ res(null); };
+    });
+  }).catch(function(){ return null; });
+}
+function idbSet(key, val){
+  return openDB().then(function(d){
+    return new Promise(function(res){
+      var tx = d.transaction(STORE,"readwrite");
+      tx.objectStore(STORE).put(val, key);
+      tx.oncomplete = function(){ res(true); };
+      tx.onerror = function(){ res(false); };
+    });
+  }).catch(function(){ return false; });
+}
+function idbCount(){
+  return openDB().then(function(d){
+    return new Promise(function(res){
+      var rq = d.transaction(STORE,"readonly").objectStore(STORE).count();
+      rq.onsuccess = function(){ res(rq.result||0); };
+      rq.onerror = function(){ res(0); };
+    });
+  }).catch(function(){ return 0; });
+}
+
+/* A full Bible loaded from a local file (see "Load from file") lives here. */
+var LOADED_BIBLE = null;   // { "num/chap": [{verse,text}], ... }
+
+/* fetch one chapter: try a file-loaded Bible, then primary, fallback, third source */
+function netFetchChapter(num, chap){
+  var key = num + "/" + chap;
+  if (LOADED_BIBLE && LOADED_BIBLE[key] && LOADED_BIBLE[key].length){
+    return Promise.resolve(LOADED_BIBLE[key]);
+  }
+  function tryJson(url, parser){
+    return fetch(url).then(function(r){
+      if(!r.ok) throw new Error("HTTP "+r.status+" from "+url);
+      return r.json();
+    }).then(function(d){
+      var v = parser(d);
+      if(!v.length) throw new Error("empty from "+url);
+      return v;
+    });
+  }
+  return tryJson(urlPrimary(num,chap), parsePrimary)
+    .catch(function(){ return tryJson(urlFallback(num,chap), parseFallback); })
+    .catch(function(){ return tryJson(urlBibleApi(num,chap), parseBibleApi); })
+    .catch(function(e){ lastFetchError = (e && e.message) || "network blocked"; throw e; });
+}
+
+/* main accessor: memory -> IndexedDB -> network (primary/fallback) -> cache back */
+function fetchChapter(bookName, chap){
+  var b = BOOK_BY_NAME[bookName];
+  if (!b) return Promise.reject("unknown book");
+  var num = b[0], key = num + "/" + chap;
+  if (chapterCache[key]) return Promise.resolve(chapterCache[key]);
+  return idbGet(key).then(function(stored){
+    if (stored && stored.length){ chapterCache[key] = stored; return stored; }
+    return netFetchChapter(num, chap).then(function(verses){
+      chapterCache[key] = verses;
+      idbSet(key, verses);          // persist for offline
+      return verses;
+    });
+  });
+}
+
+/* ---- Download the whole Bible into IndexedDB ---- */
+var downloading = false;
+function totalChapters(){
+  var n = 0; for (var i=0;i<BIBLE_BOOKS.length;i++) n += BIBLE_BOOKS[i][3]; return n;
+}
+function downloadAll(){
+  if (downloading) return;
+  downloading = true;
+  var btn = $("download");
+  var total = totalChapters(), done = 0, failed = 0;
+  // Build the full job list
+  var jobs = [];
+  for (var i=0;i<BIBLE_BOOKS.length;i++){
+    var b = BIBLE_BOOKS[i];
+    for (var c=1;c<=b[3];c++) jobs.push([b[1], c, b[0]]);
+  }
+  function updateBtn(){
+    btn.textContent = "Downloading\u2026 " + Math.round(done/total*100) + "%";
+  }
+  updateBtn();
+  // Sequential with small concurrency to be gentle on the source
+  var idx = 0, CONC = 4, active = 0;
+  function pump(){
+    if (idx>=jobs.length && active===0){
+      downloading = false;
+      btn.textContent = failed ? ("Saved offline (" + (total-failed) + "/" + total + ")")
+                               : "Saved for offline use \u2713";
+      btn.setAttribute("aria-pressed","true");
+      refreshOfflineLabel();
+      return;
+    }
+    while (active<CONC && idx<jobs.length){
+      var job = jobs[idx++]; active++;
+      (function(j){
+        var num = j[2], chap = j[1], k = num + "/" + chap;
+        idbGet(k).then(function(stored){
+          if (stored && stored.length){ return stored; }
+          return netFetchChapter(num, chap).then(function(v){ idbSet(k, v); return v; });
+        }).then(function(){ done++; })
+          .catch(function(){ failed++; done++; })
+          .then(function(){ active--; updateBtn(); pump(); });
+      })(job);
+    }
+  }
+  pump();
+}
+function refreshOfflineLabel(){
+  idbCount().then(function(n){
+    if (n>0){
+      $("offlineinfo").textContent = n + " of " + totalChapters() + " chapters saved on this device for offline reading.";
+    } else {
+      $("offlineinfo").textContent = "";
+    }
+  });
+}
+
+function L(){ return LANGS[lang]; }
+function pool(){ return SCRIPTURE.filter(function(s){ return filter==="all" || s.t===filter; }); }
+function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+function parseRef(ref){
+  // "1 Corinthians 13:4" -> {book:"1 Corinthians", chap:13, verse:4}
+  var i = ref.lastIndexOf(" ");
+  var book = ref.slice(0, i);
+  var cv = ref.slice(i+1).split(":");
+  return { book: book, chap: parseInt(cv[0],10), verse: parseInt(cv[1],10) };
+}
+
+function show(entry){
+  current = entry;
+  var book = L().names[current.t] || "";
+  var line = current.ref + (book ? "  \u00B7  " + book : "");
+  if (current.theme) line = current.theme + "  \u2014  " + current.ref;
+  var refEl = $("ref"), passage = $("passage");
+
+  function render(){
+    refEl.textContent = line;
+    passage.classList.remove("hint","verse-leave");
+    passage.textContent = current.text;
+    // enter animation
+    passage.classList.remove("verse-enter"); void passage.offsetWidth; passage.classList.add("verse-enter");
+    refEl.classList.remove("ref-enter"); void refEl.offsetWidth; refEl.classList.add("ref-enter");
+    if (autoOn) scheduleAuto();
+  }
+
+  // Crossfade: if real content is showing, fade it out first, then render.
+  var hasContent = passage.textContent && !passage.classList.contains("hint");
+  if (hasContent){
+    passage.classList.remove("verse-enter");
+    passage.classList.add("verse-leave");
+    var done = false;
+    var go = function(){ if(done) return; done=true; render(); };
+    passage.addEventListener("animationend", go, { once:true });
+    setTimeout(go, 300); // fallback if animationend doesn't fire
+  } else {
+    render();
+  }
+}
+
+/* ---- Vision of the Heavens: resolve a themed reference to its text ---- */
+function showHeavensEntry(entry){
+  var p = parseRef(entry.ref);
+  var b = BOOK_BY_NAME[p.book];
+  var t = b ? b[2] : "new";
+  setPassageLoading();
+  // Themed label appears with the reference
+  fetchChapter(p.book, p.chap).then(function(verses){
+    var v = verses.filter(function(x){ return x.verse===p.verse; })[0];
+    if (!v){ showFetchError(); return; }
+    show({ t:t, ref:entry.ref, text:v.text, theme:entry.theme });
+  }).catch(showFetchError);
+}
+
+/* ---- Random "Next passage" ----
+   For Bible filters, pick a random book/chapter, fetch it, show a random verse.
+   For Enoch/Jubilees, use the curated offline pool.
+   For Heavens, pick a random themed reference and fetch its text. */
+function next(){
+  if (filter==="enoch" || filter==="jubilees"){
+    var p = pool(), choice;
+    do { choice = p[Math.floor(Math.random()*p.length)]; }
+    while (p.length>1 && choice===current);
+    show(choice); return;
+  }
+  if (filter==="heavens"){
+    var e, prev = current && current.ref;
+    do { e = HEAVENS_REFS[Math.floor(Math.random()*HEAVENS_REFS.length)]; }
+    while (HEAVENS_REFS.length>1 && e.ref===prev);
+    showHeavensEntry(e); return;
+  }
+  // Bible (all / old / new): random across the canonical books in scope
+  var books = bibleBooksInScope();
+  var b = rand(books);
+  var chap = 1 + Math.floor(Math.random()*b[3]);
+  setPassageLoading();
+  fetchChapter(b[1], chap).then(function(verses){
+    if (!verses.length){ next(); return; }
+    var v = verses[Math.floor(Math.random()*verses.length)];
+    show({ t:b[2], ref:b[1]+" "+chap+":"+v.verse, text:v.text });
+  }).catch(showFetchError);
+}
+
+function bibleBooksInScope(){
+  return BIBLE_BOOKS.filter(function(b){ return filter==="all" || b[2]===filter; });
+}
+
+/* ---- Book / Chapter / Verse picker ---- */
+function fill(sel, items, value){
+  sel.innerHTML = "";
+  for (var i=0;i<items.length;i++){
+    var o = document.createElement("option");
+    if (typeof items[i]==="object"){ o.value=items[i].v; o.textContent=items[i].t; }
+    else { o.value=items[i]; o.textContent=items[i]; }
+    sel.appendChild(o);
+  }
+  if (value!=null) sel.value = value;
+}
+
+// Curated structure (Enoch / Jubilees) read from SCRIPTURE
+function curatedBooks(){
+  var seen={}, list=[];
+  for (var i=0;i<SCRIPTURE.length;i++){
+    var s=SCRIPTURE[i];
+    if (s.t!==filter) continue;
+    var b=parseRef(s.ref).book;
+    if(!seen[b]){seen[b]=1;list.push(b);}
+  }
+  return list;
+}
+function curatedChapters(book){
+  var seen={},list=[];
+  for (var i=0;i<SCRIPTURE.length;i++){
+    var p=parseRef(SCRIPTURE[i].ref);
+    if(p.book!==book)continue;
+    if(!seen[p.chap]){seen[p.chap]=1;list.push(p.chap);}
+  }
+  return list.sort(function(a,b){return a-b;});
+}
+function curatedVerses(book,chap){
+  var list=[];
+  for (var i=0;i<SCRIPTURE.length;i++){
+    var p=parseRef(SCRIPTURE[i].ref);
+    if(p.book===book&&p.chap===chap)list.push(p.verse);
+  }
+  return list.sort(function(a,b){return a-b;});
+}
+
+function refreshPicker(keepBook){
+  var bsel=$("booksel"), books, want;
+  if (filter==="heavens"){
+    // Book dropdown becomes the themed-passage chooser
+    var items = HEAVENS_REFS.map(function(e){ return { v:e.ref, t:e.theme+"  ("+e.ref+")" }; });
+    var prev = bsel.value;
+    fill(bsel, items, null);
+    if (keepBook && [].some.call(bsel.options,function(o){return o.value===prev;})) bsel.value = prev;
+    setHeavensPickerMode(true);
+    return; // chapter/verse not used for this theme
+  }
+  setHeavensPickerMode(false);
+  if (filter==="enoch" || filter==="jubilees"){
+    books = curatedBooks();
+    want = keepBook && books.indexOf(bsel.value)>=0 ? bsel.value : books[0];
+    fill(bsel, books, want);
+  } else {
+    var inScope = bibleBooksInScope().map(function(b){ return b[1]; });
+    want = keepBook && inScope.indexOf(bsel.value)>=0 ? bsel.value : inScope[0];
+    fill(bsel, inScope, want);
+  }
+  refreshChapters();
+}
+function setHeavensPickerMode(on){
+  // Hide chapter/verse selectors when navigating by theme
+  var c=$("chapsel").parentNode, v=$("versesel").parentNode;
+  c.style.display = on ? "none" : "";
+  v.style.display = on ? "none" : "";
+}
+function refreshChapters(){
+  if (filter==="heavens") return; // book dropdown is the full chooser
+  var book=$("booksel").value, csel=$("chapsel");
+  if (filter==="enoch" || filter==="jubilees"){
+    var chaps=curatedChapters(book);
+    fill(csel, chaps, chaps[0]);
+  } else {
+    var b=BOOK_BY_NAME[book]; var n=b?b[3]:1; var arr=[];
+    for (var c=1;c<=n;c++) arr.push(c);
+    fill(csel, arr, 1);
+  }
+  refreshVerses();
+}
+function refreshVerses(){
+  var book=$("booksel").value, chap=parseInt($("chapsel").value,10), vsel=$("versesel");
+  if (filter==="enoch" || filter==="jubilees"){
+    fill(vsel, curatedVerses(book,chap), null);
+    return;
+  }
+  // Bible: use the bundled verse-count table so the full list shows instantly,
+  // with no network needed. (Verse text still loads on "Go".)
+  var counts = VERSE_COUNTS[book];
+  var n = (counts && counts[chap-1]) ? counts[chap-1] : 1;
+  var arr=[]; for (var v=1; v<=n; v++) arr.push(v);
+  fill(vsel, arr, null);
+}
+function gotoSelected(){
+  if (filter==="heavens"){
+    var ref = $("booksel").value;
+    for (var i=0;i<HEAVENS_REFS.length;i++){
+      if (HEAVENS_REFS[i].ref===ref){ showHeavensEntry(HEAVENS_REFS[i]); return; }
+    }
+    return;
+  }
+  var book=$("booksel").value, chap=$("chapsel").value, verse=$("versesel").value;
+  if (filter==="enoch" || filter==="jubilees"){
+    var ref=book+" "+chap+":"+verse;
+    for (var i=0;i<SCRIPTURE.length;i++){
+      if (SCRIPTURE[i].ref===ref){ show(SCRIPTURE[i]); return; }
+    }
+    return;
+  }
+  setPassageLoading();
+  fetchChapter(book, parseInt(chap,10)).then(function(verses){
+    var want = parseInt(verse,10);
+    var v = verses.filter(function(x){ return x.verse===want; })[0] || verses[0];
+    if (!v){ showFetchError(); return; }
+    var b = BOOK_BY_NAME[book];
+    show({ t:b?b[2]:"new", ref:book+" "+chap+":"+v.verse, text:v.text });
+  }).catch(showFetchError);
+}
+
+function setPassageLoading(){
+  $("ref").textContent = "";
+  var p=$("passage"); p.classList.add("hint");
+  p.textContent = "Drawing the passage from the heavens\u2026";
+  p.classList.remove("verse-enter");
+  p.classList.add("loading-pulse");
+  setTimeout(function(){ p.classList.remove("loading-pulse"); }, 1200);
+}
+function showFetchError(){
+  var p=$("passage"); p.classList.add("hint");
+  $("ref").textContent="";
+  p.textContent = "Couldn\u2019t load scripture from the web" +
+    (lastFetchError ? " (" + lastFetchError + ")" : "") +
+    ". If you\u2019re viewing this inside a preview, save the file and open it in your browser. " +
+    "Or use \u201CLoad Bible from file\u201D below for full offline reading. Enoch and Jubilees work offline now.";
+}
+
+/* ---- Voices ---- */
+function scoreVoice(v){
+  var s = 0, n = (v.name||"").toLowerCase();
+  if (/neural|natural/.test(n)) s += 50;
+  if (/google/.test(n)) s += 40;
+  if (/premium|enhanced|siri/.test(n)) s += 35;
+  if (/multilingual/.test(n)) s += 15;
+  if (!v.localService) s += 20;
+  return s;
+}
+function bestForLocale(locale){
+  var voices = speechSynthesis.getVoices();
+  var base = locale.split("-")[0];
+  function top(list){ return list.length ? list.slice().sort(function(a,b){return scoreVoice(b)-scoreVoice(a);})[0] : null; }
+  var exact = voices.filter(function(v){return v.lang && v.lang.toLowerCase()===locale.toLowerCase();});
+  var byLang = voices.filter(function(v){return v.lang && v.lang.toLowerCase().indexOf(base)===0;});
+  var za = voices.filter(function(v){return v.lang && v.lang.toLowerCase().indexOf("en-za")===0;});
+  var anyEn = voices.filter(function(v){return v.lang && v.lang.toLowerCase().indexOf("en")===0;});
+  return top(exact) || top(byLang) || top(za) || top(anyEn);
+}
+function pickVoice(locale){
+  if (chosenVoiceURI !== "auto"){
+    var voices = speechSynthesis.getVoices();
+    var m = voices.filter(function(v){return v.voiceURI===chosenVoiceURI;})[0];
+    if (m) return m;
+  }
+  return bestForLocale(locale);
+}
+function populateVoices(){
+  if (!("speechSynthesis" in window)) return;
+  var sel = $("voicesel"); if (!sel) return;
+  var voices = speechSynthesis.getVoices().slice();
+  if (!voices.length) return;
+  var base = L().locale.split("-")[0];
+  voices.sort(function(a,b){
+    var am=(a.lang||"").toLowerCase().indexOf(base)===0?1:0;
+    var bm=(b.lang||"").toLowerCase().indexOf(base)===0?1:0;
+    if (am!==bm) return bm-am;
+    return scoreVoice(b)-scoreVoice(a);
+  });
+  var prev = sel.value;
+  sel.innerHTML = '<option value="auto">Auto (best available)</option>';
+  for (var i=0;i<voices.length;i++){
+    var v = voices[i];
+    var star = scoreVoice(v) >= 35 ? " \u2605" : "";
+    var o = document.createElement("option");
+    o.value = v.voiceURI; o.textContent = v.name+" ("+v.lang+")"+star;
+    sel.appendChild(o);
+  }
+  sel.value = prev && [].some.call(sel.options,function(o){return o.value===prev;}) ? prev : "auto";
+}
+
+function read(){
+  if (!current) next();
+  if (!current) return;
+  if (!("speechSynthesis" in window)){
+    $("label").textContent = "This browser can't read aloud — but you can read it yourself.";
+    return;
+  }
+  speechSynthesis.cancel();
+  var voice = pickVoice("en-ZA"); // verse text is English
+  var u = new SpeechSynthesisUtterance(current.text + " " + current.ref + ".");
+  u.lang = "en-ZA";
+  if (voice) u.voice = voice;
+  u.rate = 0.92; u.pitch = 1.0; u.volume = 1;   // calm, even reading
+  speechSynthesis.speak(u);
+}
+
+/* ---- Auto-advance (gentle, for unhurried reading) ---- */
+function scheduleAuto(){
+  clearTimeout(autoTimer);
+  // ~10s per passage, a little longer for longer texts
+  var ms = current ? Math.max(9000, current.text.length*60) : 10000;
+  autoTimer = setTimeout(next, ms);
+}
+function toggleAuto(){
+  autoOn = !autoOn;
+  $("autoplay").setAttribute("aria-pressed", autoOn ? "true":"false");
+  $("autoplay").textContent = "Auto-advance: " + (autoOn ? "on" : "off");
+  if (autoOn){ if (!current) next(); else scheduleAuto(); }
+  else clearTimeout(autoTimer);
+}
+
+/* ---- Wiring ---- */
+var chips = document.querySelectorAll(".chip");
+for (var c=0;c<chips.length;c++){
+  chips[c].addEventListener("click", function(){
+    for (var k=0;k<chips.length;k++) chips[k].setAttribute("aria-pressed","false");
+    this.setAttribute("aria-pressed","true");
+    // press ripple
+    var btn=this;
+    btn.classList.remove("rippling"); void btn.offsetWidth; btn.classList.add("rippling");
+    filter = this.getAttribute("data-t");
+    refreshPicker(false);
+    // re-trigger picker swap animation
+    var pk=document.querySelector(".picker");
+    if(pk){ pk.classList.remove("swap"); void pk.offsetWidth; pk.classList.add("swap"); }
+    next();
+  });
+}
+$("next").addEventListener("click", next);
+$("read").addEventListener("click", read);
+$("autoplay").addEventListener("click", toggleAuto);
+$("download").addEventListener("click", downloadAll);
+$("loadfile").addEventListener("click", function(){ $("fileinput").click(); });
+$("fileinput").addEventListener("change", function(){
+  if (this.files && this.files[0]) loadBibleFile(this.files[0]);
+});
+
+$("langsel").addEventListener("change", function(){
+  lang = this.value;
+  if (current){
+    var book = L().names[current.t] || "";
+    $("ref").textContent = current.ref + (book ? "  \u00B7  " + book : "");
+  }
+  populateVoices();
+});
+$("voicesel").addEventListener("change", function(){ chosenVoiceURI = this.value; });
+
+/* Book / Chapter / Verse picker wiring */
+$("booksel").addEventListener("change", refreshChapters);
+$("chapsel").addEventListener("change", refreshVerses);
+$("goto").addEventListener("click", gotoSelected);
+refreshPicker(false); // populate on load
+refreshOfflineLabel(); // show any previously cached chapters
+
+if ("speechSynthesis" in window){
+  speechSynthesis.onvoiceschanged = populateVoices;
+  setTimeout(populateVoices, 0);
+  setTimeout(populateVoices, 400);
+}
+
+/* Register the service worker so the app installs and works offline */
+if ("serviceWorker" in navigator){
+  window.addEventListener("load", function(){
+    navigator.serviceWorker.register("sw.js").catch(function(){ /* offline-first is optional */ });
+  });
+}
+</script>
+</body>
+</html>
