@@ -5,7 +5,7 @@ var CACHE = "vision-of-heavens-v1";
 var SHELL = [
   "./",
   "./index.html",
-  "./manifest.webmanifest",
+  "./manifest.json",
   "./icon-192.png",
   "./icon-512.png",
   "./icon-180.png"
