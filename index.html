@@ -379,11 +379,117 @@
     color:var(--ink-soft);font-size:.8rem;line-height:1.7;padding:1.6rem 1.4rem 3rem;
   }
   footer .meta{opacity:.65;font-size:.74rem;margin-top:.5rem;}
+
+  /* Install pop-up */
+  .install-pop{
+    position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(140%);
+    z-index:50;width:min(420px,92vw);
+    display:flex;gap:14px;align-items:flex-start;
+    padding:16px 16px 16px 14px;border-radius:16px;
+    background:linear-gradient(180deg, rgba(46,32,9,.97), rgba(24,16,4,.98));
+    border:1px solid var(--line-bright);
+    box-shadow:0 16px 50px -12px rgba(0,0,0,.7), 0 0 30px rgba(231,162,60,.25);
+    backdrop-filter:blur(4px);
+    transition:transform .5s cubic-bezier(.2,.8,.2,1), opacity .4s;
+    opacity:0;
+  }
+  .install-pop.show{transform:translateX(-50%) translateY(0);opacity:1;}
+  .install-icon img{border-radius:11px;display:block;
+    box-shadow:0 0 16px rgba(255,217,138,.4);}
+  .install-body{flex:1;min-width:0;}
+  .install-title{color:var(--fire);font-size:1rem;letter-spacing:.02em;
+    margin-bottom:.25rem;text-shadow:0 0 12px rgba(255,217,138,.35);}
+  .install-text{color:var(--ink-soft);font-size:.82rem;line-height:1.45;margin-bottom:.7rem;}
+  .install-actions{display:flex;gap:.5rem;align-items:center;}
+  .install-btn{
+    font-family:inherit;cursor:pointer;font-size:.86rem;font-weight:600;
+    padding:.5rem 1.1rem;border-radius:8px;color:#2a1c06;
+    background:linear-gradient(180deg, var(--fire), var(--fire-deep));
+    border:1px solid var(--fire-deep);
+    box-shadow:0 0 18px rgba(231,162,60,.45);transition:.2s;
+  }
+  .install-btn:hover{box-shadow:0 0 26px rgba(231,162,60,.7);transform:translateY(-1px);}
+  .install-later{
+    font-family:inherit;cursor:pointer;font-size:.82rem;
+    padding:.5rem .8rem;border-radius:8px;color:var(--ink-soft);
+    background:transparent;border:1px solid var(--line);transition:.2s;
+  }
+  .install-later:hover{color:var(--ink);border-color:var(--crystal-dim);}
+  .install-x{
+    position:absolute;top:8px;right:10px;
+    background:none;border:none;color:var(--ink-soft);
+    font-size:1.3rem;line-height:1;cursor:pointer;padding:2px 6px;
+  }
+  .install-x:hover{color:var(--fire);}
+  .ios-steps{margin:.2rem 0 0;color:var(--ink);font-size:.82rem;line-height:1.5;}
+  .ios-steps b{color:var(--fire);}
   footer .credit{
     margin-top:.7rem;font-size:.86rem;letter-spacing:.16em;
     text-transform:uppercase;color:var(--fire);
     text-shadow:0 0 14px rgba(255,217,138,.4);
   }
+  .credits-tap{
+    margin-top:.9rem;font-family:inherit;cursor:pointer;
+    font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--ink-soft);background:transparent;
+    border:1px solid var(--line);border-radius:30px;
+    padding:.42rem 1.2rem;transition:.25s;
+  }
+  .credits-tap:hover{color:var(--fire);border-color:var(--crystal-dim);
+    box-shadow:0 0 16px rgba(255,217,138,.2);}
+  .credits-chevron{display:inline-block;transition:transform .3s;font-size:.7em;}
+  .credits-tap[aria-expanded="true"] .credits-chevron{transform:rotate(180deg);}
+  .credits-panel{
+    overflow:hidden;max-height:0;opacity:0;
+    transition:max-height .45s ease, opacity .4s ease, margin .4s ease;
+    margin-top:0;
+  }
+  .credits-panel.open{max-height:240px;opacity:1;margin-top:1rem;}
+
+  /* ===== Mobile-friendly & touch enhancements ===== */
+  /* Larger tap targets and comfortable spacing on phones */
+  @media (max-width:680px){
+    header{padding:2.6rem 1.1rem 1rem;}
+    main{padding:.6rem 1rem 3rem;}
+    h1{font-size:clamp(1.7rem,8vw,2.6rem);}
+    .subtitle{font-size:.96rem;}
+    .seg{gap:.45rem;width:100%;}
+    .chip{
+      flex:1 1 auto;min-width:max-content;text-align:center;
+      padding:.62rem .9rem;font-size:.8rem;  /* taller = easier to tap */
+    }
+    /* Stack the language/voice and picker rows so selects are full width */
+    .selrow{flex-direction:column;align-items:stretch;gap:.7rem;}
+    .selrow span{display:flex;justify-content:space-between;align-items:center;gap:.7rem;}
+    .selrow select{flex:1;min-width:0;}
+    .picker{flex-direction:column;align-items:stretch;gap:.7rem;padding:1rem;}
+    .picker span{flex-direction:row;justify-content:space-between;align-items:center;}
+    .picker select{flex:1;min-width:0;}
+    .picker #chapsel,.picker #versesel{min-width:0;}
+    .picker #goto{width:100%;align-self:stretch;padding:.7rem;}
+    .reader-frame{padding:30px 12px 22px;margin-top:2.2rem;}
+    .reader{padding:2rem 1.3rem;min-height:220px;}
+    .passage{font-size:clamp(1.2rem,5.2vw,1.5rem);}
+    /* Action buttons: comfy, full-width-ish, easy to thumb */
+    .actions{gap:.55rem;}
+    button.act{flex:1 1 44%;padding:.85rem 1rem;font-size:.9rem;}
+    button.act#next{flex-basis:100%;}
+    .seraph{width:54px;top:-22px;}
+    .lamps{gap:clamp(14px,6vw,30px);}
+    /* Install pop-up sits above the home indicator */
+    .install-pop{bottom:calc(14px + env(safe-area-inset-bottom));width:94vw;}
+  }
+  /* Honour iOS notch / safe areas */
+  @supports(padding:max(0px)){
+    body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);}
+  }
+  /* Prevent iOS auto-zoom on focus: form controls must be >=16px */
+  select{font-size:16px;}
+  /* Smoother touch behaviour */
+  .chip,button,select{ -webkit-tap-highlight-color:transparent; touch-action:manipulation; }
+  /* Bigger, easier tap target for the credits + install controls */
+  .credits-tap{min-height:40px;}
+  .install-btn,.install-later{min-height:42px;}
 
   @media (prefers-reduced-motion:reduce){
     *{animation:none!important;transition-duration:.001ms!important}
@@ -400,6 +506,22 @@
 </style>
 </head>
 <body>
+
+<!-- Install pop-up (shown when installable, or with iOS instructions) -->
+<div class="install-pop" id="installPop" role="dialog" aria-label="Install this app" hidden>
+  <button class="install-x" id="installClose" aria-label="Dismiss">&times;</button>
+  <div class="install-icon">
+    <img src="icon-192.png" alt="" width="46" height="46">
+  </div>
+  <div class="install-body">
+    <div class="install-title">Install Vision of the Heavens</div>
+    <div class="install-text" id="installText">Add it to your home screen to read fullscreen, even offline.</div>
+    <div class="install-actions">
+      <button class="install-btn" id="installBtn">Install</button>
+      <button class="install-later" id="installLater">Not now</button>
+    </div>
+  </div>
+</div>
 
 <div class="throne-bg" aria-hidden="true">
   <svg viewBox="0 0 760 760" xmlns="http://www.w3.org/2000/svg">
@@ -584,10 +706,15 @@
 
 <footer>
   <div id="label">A place to read.</div>
-  <div class="credit">Engineered by Tebogo Maruping</div>
-  <div class="meta">
-    Bible: complete World English Bible (Public Domain), loaded from getbible.net.
-    Enoch &amp; Jubilees: R.H. Charles, 1913 (Public Domain), bundled offline.
+  <button class="credits-tap" id="creditsTap" aria-expanded="false" aria-controls="creditsPanel">
+    <span class="credits-chevron" aria-hidden="true">&#9662;</span> Credits
+  </button>
+  <div class="credits-panel" id="creditsPanel" hidden>
+    <div class="credit">Engineered by Tebogo Maruping</div>
+    <div class="meta">
+      Bible: complete World English Bible (Public Domain), loaded from getbible.net.
+      Enoch &amp; Jubilees: R.H. Charles, 1913 (Public Domain), bundled offline.
+    </div>
   </div>
 </footer>
 
@@ -987,13 +1114,21 @@ function netFetchChapter(num, chap){
     return Promise.resolve(LOADED_BIBLE[key]);
   }
   function tryJson(url, parser){
-    return fetch(url).then(function(r){
+    // Timeout so a hanging request can't freeze the reader on "loading"
+    var controller = ("AbortController" in window) ? new AbortController() : null;
+    var opts = controller ? { signal: controller.signal } : {};
+    var timer = controller ? setTimeout(function(){ controller.abort(); }, 12000) : null;
+    return fetch(url, opts).then(function(r){
       if(!r.ok) throw new Error("HTTP "+r.status+" from "+url);
       return r.json();
     }).then(function(d){
+      if(timer) clearTimeout(timer);
       var v = parser(d);
       if(!v.length) throw new Error("empty from "+url);
       return v;
+    }).catch(function(e){
+      if(timer) clearTimeout(timer);
+      throw e;
     });
   }
   return tryJson(urlPrimary(num,chap), parsePrimary)
@@ -1149,12 +1284,16 @@ function next(){
     showHeavensEntry(e); return;
   }
   // Bible (all / old / new): random across the canonical books in scope
+  var attempts = (arguments[0] && arguments[0].__n) || 0;
   var books = bibleBooksInScope();
   var b = rand(books);
   var chap = 1 + Math.floor(Math.random()*b[3]);
   setPassageLoading();
   fetchChapter(b[1], chap).then(function(verses){
-    if (!verses.length){ next(); return; }
+    if (!verses.length){
+      if (attempts < 6){ next({__n:attempts+1}); } else { showFetchError(); }
+      return;
+    }
     var v = verses[Math.floor(Math.random()*verses.length)];
     show({ t:b[2], ref:b[1]+" "+chap+":"+v.verse, text:v.text });
   }).catch(showFetchError);
@@ -1441,6 +1580,83 @@ if ("serviceWorker" in navigator){
     navigator.serviceWorker.register("sw.js").catch(function(){ /* offline-first is optional */ });
   });
 }
+
+/* ---- Install pop-up ---- */
+(function(){
+  var pop = $("installPop"), btn = $("installBtn"),
+      later = $("installLater"), closeX = $("installClose"),
+      txt = $("installText");
+  var deferred = null;
+
+  function isStandalone(){
+    return window.matchMedia("(display-mode: standalone)").matches ||
+           window.navigator.standalone === true;
+  }
+  function isIOS(){
+    return /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+  }
+  function dismissedRecently(){
+    try{
+      var t = localStorage.getItem("installDismissed");
+      return t && (Date.now() - (+t)) < 7*24*60*60*1000; // 7 days
+    }catch(e){ return false; }
+  }
+  function remember(){
+    try{ localStorage.setItem("installDismissed", Date.now()); }catch(e){}
+  }
+  function showPop(){
+    pop.hidden = false;
+    requestAnimationFrame(function(){ pop.classList.add("show"); });
+  }
+  function hidePop(){
+    pop.classList.remove("show");
+    setTimeout(function(){ pop.hidden = true; }, 500);
+  }
+
+  // Already installed, or dismissed recently → do nothing
+  if (isStandalone() || dismissedRecently()) return;
+
+  // Android / Chrome / Edge: real install prompt
+  window.addEventListener("beforeinstallprompt", function(e){
+    e.preventDefault();
+    deferred = e;
+    setTimeout(showPop, 2500); // let the heavens load in first
+  });
+
+  btn.addEventListener("click", function(){
+    if (deferred){
+      deferred.prompt();
+      deferred.userChoice.finally(function(){ deferred = null; hidePop(); });
+    } else {
+      hidePop();
+    }
+  });
+
+  // iOS Safari: no auto prompt — show manual instructions instead
+  if (isIOS() && !isStandalone()){
+    txt.innerHTML = 'Tap the <b>Share</b> button below, then choose ' +
+                    '<b>\u201CAdd to Home Screen\u201D</b> to install.';
+    btn.style.display = "none";
+    setTimeout(showPop, 2500);
+  }
+
+  later.addEventListener("click", function(){ remember(); hidePop(); });
+  closeX.addEventListener("click", function(){ remember(); hidePop(); });
+
+  // Confirm installation
+  window.addEventListener("appinstalled", function(){ remember(); hidePop(); });
+})();
+/* ---- Credits tap ---- */
+(function(){
+  var tap = $("creditsTap"), panel = $("creditsPanel");
+  if (!tap || !panel) return;
+  tap.addEventListener("click", function(){
+    var open = panel.classList.toggle("open");
+    if (open){ panel.hidden = false; }
+    else { setTimeout(function(){ if(!panel.classList.contains("open")) panel.hidden = true; }, 450); }
+    tap.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+})();
 </script>
 </body>
 </html>

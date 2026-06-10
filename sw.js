@@ -1,7 +1,7 @@
 /* Service worker for "The Vision of the Heavens"
    Caches the app shell so it opens offline. Bible chapter text is handled
    separately by the app's own IndexedDB cache. */
-var CACHE = "vision-of-heavens-v1";
+var CACHE = "vision-of-heavens-v2";
 var SHELL = [
   "./",
   "./index.html",
