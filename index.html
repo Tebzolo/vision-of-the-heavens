@@ -6,14 +6,7 @@
 <title>The Vision of the Heavens — Scripture</title>
 <meta name="description" content="Read the whole Bible with the Books of Enoch and Jubilees, in a golden throne-room reading experience. Engineered by Tebogo Maruping.">
 <meta name="author" content="Tebogo Maruping">
-<!-- PWA / installable app -->
-<link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1a1206">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Vision of Heavens">
-<link rel="apple-touch-icon" href="icon-180.png">
 <style>
   :root{
     /* Golden throne-room palette: deep amber-brown ground, gold accents,
@@ -370,6 +363,7 @@
     justify-content:center;background:rgba(6,4,1,.62);backdrop-filter:blur(3px);
     animation:fadeIn .25s ease both;
   }
+  .overlay[hidden]{display:none!important;}
   .sheet{
     position:relative;width:min(560px,100%);max-height:82vh;overflow-y:auto;
     -webkit-overflow-scrolling:touch;
@@ -443,64 +437,11 @@
   }
   footer .meta{opacity:.65;font-size:.74rem;margin-top:.5rem;}
 
-  /* Install pop-up */
-  .install-pop{
-    position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(140%);
-    z-index:50;width:min(420px,92vw);
-    display:flex;gap:14px;align-items:flex-start;
-    padding:16px 16px 16px 14px;border-radius:16px;
-    background:linear-gradient(180deg, rgba(46,32,9,.97), rgba(24,16,4,.98));
-    border:1px solid var(--line-bright);
-    box-shadow:0 16px 50px -12px rgba(0,0,0,.7), 0 0 30px rgba(231,162,60,.25);
-    backdrop-filter:blur(4px);
-    transition:transform .5s cubic-bezier(.2,.8,.2,1), opacity .4s;
-    opacity:0;
-  }
-  .install-pop.show{transform:translateX(-50%) translateY(0);opacity:1;}
-  .install-icon img{border-radius:11px;display:block;
-    box-shadow:0 0 16px rgba(255,217,138,.4);}
-  .install-body{flex:1;min-width:0;}
-  .install-title{color:var(--fire);font-size:1rem;letter-spacing:.02em;
-    margin-bottom:.25rem;text-shadow:0 0 12px rgba(255,217,138,.35);}
-  .install-text{color:var(--ink-soft);font-size:.82rem;line-height:1.45;margin-bottom:.7rem;}
-  .install-actions{display:flex;gap:.5rem;align-items:center;}
-  .install-btn{
-    font-family:inherit;cursor:pointer;font-size:.86rem;font-weight:600;
-    padding:.5rem 1.1rem;border-radius:8px;color:#2a1c06;
-    background:linear-gradient(180deg, var(--fire), var(--fire-deep));
-    border:1px solid var(--fire-deep);
-    box-shadow:0 0 18px rgba(231,162,60,.45);transition:.2s;
-  }
-  .install-btn:hover{box-shadow:0 0 26px rgba(231,162,60,.7);transform:translateY(-1px);}
-  .install-later{
-    font-family:inherit;cursor:pointer;font-size:.82rem;
-    padding:.5rem .8rem;border-radius:8px;color:var(--ink-soft);
-    background:transparent;border:1px solid var(--line);transition:.2s;
-  }
-  .install-later:hover{color:var(--ink);border-color:var(--crystal-dim);}
-  .install-x{
-    position:absolute;top:8px;right:10px;
-    background:none;border:none;color:var(--ink-soft);
-    font-size:1.3rem;line-height:1;cursor:pointer;padding:2px 6px;
-  }
-  .install-x:hover{color:var(--fire);}
-  .ios-steps{margin:.2rem 0 0;color:var(--ink);font-size:.82rem;line-height:1.5;}
-  .ios-steps b{color:var(--fire);}
   footer .credit{
     margin-top:.7rem;font-size:.86rem;letter-spacing:.16em;
     text-transform:uppercase;color:var(--fire);
     text-shadow:0 0 14px rgba(255,217,138,.4);
   }
-  .install-foot{
-    display:inline-block;margin:.9rem .4rem 0;font-family:inherit;cursor:pointer;
-    font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
-    color:#2a1c06;background:linear-gradient(180deg,var(--fire),var(--fire-deep));
-    border:1px solid var(--fire-deep);border-radius:30px;
-    padding:.5rem 1.3rem;min-height:42px;
-    box-shadow:0 0 18px rgba(231,162,60,.4);transition:.25s;
-    -webkit-tap-highlight-color:transparent;touch-action:manipulation;
-  }
-  .install-foot:hover{box-shadow:0 0 28px rgba(231,162,60,.65);transform:translateY(-1px);}
   .credits-tap{
     margin-top:.9rem;font-family:inherit;cursor:pointer;
     font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;
@@ -549,8 +490,6 @@
     button.act#next{flex-basis:100%;}
     .seraph{width:54px;top:-22px;}
     .lamps{gap:clamp(14px,6vw,30px);}
-    /* Install pop-up sits above the home indicator */
-    .install-pop{bottom:calc(14px + env(safe-area-inset-bottom));width:94vw;}
   }
   /* Honour iOS notch / safe areas */
   @supports(padding:max(0px)){
@@ -560,9 +499,8 @@
   select{font-size:16px;}
   /* Smoother touch behaviour */
   .chip,button,select{ -webkit-tap-highlight-color:transparent; touch-action:manipulation; }
-  /* Bigger, easier tap target for the credits + install controls */
+  /* Bigger, easier tap target for the credits control */
   .credits-tap{min-height:40px;}
-  .install-btn,.install-later{min-height:42px;}
   /* Stability: no horizontal overflow, comfortable wrapping, no long-press flash */
   html,body{max-width:100%;overflow-x:hidden;}
   .passage{overflow-wrap:break-word;word-break:break-word;hyphens:auto;}
@@ -572,8 +510,6 @@
     h1{font-size:clamp(1.5rem,8.5vw,2.1rem);}
     .chip{padding:.55rem .7rem;font-size:.74rem;letter-spacing:.02em;}
     .reader{padding:1.7rem 1.05rem;}
-    .install-pop{padding:14px 12px;gap:10px;}
-    .install-icon img{width:38px;height:38px;}
   }
   /* Larger, steadier action buttons on touch devices */
   @media (hover:none){
@@ -699,22 +635,6 @@
     else if(ti===2) document.body.classList.add("theme-light");
   }catch(e){}
 </script>
-
-<!-- Install pop-up (shown when installable, or with iOS instructions) -->
-<div class="install-pop" id="installPop" role="dialog" aria-label="Install this app" hidden>
-  <button class="install-x" id="installClose" aria-label="Dismiss">&times;</button>
-  <div class="install-icon">
-    <img src="icon-192.png" alt="" width="46" height="46">
-  </div>
-  <div class="install-body">
-    <div class="install-title">Install Vision of the Heavens</div>
-    <div class="install-text" id="installText">Add it to your home screen to read fullscreen, even offline.</div>
-    <div class="install-actions">
-      <button class="install-btn" id="installBtn">Install</button>
-      <button class="install-later" id="installLater">Not now</button>
-    </div>
-  </div>
-</div>
 
 <div class="throne-bg" aria-hidden="true">
   <svg viewBox="0 0 760 760" xmlns="http://www.w3.org/2000/svg">
@@ -870,7 +790,15 @@
       </defs>
     </svg>
     <svg class="seraph seraph-r" viewBox="0 0 120 120" aria-hidden="true">
-      <g fill="none" stroke="url(#seraphGold)" stroke-width="2.4" stroke-linecap="round">
+      <defs>
+        <linearGradient id="seraphGoldR" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffe6a8"/><stop offset="100%" stop-color="#c9712d"/>
+        </linearGradient>
+        <radialGradient id="seraphHaloR" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fff6e2"/><stop offset="100%" stop-color="#e7a23c" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <g fill="none" stroke="url(#seraphGoldR)" stroke-width="2.4" stroke-linecap="round">
         <path d="M60 52 Q26 24 14 44 Q34 46 56 60"/>
         <path d="M60 52 Q94 24 106 44 Q86 46 64 60"/>
         <path d="M60 64 Q24 60 10 78 Q36 78 57 70"/>
@@ -878,7 +806,7 @@
         <path d="M60 74 Q40 92 44 112 Q56 96 60 84"/>
         <path d="M60 74 Q80 92 76 112 Q64 96 60 84"/>
       </g>
-      <circle cx="60" cy="58" r="7" fill="url(#seraphHalo)"/>
+      <circle cx="60" cy="58" r="7" fill="url(#seraphHaloR)"/>
     </svg>
 
     <section class="reader" aria-live="polite">
@@ -895,7 +823,7 @@
     <button class="act star" id="bookmark" aria-pressed="false" aria-label="Bookmark this verse" title="Bookmark">&#9734;</button>
   </div>
   <div class="actions">
-    <button class="act" id="seqToggle" aria-pressed="false">Read in order: off</button>
+    <button class="act" id="seqToggle" aria-pressed="true">Read in order: on</button>
     <button class="act" id="votd">Verse of the day</button>
     <button class="act" id="read">Read aloud</button>
     <button class="act" id="share">Copy / Share</button>
@@ -931,7 +859,6 @@
 
 <footer>
   <div id="label">A place to read.</div>
-  <button class="install-foot" id="installFoot">&#11015; Install app</button>
   <button class="credits-tap" id="creditsTap" aria-expanded="false" aria-controls="creditsPanel">
     <span class="credits-chevron" aria-hidden="true">&#9662;</span> Credits
   </button>
@@ -953,12 +880,12 @@ var SCRIPTURE = [
   {t:"old", ref:"Exodus 20:3", text:"You shall have no other gods before me."},
   {t:"old", ref:"Deuteronomy 6:5", text:"You shall love Yahweh your God with all your heart, with all your soul, and with all your might."},
   {t:"old", ref:"Joshua 1:9", text:"Be strong and courageous. Don\u2019t be afraid. Don\u2019t be dismayed, for Yahweh your God is with you wherever you go."},
-  {t:"old", ref:"Psalm 23:1", text:"Yahweh is my shepherd; I shall lack nothing."},
-  {t:"old", ref:"Psalm 23:4", text:"Even though I walk through the valley of the shadow of death, I will fear no evil, for you are with me."},
-  {t:"old", ref:"Psalm 27:1", text:"Yahweh is my light and my salvation. Whom shall I fear?"},
-  {t:"old", ref:"Psalm 46:1", text:"God is our refuge and strength, a very present help in trouble."},
-  {t:"old", ref:"Psalm 51:10", text:"Create in me a clean heart, O God. Renew a right spirit within me."},
-  {t:"old", ref:"Psalm 119:105", text:"Your word is a lamp to my feet, and a light for my path."},
+  {t:"old", ref:"Psalms 23:1", text:"Yahweh is my shepherd; I shall lack nothing."},
+  {t:"old", ref:"Psalms 23:4", text:"Even though I walk through the valley of the shadow of death, I will fear no evil, for you are with me."},
+  {t:"old", ref:"Psalms 27:1", text:"Yahweh is my light and my salvation. Whom shall I fear?"},
+  {t:"old", ref:"Psalms 46:1", text:"God is our refuge and strength, a very present help in trouble."},
+  {t:"old", ref:"Psalms 51:10", text:"Create in me a clean heart, O God. Renew a right spirit within me."},
+  {t:"old", ref:"Psalms 119:105", text:"Your word is a lamp to my feet, and a light for my path."},
   {t:"old", ref:"Proverbs 3:5", text:"Trust in Yahweh with all your heart, and don\u2019t lean on your own understanding."},
   {t:"old", ref:"Proverbs 18:10", text:"Yahweh\u2019s name is a strong tower: the righteous run to him, and are safe."},
   {t:"old", ref:"Isaiah 40:31", text:"Those who wait for Yahweh will renew their strength. They will mount up with wings like eagles."},
@@ -1176,7 +1103,7 @@ var fetchBusy = false;   // true while a chapter fetch is in flight
    Enoch & Jubilees are always bundled offline. */
 // [number, name, testament, chapterCount]
 var VERSE_COUNTS = {
-"Genesis":[31,25,24,26,32,22,24,22,29,32,32,20,18,24,21,16,27,33,38,18,34,24,20,67,34,35,28,32,22,33,26,20,29,22,35,43,23,24,33,27,38,18,34,24,20,67,34,35,28,32],
+"Genesis":[31,25,24,26,32,22,24,22,29,32,32,20,18,24,21,16,27,33,38,18,34,24,20,67,34,35,28,32,22,35,43,31,42,33,34,29,35,28,33,45,34,46,33,29,33,34,23,46,33,26],
 "Exodus":[22,25,22,31,23,30,25,32,35,29,10,51,22,31,27,36,16,27,25,26,36,31,33,18,40,37,21,43,46,38,18,35,23,35,35,38,29,31,43,38],
 "Leviticus":[17,16,17,35,19,30,38,36,24,20,47,8,59,57,33,34,16,30,37,27,24,33,44,23,55,46,34],
 "Numbers":[54,34,51,49,31,27,89,26,23,36,35,16,33,45,41,50,13,32,22,29,35,41,30,25,18,65,23,31,40,16,54,42,56,29,34,13],
@@ -1599,7 +1526,7 @@ function next(){
 }
 
 /* ---- Sequential reading: step verse by verse across the whole Bible ---- */
-var seqMode = false;
+var seqMode = true;
 function bookByNumber(n){ return BIBLE_BOOKS[n-1]; }
 function chapterVerseCount(bookName, chap){
   var c = VERSE_COUNTS[bookName];
@@ -1649,9 +1576,9 @@ function goToVerse(bookName, chap, verse, dir){
   }).catch(function(){ fetchBusy=false; showFetchError(function(){ goToVerse(bn,cn,vn,0); }); });
 }
 function seqStep(dir){
-  // Use the current verse as anchor; if none or non-Bible, start at John 1:1
+  // Use the current verse as anchor; if none or non-Bible, start at Genesis 1:1
   var anchor = current && current.ref && BOOK_BY_NAME[parseRef(current.ref).book]
-             ? parseRef(current.ref) : { book:"John", chap:1, verse: dir===1?0:1 };
+             ? parseRef(current.ref) : { book:"Genesis", chap:1, verse: dir===1?0:1 };
   goToVerse(anchor.book, anchor.chap, anchor.verse, dir);
 }
 
@@ -1932,7 +1859,15 @@ function saveLastRead(entry){
 }
 function resumeLastRead(){
   var last = lsGet("lastRead", null);
-  if (!last || !last.ref){ next(); return; }
+  if (!last || !last.ref){
+    // Fresh start: begin reading at the very beginning, Genesis 1:1
+    if (seqMode && filter!=="enoch" && filter!=="jubilees" && !isCollection(filter)){
+      goToVerse("Genesis", 1, 1, 0);
+    } else {
+      next();
+    }
+    return;
+  }
   var p = parseRef(last.ref);
   if (BOOK_BY_NAME[p.book]){
     setPassageLoading();
@@ -2093,7 +2028,7 @@ function openAbout(){
   $("sheetTitle").textContent = "About";
   $("sheetBody").innerHTML =
     '<div class="about-p"><b>The Vision of the Heavens</b> \u2014 read the whole Bible in a golden throne-room setting, with the Books of Enoch and Jubilees.</div>'+
-    '<div class="about-p"><b>Reading:</b> Tap <b>Next passage</b> for a random verse, or turn on <b>Read in order</b> to read straight through. Use <b>Prev</b> / swipe to move between verses. The app reopens to where you left off.</div>'+
+    '<div class="about-p"><b>Reading:</b> By default the app reads <b>in order</b> from Genesis to Revelation \u2014 tap <b>Next</b> or swipe left for the next verse, <b>Prev</b> or swipe right to go back. Turn off <b>Read in order</b> for a random verse each time. The app reopens where you left off.</div>'+
     '<div class="about-p"><b>Collections:</b> Tap the chips to explore themed passages \u2014 Vision of the Heavens, Comfort &amp; Peace, Faith &amp; Trust, Praise &amp; Worship.</div>'+
     '<div class="about-p"><b>Tools:</b> Bookmark verses with the \u2606 star, Search loaded text, Copy / Share a verse, and hear it read aloud.</div>'+
     '<div class="about-p"><b>Offline:</b> Tap <b>Download for offline use</b> to save the whole Bible to your device. Enoch &amp; Jubilees are always offline.</div>'+
@@ -2164,7 +2099,10 @@ function toggleAuto(){
     if (x0===null) return;
     var t=e.changedTouches[0], dx=t.clientX-x0, dy=t.clientY-y0;
     // horizontal swipe, not a vertical scroll
-    if (Math.abs(dx)>55 && Math.abs(dx)>Math.abs(dy)*1.6){ next(); }
+    if (Math.abs(dx)>55 && Math.abs(dx)>Math.abs(dy)*1.6){
+      if (dx < 0){ next(); }          // swipe left  -> next
+      else { goPrev(); }              // swipe right -> previous
+    }
     x0=y0=null;
   }, {passive:true});
 })();
@@ -2177,6 +2115,9 @@ for (var c=0;c<chips.length;c++){
     // press ripple
     var btn=this;
     btn.classList.remove("rippling"); void btn.offsetWidth; btn.classList.add("rippling");
+    btn.addEventListener("animationend", function clearRipple(ev){
+      if (ev.animationName === "ripple"){ btn.classList.remove("rippling"); btn.removeEventListener("animationend", clearRipple); }
+    });
     filter = this.getAttribute("data-t");
     refreshPicker(false);
     // re-trigger picker swap animation
@@ -2186,11 +2127,12 @@ for (var c=0;c<chips.length;c++){
   });
 }
 $("next").addEventListener("click", next);
-$("prev").addEventListener("click", function(){
+function goPrev(){
   if (seqMode || (current && current.ref && BOOK_BY_NAME[parseRef(current.ref).book])){
     seqStep(-1);
   } else { next(); }
-});
+}
+$("prev").addEventListener("click", goPrev);
 $("seqToggle").addEventListener("click", function(){
   seqMode = !seqMode;
   this.setAttribute("aria-pressed", seqMode ? "true":"false");
@@ -2232,13 +2174,13 @@ refreshOfflineLabel(); // show any previously cached chapters
 $("sheetClose").addEventListener("click", closeSheet);
 $("overlay").addEventListener("click", function(e){ if (e.target===this) closeSheet(); });
 document.addEventListener("keydown", function(e){ if (e.key==="Escape") closeSheet(); });
+closeSheet(); // ensure the overlay starts closed
 
-/* Restore "read in order" preference */
-if (lsGet("seqMode",0)===1){
-  seqMode = true;
-  $("seqToggle").setAttribute("aria-pressed","true");
-  $("seqToggle").textContent = "Read in order: on";
-}
+/* Restore "read in order" preference (defaults to ON) */
+var savedSeq = lsGet("seqMode", 1);   // default 1 = on
+seqMode = (savedSeq === 1);
+$("seqToggle").setAttribute("aria-pressed", seqMode ? "true" : "false");
+$("seqToggle").textContent = "Read in order: " + (seqMode ? "on" : "off");
 
 /* Show reading streak, and resume where we left off */
 showStreak();
@@ -2250,106 +2192,6 @@ if ("speechSynthesis" in window){
   setTimeout(populateVoices, 400);
 }
 
-/* Register the service worker so the app installs and works offline */
-if ("serviceWorker" in navigator){
-  window.addEventListener("load", function(){
-    navigator.serviceWorker.register("sw.js").then(function(reg){
-      console.log("[PWA] service worker registered, scope:", reg.scope);
-    }).catch(function(err){
-      console.warn("[PWA] service worker registration failed:", err);
-    });
-  });
-}
-
-/* ---- Install pop-up + manual install button ---- */
-/* Capture the install event as early as possible (it can fire before the
-   rest of the script runs), storing it globally. */
-var deferredInstall = null;
-window.addEventListener("beforeinstallprompt", function(e){
-  e.preventDefault();
-  deferredInstall = e;
-  window.__canInstall = true;
-});
-
-(function(){
-  var pop = $("installPop"), btn = $("installBtn"),
-      later = $("installLater"), closeX = $("installClose"),
-      txt = $("installText"), foot = $("installFoot");
-
-  function isStandalone(){
-    return window.matchMedia("(display-mode: standalone)").matches ||
-           window.navigator.standalone === true;
-  }
-  function isIOS(){
-    return /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
-  }
-  function dismissedRecently(){
-    try{
-      var t = localStorage.getItem("installDismissed");
-      return t && (Date.now() - (+t)) < 7*24*60*60*1000;
-    }catch(e){ return false; }
-  }
-  function remember(){ try{ localStorage.setItem("installDismissed", Date.now()); }catch(e){} }
-  function showPop(){ if(!pop) return; pop.hidden=false; requestAnimationFrame(function(){ pop.classList.add("show"); }); }
-  function hidePop(){ if(!pop) return; pop.classList.remove("show"); setTimeout(function(){ pop.hidden=true; },500); }
-
-  if (isStandalone() && foot) foot.style.display = "none";
-
-  function doInstall(){
-    if (deferredInstall){
-      deferredInstall.prompt();
-      deferredInstall.userChoice.finally(function(){ deferredInstall=null; hidePop(); });
-      return;
-    }
-    var html;
-    if (isIOS()){
-      html =
-        '<div class="about-p">On iPhone &amp; iPad, install from <b>Safari</b>:</div>'+
-        '<div class="about-p">1. Make sure you opened this in the <b>Safari</b> browser (not Chrome, and not a file preview).</div>'+
-        '<div class="about-p">2. Tap the <b>Share</b> button \u2014 the square with an arrow \u2191 at the bottom of Safari.</div>'+
-        '<div class="about-p">3. Scroll down and tap <b>\u201CAdd to Home Screen\u201D</b>.</div>'+
-        '<div class="about-p">4. Tap <b>Add</b>. The golden icon appears on your home screen.</div>'+
-        '<div class="sheet-note">If you don\u2019t see \u201CAdd to Home Screen,\u201D you\u2019re viewing the file instead of the live website. Open your github.io link in Safari first.</div>';
-    } else if (/android/i.test(navigator.userAgent)){
-      html =
-        '<div class="about-p">On Android, install from <b>Chrome</b>:</div>'+
-        '<div class="about-p">1. Make sure you\u2019re in the <b>Chrome</b> browser on your live website (the https:// link).</div>'+
-        '<div class="about-p">2. Tap the <b>\u22EE menu</b> (top-right).</div>'+
-        '<div class="about-p">3. Tap <b>\u201CInstall app\u201D</b> or <b>\u201CAdd to Home screen\u201D</b>.</div>'+
-        '<div class="about-p">4. Confirm <b>Install</b>.</div>'+
-        '<div class="sheet-note">If you don\u2019t see those options, the page may still be loading \u2014 wait a few seconds and try the menu again, or refresh the page.</div>';
-    } else {
-      html =
-        '<div class="about-p">On desktop, install from <b>Chrome</b> or <b>Edge</b>:</div>'+
-        '<div class="about-p">1. Look for the <b>install icon</b> (a screen with a \u2193) at the right of the address bar, and click it.</div>'+
-        '<div class="about-p">2. Or open the browser menu and choose <b>\u201CInstall The Vision of the Heavens\u201D</b>.</div>'+
-        '<div class="sheet-note">Make sure you\u2019re on the https:// website, not a local file. Firefox desktop doesn\u2019t support installing web apps.</div>';
-    }
-    hidePop();
-    if (typeof openInfo === "function") openInfo("Install the app", html);
-  }
-
-  if (foot) foot.addEventListener("click", doInstall);
-  if (btn) btn.addEventListener("click", doInstall);
-  if (later) later.addEventListener("click", function(){ remember(); hidePop(); });
-  if (closeX) closeX.addEventListener("click", function(){ remember(); hidePop(); });
-  window.addEventListener("appinstalled", function(){
-    remember(); hidePop(); if (foot) foot.style.display="none";
-  });
-
-  if (isStandalone() || dismissedRecently()) return;
-
-  if (deferredInstall || window.__canInstall){
-    setTimeout(showPop, 2500);
-  } else {
-    window.addEventListener("beforeinstallprompt", function(){ setTimeout(showPop, 2500); });
-  }
-  if (isIOS() && txt){
-    txt.innerHTML = 'Tap the <b>Share</b> button, then choose <b>\u201CAdd to Home Screen\u201D</b>.';
-    if (btn) btn.style.display = "none";
-    setTimeout(showPop, 2500);
-  }
-})();
 /* ---- Reading theme (Throne dark / Sepia / Light) ---- */
 (function(){
   var btn = $("themeBtn"), label = $("themeLabel");
