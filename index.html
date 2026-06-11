@@ -491,6 +491,16 @@
     text-transform:uppercase;color:var(--fire);
     text-shadow:0 0 14px rgba(255,217,138,.4);
   }
+  .install-foot{
+    display:inline-block;margin:.9rem .4rem 0;font-family:inherit;cursor:pointer;
+    font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+    color:#2a1c06;background:linear-gradient(180deg,var(--fire),var(--fire-deep));
+    border:1px solid var(--fire-deep);border-radius:30px;
+    padding:.5rem 1.3rem;min-height:42px;
+    box-shadow:0 0 18px rgba(231,162,60,.4);transition:.25s;
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  }
+  .install-foot:hover{box-shadow:0 0 28px rgba(231,162,60,.65);transform:translateY(-1px);}
   .credits-tap{
     margin-top:.9rem;font-family:inherit;cursor:pointer;
     font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;
@@ -921,6 +931,7 @@
 
 <footer>
   <div id="label">A place to read.</div>
+  <button class="install-foot" id="installFoot">&#11015; Install app</button>
   <button class="credits-tap" id="creditsTap" aria-expanded="false" aria-controls="creditsPanel">
     <span class="credits-chevron" aria-hidden="true">&#9662;</span> Credits
   </button>
@@ -1566,6 +1577,8 @@ function next(){
     while (R.length>1 && e.ref===prev);
     showHeavensEntry(e); return;
   }
+  // Sequential mode: step to the next verse in order instead of random
+  if (seqMode){ seqStep(1); return; }
   // Bible (all / old / new): random across the canonical books in scope
   if (fetchBusy) return;                 // ignore taps while a fetch is in flight
   var attempts = (arguments[0] && arguments[0].__n) || 0;
@@ -2093,6 +2106,11 @@ function openAbout(){
 /* ============ Overlay control ============ */
 function openSheet(){ $("overlay").hidden=false; }
 function closeSheet(){ $("overlay").hidden=true; }
+function openInfo(title, html){
+  $("sheetTitle").textContent = title;
+  $("sheetBody").innerHTML = html;
+  openSheet();
+}
 
 
 function read(){
@@ -2168,6 +2186,21 @@ for (var c=0;c<chips.length;c++){
   });
 }
 $("next").addEventListener("click", next);
+$("prev").addEventListener("click", function(){
+  if (seqMode || (current && current.ref && BOOK_BY_NAME[parseRef(current.ref).book])){
+    seqStep(-1);
+  } else { next(); }
+});
+$("seqToggle").addEventListener("click", function(){
+  seqMode = !seqMode;
+  this.setAttribute("aria-pressed", seqMode ? "true":"false");
+  this.textContent = "Read in order: " + (seqMode ? "on" : "off");
+  if (seqMode) lsSet("seqMode", 1); else lsSet("seqMode", 0);
+});
+$("bookmark").addEventListener("click", toggleBookmark);
+$("bookmarksBtn").addEventListener("click", openBookmarks);
+$("searchBtn").addEventListener("click", openSearch);
+$("aboutBtn").addEventListener("click", openAbout);
 $("read").addEventListener("click", read);
 $("votd").addEventListener("click", verseOfTheDay);
 $("share").addEventListener("click", shareVerse);
@@ -2195,6 +2228,22 @@ $("goto").addEventListener("click", gotoSelected);
 refreshPicker(false); // populate on load
 refreshOfflineLabel(); // show any previously cached chapters
 
+/* Overlay (Search / Bookmarks / About) close handlers */
+$("sheetClose").addEventListener("click", closeSheet);
+$("overlay").addEventListener("click", function(e){ if (e.target===this) closeSheet(); });
+document.addEventListener("keydown", function(e){ if (e.key==="Escape") closeSheet(); });
+
+/* Restore "read in order" preference */
+if (lsGet("seqMode",0)===1){
+  seqMode = true;
+  $("seqToggle").setAttribute("aria-pressed","true");
+  $("seqToggle").textContent = "Read in order: on";
+}
+
+/* Show reading streak, and resume where we left off */
+showStreak();
+resumeLastRead();
+
 if ("speechSynthesis" in window){
   speechSynthesis.onvoiceschanged = populateVoices;
   setTimeout(populateVoices, 0);
@@ -2204,16 +2253,28 @@ if ("speechSynthesis" in window){
 /* Register the service worker so the app installs and works offline */
 if ("serviceWorker" in navigator){
   window.addEventListener("load", function(){
-    navigator.serviceWorker.register("sw.js").catch(function(){ /* offline-first is optional */ });
+    navigator.serviceWorker.register("sw.js").then(function(reg){
+      console.log("[PWA] service worker registered, scope:", reg.scope);
+    }).catch(function(err){
+      console.warn("[PWA] service worker registration failed:", err);
+    });
   });
 }
 
-/* ---- Install pop-up ---- */
+/* ---- Install pop-up + manual install button ---- */
+/* Capture the install event as early as possible (it can fire before the
+   rest of the script runs), storing it globally. */
+var deferredInstall = null;
+window.addEventListener("beforeinstallprompt", function(e){
+  e.preventDefault();
+  deferredInstall = e;
+  window.__canInstall = true;
+});
+
 (function(){
   var pop = $("installPop"), btn = $("installBtn"),
       later = $("installLater"), closeX = $("installClose"),
-      txt = $("installText");
-  var deferred = null;
+      txt = $("installText"), foot = $("installFoot");
 
   function isStandalone(){
     return window.matchMedia("(display-mode: standalone)").matches ||
@@ -2225,53 +2286,69 @@ if ("serviceWorker" in navigator){
   function dismissedRecently(){
     try{
       var t = localStorage.getItem("installDismissed");
-      return t && (Date.now() - (+t)) < 7*24*60*60*1000; // 7 days
+      return t && (Date.now() - (+t)) < 7*24*60*60*1000;
     }catch(e){ return false; }
   }
-  function remember(){
-    try{ localStorage.setItem("installDismissed", Date.now()); }catch(e){}
-  }
-  function showPop(){
-    pop.hidden = false;
-    requestAnimationFrame(function(){ pop.classList.add("show"); });
-  }
-  function hidePop(){
-    pop.classList.remove("show");
-    setTimeout(function(){ pop.hidden = true; }, 500);
+  function remember(){ try{ localStorage.setItem("installDismissed", Date.now()); }catch(e){} }
+  function showPop(){ if(!pop) return; pop.hidden=false; requestAnimationFrame(function(){ pop.classList.add("show"); }); }
+  function hidePop(){ if(!pop) return; pop.classList.remove("show"); setTimeout(function(){ pop.hidden=true; },500); }
+
+  if (isStandalone() && foot) foot.style.display = "none";
+
+  function doInstall(){
+    if (deferredInstall){
+      deferredInstall.prompt();
+      deferredInstall.userChoice.finally(function(){ deferredInstall=null; hidePop(); });
+      return;
+    }
+    var html;
+    if (isIOS()){
+      html =
+        '<div class="about-p">On iPhone &amp; iPad, install from <b>Safari</b>:</div>'+
+        '<div class="about-p">1. Make sure you opened this in the <b>Safari</b> browser (not Chrome, and not a file preview).</div>'+
+        '<div class="about-p">2. Tap the <b>Share</b> button \u2014 the square with an arrow \u2191 at the bottom of Safari.</div>'+
+        '<div class="about-p">3. Scroll down and tap <b>\u201CAdd to Home Screen\u201D</b>.</div>'+
+        '<div class="about-p">4. Tap <b>Add</b>. The golden icon appears on your home screen.</div>'+
+        '<div class="sheet-note">If you don\u2019t see \u201CAdd to Home Screen,\u201D you\u2019re viewing the file instead of the live website. Open your github.io link in Safari first.</div>';
+    } else if (/android/i.test(navigator.userAgent)){
+      html =
+        '<div class="about-p">On Android, install from <b>Chrome</b>:</div>'+
+        '<div class="about-p">1. Make sure you\u2019re in the <b>Chrome</b> browser on your live website (the https:// link).</div>'+
+        '<div class="about-p">2. Tap the <b>\u22EE menu</b> (top-right).</div>'+
+        '<div class="about-p">3. Tap <b>\u201CInstall app\u201D</b> or <b>\u201CAdd to Home screen\u201D</b>.</div>'+
+        '<div class="about-p">4. Confirm <b>Install</b>.</div>'+
+        '<div class="sheet-note">If you don\u2019t see those options, the page may still be loading \u2014 wait a few seconds and try the menu again, or refresh the page.</div>';
+    } else {
+      html =
+        '<div class="about-p">On desktop, install from <b>Chrome</b> or <b>Edge</b>:</div>'+
+        '<div class="about-p">1. Look for the <b>install icon</b> (a screen with a \u2193) at the right of the address bar, and click it.</div>'+
+        '<div class="about-p">2. Or open the browser menu and choose <b>\u201CInstall The Vision of the Heavens\u201D</b>.</div>'+
+        '<div class="sheet-note">Make sure you\u2019re on the https:// website, not a local file. Firefox desktop doesn\u2019t support installing web apps.</div>';
+    }
+    hidePop();
+    if (typeof openInfo === "function") openInfo("Install the app", html);
   }
 
-  // Already installed, or dismissed recently → do nothing
+  if (foot) foot.addEventListener("click", doInstall);
+  if (btn) btn.addEventListener("click", doInstall);
+  if (later) later.addEventListener("click", function(){ remember(); hidePop(); });
+  if (closeX) closeX.addEventListener("click", function(){ remember(); hidePop(); });
+  window.addEventListener("appinstalled", function(){
+    remember(); hidePop(); if (foot) foot.style.display="none";
+  });
+
   if (isStandalone() || dismissedRecently()) return;
 
-  // Android / Chrome / Edge: real install prompt
-  window.addEventListener("beforeinstallprompt", function(e){
-    e.preventDefault();
-    deferred = e;
-    setTimeout(showPop, 2500); // let the heavens load in first
-  });
-
-  btn.addEventListener("click", function(){
-    if (deferred){
-      deferred.prompt();
-      deferred.userChoice.finally(function(){ deferred = null; hidePop(); });
-    } else {
-      hidePop();
-    }
-  });
-
-  // iOS Safari: no auto prompt — show manual instructions instead
-  if (isIOS() && !isStandalone()){
-    txt.innerHTML = 'Tap the <b>Share</b> button below, then choose ' +
-                    '<b>\u201CAdd to Home Screen\u201D</b> to install.';
-    btn.style.display = "none";
+  if (deferredInstall || window.__canInstall){
+    setTimeout(showPop, 2500);
+  } else {
+    window.addEventListener("beforeinstallprompt", function(){ setTimeout(showPop, 2500); });
+  }
+  if (isIOS() && txt){
+    txt.innerHTML = 'Tap the <b>Share</b> button, then choose <b>\u201CAdd to Home Screen\u201D</b>.';
+    if (btn) btn.style.display = "none";
     setTimeout(showPop, 2500);
   }
-
-  later.addEventListener("click", function(){ remember(); hidePop(); });
-  closeX.addEventListener("click", function(){ remember(); hidePop(); });
-
-  // Confirm installation
-  window.addEventListener("appinstalled", function(){ remember(); hidePop(); });
 })();
 /* ---- Reading theme (Throne dark / Sepia / Light) ---- */
 (function(){
