@@ -338,11 +338,74 @@
     text-shadow:0 1px 20px rgba(201,161,78,.25);
   }
   .hint{color:var(--ink-soft);font-style:italic;font-size:1.12rem;line-height:1.7;}
+  .retry-btn{
+    margin-top:.9rem;font-family:inherit;cursor:pointer;font-size:.9rem;
+    padding:.55rem 1.3rem;border-radius:8px;color:#2a1c06;font-weight:600;
+    background:linear-gradient(180deg, var(--fire), var(--fire-deep));
+    border:1px solid var(--fire-deep);box-shadow:0 0 18px rgba(231,162,60,.4);
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  }
+  .retry-btn:hover{box-shadow:0 0 26px rgba(231,162,60,.65);}
 
   .actions{
     display:flex;gap:.7rem;flex-wrap:wrap;justify-content:center;margin-top:2rem;
     animation:riseIn .7s 2.95s both cubic-bezier(.2,.7,.2,1);
   }
+  .nav-row{margin-top:1.6rem;align-items:center;}
+  .act.star{
+    font-size:1.2rem;line-height:1;padding:.6rem .9rem;min-width:48px;
+    color:var(--fire);
+  }
+  .act.star[aria-pressed="true"]{
+    background:linear-gradient(180deg, rgba(255,217,138,.3), rgba(231,162,60,.18));
+    border-color:var(--fire-deep);
+  }
+  .streak{
+    text-align:center;color:var(--fire);font-size:.8rem;letter-spacing:.04em;
+    margin-top:.9rem;min-height:1.1em;opacity:.9;
+  }
+  /* Overlay panels (Search / Bookmarks / About) */
+  .overlay{
+    position:fixed;inset:0;z-index:60;display:flex;align-items:flex-end;
+    justify-content:center;background:rgba(6,4,1,.62);backdrop-filter:blur(3px);
+    animation:fadeIn .25s ease both;
+  }
+  .sheet{
+    position:relative;width:min(560px,100%);max-height:82vh;overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    background:linear-gradient(180deg, rgba(40,28,9,.99), rgba(20,13,3,.99));
+    border:1px solid var(--line-bright);border-bottom:none;
+    border-radius:18px 18px 0 0;padding:22px 20px calc(22px + env(safe-area-inset-bottom));
+    box-shadow:0 -16px 50px -12px rgba(0,0,0,.7), 0 0 30px rgba(231,162,60,.2);
+    animation:sheetUp .35s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes sheetUp{from{transform:translateY(100%)}to{transform:none}}
+  .sheet-x{position:absolute;top:12px;right:14px;background:none;border:none;
+    color:var(--ink-soft);font-size:1.5rem;line-height:1;cursor:pointer;padding:4px 8px;}
+  .sheet-x:hover{color:var(--fire);}
+  .sheet-title{color:var(--fire);font-size:1.1rem;letter-spacing:.04em;
+    margin-bottom:1rem;text-shadow:0 0 12px rgba(255,217,138,.35);}
+  .sheet-body{color:var(--ink);font-size:.92rem;line-height:1.6;}
+  .sheet-input{
+    width:100%;font-family:inherit;font-size:16px;color:var(--ink);
+    background:rgba(7,11,31,.5);border:1px solid var(--line);border-radius:8px;
+    padding:.7rem .9rem;margin-bottom:1rem;
+  }
+  .result-item, .bm-item{
+    display:flex;justify-content:space-between;align-items:center;gap:.7rem;
+    padding:.7rem .2rem;border-bottom:1px solid var(--line);cursor:pointer;
+  }
+  .result-item:hover,.bm-item:hover{color:var(--fire);}
+  .result-ref,.bm-ref{color:var(--fire);font-variant:small-caps;letter-spacing:.06em;
+    white-space:nowrap;}
+  .result-text,.bm-text{color:var(--ink-soft);font-size:.84rem;flex:1;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .bm-del{background:none;border:none;color:var(--ink-soft);cursor:pointer;
+    font-size:1.1rem;padding:0 .3rem;}
+  .bm-del:hover{color:#e7733c;}
+  .sheet-note{color:var(--ink-soft);font-size:.82rem;font-style:italic;margin-top:.8rem;}
+  .about-p{margin-bottom:.8rem;}
+  .about-p b{color:var(--fire);}
   .offlineinfo{
     text-align:center;color:var(--ink-soft);font-size:.78rem;
     margin-top:.9rem;font-style:italic;letter-spacing:.02em;min-height:1.1em;
@@ -490,6 +553,23 @@
   /* Bigger, easier tap target for the credits + install controls */
   .credits-tap{min-height:40px;}
   .install-btn,.install-later{min-height:42px;}
+  /* Stability: no horizontal overflow, comfortable wrapping, no long-press flash */
+  html,body{max-width:100%;overflow-x:hidden;}
+  .passage{overflow-wrap:break-word;word-break:break-word;hyphens:auto;}
+  .ref{overflow-wrap:break-word;}
+  /* Very small phones */
+  @media (max-width:380px){
+    h1{font-size:clamp(1.5rem,8.5vw,2.1rem);}
+    .chip{padding:.55rem .7rem;font-size:.74rem;letter-spacing:.02em;}
+    .reader{padding:1.7rem 1.05rem;}
+    .install-pop{padding:14px 12px;gap:10px;}
+    .install-icon img{width:38px;height:38px;}
+  }
+  /* Larger, steadier action buttons on touch devices */
+  @media (hover:none){
+    button.act{min-height:48px;}
+    .picker #goto{min-height:48px;}
+  }
 
   @media (prefers-reduced-motion:reduce){
     *{animation:none!important;transition-duration:.001ms!important}
@@ -503,9 +583,112 @@
     .passage,.ref{opacity:1!important;transform:none!important;filter:none!important;width:auto}
     .rule{width:120px}
   }
+
+  /* Manual "reduce motion" toggle for older / slower phones — same effect */
+  body.no-anim *{animation:none!important;transition-duration:.001ms!important}
+  body.no-anim::before{opacity:.85!important}
+  body.no-anim::after{opacity:1!important;transform:none!important}
+  body.no-anim .throne-bg{opacity:.5!important;transform:none!important}
+  body.no-anim .reader-frame::before,
+  body.no-anim .lamp,
+  body.no-anim .seraph{animation:none!important;opacity:1!important;transform:none!important}
+  body.no-anim .seraph-r{transform:scaleX(-1)!important}
+  body.no-anim .eyebrow,body.no-anim h1,body.no-anim .subtitle,body.no-anim .rule,
+  body.no-anim .seg,body.no-anim .selrow,body.no-anim .picker,body.no-anim .reader,
+  body.no-anim .actions,body.no-anim .passage,body.no-anim .ref{
+    opacity:1!important;transform:none!important;filter:none!important;width:auto}
+  body.no-anim .rule{width:120px}
+  /* Settings control */
+  .settings-row{
+    display:flex;justify-content:center;margin-top:1.1rem;
+  }
+  .anim-toggle{
+    display:inline-flex;align-items:center;gap:.6rem;cursor:pointer;
+    font-size:.8rem;letter-spacing:.04em;color:var(--ink-soft);
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+    user-select:none;
+  }
+  .anim-toggle .track{
+    width:42px;height:24px;border-radius:14px;position:relative;
+    background:rgba(231,200,120,.18);border:1px solid var(--line);
+    transition:background .25s,border-color .25s;flex:none;
+  }
+  .anim-toggle .knob{
+    position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;
+    background:linear-gradient(180deg,#fff6e2,#e7a23c);
+    box-shadow:0 0 8px rgba(255,217,138,.6);
+    transition:transform .25s cubic-bezier(.2,.8,.2,1);
+  }
+  .anim-toggle.on .track{background:rgba(231,162,60,.4);border-color:var(--fire-deep);}
+  .anim-toggle.on .knob{transform:translateX(18px);}
+
+  .settings-row{flex-wrap:wrap;gap:1rem 1.4rem;}
+  .theme-btn{
+    font-family:inherit;cursor:pointer;font-size:.8rem;letter-spacing:.04em;
+    color:var(--ink-soft);background:transparent;border:1px solid var(--line);
+    border-radius:30px;padding:.42rem 1.1rem;transition:.25s;
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation;min-height:40px;
+  }
+  .theme-btn:hover{color:var(--fire);border-color:var(--crystal-dim);}
+
+  /* ===== Sepia reading theme (warm, easy daytime) ===== */
+  body.theme-sepia{
+    --night:#e9dcc0; --night-2:#f0e6cf; --abyss:#ddcba6;
+    --crystal:#7a5a22; --crystal-dim:#9c7a35;
+    --ink:#3a2c12; --ink-soft:#6e5a32;
+    --line:rgba(120,86,30,.28); --line-bright:rgba(120,86,30,.45);
+    background:
+      radial-gradient(1100px 800px at 50% 38%, rgba(214,178,110,.5) 0%, rgba(224,205,165,.3) 40%, #e9dcc0 75%, #ddcba6 100%);
+  }
+  body.theme-sepia .reader{
+    background:linear-gradient(180deg, rgba(252,246,230,.96), rgba(244,233,205,.97));
+    border-color:rgba(120,86,30,.4);
+  }
+  body.theme-sepia .passage{color:#3a2c12;text-shadow:none;}
+  body.theme-sepia .ref{color:#8a5a18;text-shadow:none;}
+  body.theme-sepia .reader-frame::before{filter:drop-shadow(0 0 10px rgba(180,140,70,.4));}
+  body.theme-sepia select{background:#f3e8cf;color:#3a2c12;}
+  body.theme-sepia select option{background:#f3e8cf;color:#3a2c12;}
+  body.theme-sepia h1{color:#5a3d12;text-shadow:none;}
+
+  /* ===== Light theme (clean, high-contrast) ===== */
+  body.theme-light{
+    --night:#f4f1ea; --night-2:#faf8f3; --abyss:#e8e3d8;
+    --crystal:#8a6d2e; --crystal-dim:#a8884a;
+    --ink:#2a2418; --ink-soft:#6a6354;
+    --line:rgba(120,100,60,.26); --line-bright:rgba(150,120,60,.42);
+    background:
+      radial-gradient(1100px 800px at 50% 36%, rgba(240,228,196,.6) 0%, #f7f4ee 55%, #ece6da 100%);
+  }
+  body.theme-light .reader{
+    background:linear-gradient(180deg, #ffffff, #f6f2e8);
+    border-color:rgba(150,120,60,.4);
+    box-shadow:0 14px 40px -16px rgba(80,60,20,.25), inset 0 0 0 1px rgba(180,150,90,.12);
+  }
+  body.theme-light .passage{color:#2a2418;text-shadow:none;}
+  body.theme-light .ref{color:#9a6a1a;text-shadow:none;}
+  body.theme-light h1{color:#6a4d1a;text-shadow:none;}
+  body.theme-light select{background:#fbf8f1;color:#2a2418;}
+  body.theme-light select option{background:#fbf8f1;color:#2a2418;}
+  body.theme-light .reader-frame::before{filter:drop-shadow(0 0 8px rgba(200,170,100,.4));}
+  /* On light themes, dim the heavy star/throne glow so text stays crisp */
+  body.theme-sepia .throne-bg,body.theme-light .throne-bg{opacity:.32;}
+  body.theme-sepia::before,body.theme-light::before{opacity:.35;}
 </style>
 </head>
 <body>
+<script>
+  /* Apply saved "animations off" preference before paint, so older phones
+     never flash the intro animation. */
+  try{
+    if(localStorage.getItem("animOff")==="1"){
+      (document.body||document.documentElement).classList.add("no-anim");
+    }
+    var ti=parseInt(localStorage.getItem("themeIndex"),10);
+    if(ti===1) document.body.classList.add("theme-sepia");
+    else if(ti===2) document.body.classList.add("theme-light");
+  }catch(e){}
+</script>
 
 <!-- Install pop-up (shown when installable, or with iOS instructions) -->
 <div class="install-pop" id="installPop" role="dialog" aria-label="Install this app" hidden>
@@ -602,6 +785,9 @@
       <button class="chip" data-t="enoch" aria-pressed="false">Enoch</button>
       <button class="chip" data-t="jubilees" aria-pressed="false">Jubilees</button>
       <button class="chip" data-t="heavens" aria-pressed="false">Vision of the Heavens</button>
+      <button class="chip" data-t="comfort" aria-pressed="false">Comfort &amp; Peace</button>
+      <button class="chip" data-t="faith" aria-pressed="false">Faith &amp; Trust</button>
+      <button class="chip" data-t="praise" aria-pressed="false">Praise &amp; Worship</button>
     </div>
   </div>
 
@@ -693,16 +879,45 @@
     </section>
   </div>
 
-  <div class="actions">
+  <div class="actions nav-row">
+    <button class="act" id="prev" aria-label="Previous verse">&#8592; Prev</button>
     <button class="act primary" id="next">Next passage</button>
+    <button class="act star" id="bookmark" aria-pressed="false" aria-label="Bookmark this verse" title="Bookmark">&#9734;</button>
+  </div>
+  <div class="actions">
+    <button class="act" id="seqToggle" aria-pressed="false">Read in order: off</button>
+    <button class="act" id="votd">Verse of the day</button>
     <button class="act" id="read">Read aloud</button>
+    <button class="act" id="share">Copy / Share</button>
+    <button class="act" id="searchBtn">Search</button>
+    <button class="act" id="bookmarksBtn">Bookmarks</button>
     <button class="act" id="autoplay" aria-pressed="false">Auto-advance: off</button>
     <button class="act" id="download" aria-pressed="false">Download for offline use</button>
     <button class="act" id="loadfile">Load Bible from file</button>
+    <button class="act" id="aboutBtn">About</button>
     <input type="file" id="fileinput" accept=".json,application/json" style="display:none">
   </div>
+  <div class="streak" id="streak"></div>
   <p class="offlineinfo" id="offlineinfo"></p>
+  <div class="settings-row">
+    <button class="anim-toggle" id="animToggle" role="switch" aria-checked="true" aria-label="Background animations">
+      <span class="track"><span class="knob"></span></span>
+      <span id="animLabel">Background animations: on</span>
+    </button>
+    <button class="theme-btn" id="themeBtn" aria-label="Change reading theme">
+      <span aria-hidden="true">&#9728;</span> <span id="themeLabel">Theme: Throne (dark)</span>
+    </button>
+  </div>
 </main>
+
+<!-- Overlay panels -->
+<div class="overlay" id="overlay" hidden>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true">
+    <button class="sheet-x" id="sheetClose" aria-label="Close">&times;</button>
+    <div class="sheet-title" id="sheetTitle"></div>
+    <div class="sheet-body" id="sheetBody"></div>
+  </div>
+</div>
 
 <footer>
   <div id="label">A place to read.</div>
@@ -873,6 +1088,67 @@ var HEAVENS_REFS = [
   { ref:"Revelation 22:5", theme:"The Lord gives them light" }
 ];
 
+/* ===== More themed collections ===== */
+var COMFORT_REFS = [
+  { ref:"Psalms 23:4",      theme:"Through the valley" },
+  { ref:"Psalms 34:18",     theme:"Near to the broken-hearted" },
+  { ref:"Psalms 46:1",      theme:"A very present help" },
+  { ref:"Psalms 147:3",     theme:"He heals the broken-hearted" },
+  { ref:"Isaiah 41:10",     theme:"Do not fear, I am with you" },
+  { ref:"Isaiah 43:2",      theme:"Through the waters" },
+  { ref:"Matthew 11:28",    theme:"Come to me, and rest" },
+  { ref:"John 14:27",       theme:"My peace I give to you" },
+  { ref:"John 16:33",       theme:"Take heart, I have overcome" },
+  { ref:"Romans 8:28",      theme:"All things work for good" },
+  { ref:"2 Corinthians 1:3",theme:"The God of all comfort" },
+  { ref:"Philippians 4:6",  theme:"Do not be anxious" },
+  { ref:"Philippians 4:7",  theme:"The peace that guards" },
+  { ref:"1 Peter 5:7",      theme:"Cast your cares on Him" },
+  { ref:"Revelation 21:4",  theme:"He wipes every tear" }
+];
+var FAITH_REFS = [
+  { ref:"Proverbs 3:5",     theme:"Trust with all your heart" },
+  { ref:"Proverbs 3:6",     theme:"He makes your paths straight" },
+  { ref:"Habakkuk 2:4",     theme:"The righteous live by faith" },
+  { ref:"Matthew 17:20",    theme:"Faith like a mustard seed" },
+  { ref:"Matthew 21:22",    theme:"Whatever you ask, believing" },
+  { ref:"Mark 9:23",        theme:"All things are possible" },
+  { ref:"Mark 11:24",       theme:"Believe you have received" },
+  { ref:"Romans 10:17",     theme:"Faith comes by hearing" },
+  { ref:"2 Corinthians 5:7",theme:"We walk by faith" },
+  { ref:"Ephesians 2:8",    theme:"By grace, through faith" },
+  { ref:"Hebrews 11:1",     theme:"The substance of things hoped for" },
+  { ref:"Hebrews 11:6",     theme:"Without faith, impossible to please" },
+  { ref:"James 1:6",        theme:"Ask in faith, no doubting" },
+  { ref:"1 John 5:4",       theme:"Faith overcomes the world" }
+];
+var PRAISE_REFS = [
+  { ref:"1 Chronicles 16:34",theme:"Give thanks, He is good" },
+  { ref:"Psalms 9:1",       theme:"I will give thanks" },
+  { ref:"Psalms 95:1",      theme:"Sing for joy to the Lord" },
+  { ref:"Psalms 100:4",     theme:"Enter His gates with thanks" },
+  { ref:"Psalms 103:1",     theme:"Bless the Lord, O my soul" },
+  { ref:"Psalms 145:3",     theme:"Great is the Lord" },
+  { ref:"Psalms 150:6",     theme:"Let everything praise Him" },
+  { ref:"Isaiah 12:2",      theme:"The Lord is my strength and song" },
+  { ref:"Luke 1:46",        theme:"My soul magnifies the Lord" },
+  { ref:"Ephesians 5:19",   theme:"Singing and making melody" },
+  { ref:"Philippians 4:4",  theme:"Rejoice in the Lord always" },
+  { ref:"1 Thessalonians 5:18", theme:"Give thanks in everything" },
+  { ref:"Hebrews 13:15",    theme:"A sacrifice of praise" },
+  { ref:"Revelation 5:13",  theme:"Every creature gives praise" }
+];
+
+/* Registry: maps a filter key to its collection + display name */
+var COLLECTIONS = {
+  heavens:  { name:"Vision of the Heavens", refs:HEAVENS_REFS },
+  comfort:  { name:"Comfort & Peace",       refs:COMFORT_REFS },
+  faith:    { name:"Faith & Trust",         refs:FAITH_REFS },
+  praise:   { name:"Praise & Worship",      refs:PRAISE_REFS }
+};
+function isCollection(f){ return !!COLLECTIONS[f]; }
+function collectionRefs(){ return COLLECTIONS[filter] ? COLLECTIONS[filter].refs : HEAVENS_REFS; }
+
 var $ = function(id){ return document.getElementById(id); };
 var filter = "all";
 var lang = "en";
@@ -880,6 +1156,7 @@ var current = null;
 var chosenVoiceURI = "auto";
 var autoOn = false;
 var autoTimer = null;
+var fetchBusy = false;   // true while a chapter fetch is in flight
 
 /* ===== Full World English Bible, fetched on demand =====
    Two public-domain sources (primary + fallback). Chapters are cached in
@@ -1236,6 +1513,9 @@ function show(entry){
     passage.classList.remove("verse-enter"); void passage.offsetWidth; passage.classList.add("verse-enter");
     refEl.classList.remove("ref-enter"); void refEl.offsetWidth; refEl.classList.add("ref-enter");
     if (autoOn) scheduleAuto();
+    saveLastRead(current);     // continue-where-I-left-off
+    updateBookmarkStar();      // reflect saved state
+    markReadToday();           // reading streak
   }
 
   // Crossfade: if real content is showing, fade it out first, then render.
@@ -1257,13 +1537,14 @@ function showHeavensEntry(entry){
   var p = parseRef(entry.ref);
   var b = BOOK_BY_NAME[p.book];
   var t = b ? b[2] : "new";
+  var retry = function(){ showHeavensEntry(entry); };
   setPassageLoading();
   // Themed label appears with the reference
   fetchChapter(p.book, p.chap).then(function(verses){
     var v = verses.filter(function(x){ return x.verse===p.verse; })[0];
-    if (!v){ showFetchError(); return; }
+    if (!v){ showFetchError(retry); return; }
     show({ t:t, ref:entry.ref, text:v.text, theme:entry.theme });
-  }).catch(showFetchError);
+  }).catch(function(){ showFetchError(retry); });
 }
 
 /* ---- Random "Next passage" ----
@@ -1271,32 +1552,94 @@ function showHeavensEntry(entry){
    For Enoch/Jubilees, use the curated offline pool.
    For Heavens, pick a random themed reference and fetch its text. */
 function next(){
+  // Stop any in-progress narration when moving on
+  if ("speechSynthesis" in window) speechSynthesis.cancel();
   if (filter==="enoch" || filter==="jubilees"){
     var p = pool(), choice;
     do { choice = p[Math.floor(Math.random()*p.length)]; }
     while (p.length>1 && choice===current);
     show(choice); return;
   }
-  if (filter==="heavens"){
-    var e, prev = current && current.ref;
-    do { e = HEAVENS_REFS[Math.floor(Math.random()*HEAVENS_REFS.length)]; }
-    while (HEAVENS_REFS.length>1 && e.ref===prev);
+  if (isCollection(filter)){
+    var R = collectionRefs(), e, prev = current && current.ref;
+    do { e = R[Math.floor(Math.random()*R.length)]; }
+    while (R.length>1 && e.ref===prev);
     showHeavensEntry(e); return;
   }
   // Bible (all / old / new): random across the canonical books in scope
+  if (fetchBusy) return;                 // ignore taps while a fetch is in flight
   var attempts = (arguments[0] && arguments[0].__n) || 0;
   var books = bibleBooksInScope();
   var b = rand(books);
   var chap = 1 + Math.floor(Math.random()*b[3]);
   setPassageLoading();
+  fetchBusy = true;
   fetchChapter(b[1], chap).then(function(verses){
+    fetchBusy = false;
     if (!verses.length){
-      if (attempts < 6){ next({__n:attempts+1}); } else { showFetchError(); }
+      if (attempts < 6){ next({__n:attempts+1}); } else { showFetchError(next); }
       return;
     }
     var v = verses[Math.floor(Math.random()*verses.length)];
     show({ t:b[2], ref:b[1]+" "+chap+":"+v.verse, text:v.text });
-  }).catch(showFetchError);
+  }).catch(function(){ fetchBusy = false; showFetchError(next); });
+}
+
+/* ---- Sequential reading: step verse by verse across the whole Bible ---- */
+var seqMode = false;
+function bookByNumber(n){ return BIBLE_BOOKS[n-1]; }
+function chapterVerseCount(bookName, chap){
+  var c = VERSE_COUNTS[bookName];
+  return (c && c[chap-1]) ? c[chap-1] : null;
+}
+function goToVerse(bookName, chap, verse, dir){
+  // Resolve a target, stepping across boundaries when needed.
+  var b = BOOK_BY_NAME[bookName];
+  if (!b) return;
+  var num = b[0];
+  var vmax = chapterVerseCount(bookName, chap);
+
+  if (dir === 1){
+    verse++;
+    if (vmax && verse > vmax){               // past end of chapter
+      verse = 1; chap++;
+      if (chap > b[3]){                       // past end of book
+        chap = 1; num++;
+        if (num > BIBLE_BOOKS.length) num = 1; // wrap Genesis after Revelation
+        bookName = bookByNumber(num)[1];
+      } else { bookName = b[1]; }
+    }
+  } else if (dir === -1){
+    verse--;
+    if (verse < 1){                           // before start of chapter
+      chap--;
+      if (chap < 1){                          // before start of book
+        num--;
+        if (num < 1) num = BIBLE_BOOKS.length;
+        bookName = bookByNumber(num)[1];
+        chap = bookByNumber(num)[3];
+      } else { bookName = b[1]; }
+      verse = chapterVerseCount(bookName, chap) || 1;
+    }
+  }
+
+  if (fetchBusy) return;
+  setPassageLoading();
+  fetchBusy = true;
+  var bn = bookName, cn = chap, vn = verse;
+  fetchChapter(bn, cn).then(function(verses){
+    fetchBusy = false;
+    var v = verses.filter(function(x){ return x.verse===vn; })[0] || verses[0];
+    if (!v){ showFetchError(function(){ goToVerse(bn,cn,vn,0); }); return; }
+    var bb = BOOK_BY_NAME[bn];
+    show({ t: bb?bb[2]:"new", ref: bn+" "+cn+":"+v.verse, text:v.text });
+  }).catch(function(){ fetchBusy=false; showFetchError(function(){ goToVerse(bn,cn,vn,0); }); });
+}
+function seqStep(dir){
+  // Use the current verse as anchor; if none or non-Bible, start at John 1:1
+  var anchor = current && current.ref && BOOK_BY_NAME[parseRef(current.ref).book]
+             ? parseRef(current.ref) : { book:"John", chap:1, verse: dir===1?0:1 };
+  goToVerse(anchor.book, anchor.chap, anchor.verse, dir);
 }
 
 function bibleBooksInScope(){
@@ -1346,9 +1689,9 @@ function curatedVerses(book,chap){
 
 function refreshPicker(keepBook){
   var bsel=$("booksel"), books, want;
-  if (filter==="heavens"){
+  if (isCollection(filter)){
     // Book dropdown becomes the themed-passage chooser
-    var items = HEAVENS_REFS.map(function(e){ return { v:e.ref, t:e.theme+"  ("+e.ref+")" }; });
+    var items = collectionRefs().map(function(e){ return { v:e.ref, t:e.theme+"  ("+e.ref+")" }; });
     var prev = bsel.value;
     fill(bsel, items, null);
     if (keepBook && [].some.call(bsel.options,function(o){return o.value===prev;})) bsel.value = prev;
@@ -1374,7 +1717,7 @@ function setHeavensPickerMode(on){
   v.style.display = on ? "none" : "";
 }
 function refreshChapters(){
-  if (filter==="heavens") return; // book dropdown is the full chooser
+  if (isCollection(filter)) return; // book dropdown is the full chooser
   var book=$("booksel").value, csel=$("chapsel");
   if (filter==="enoch" || filter==="jubilees"){
     var chaps=curatedChapters(book);
@@ -1400,10 +1743,10 @@ function refreshVerses(){
   fill(vsel, arr, null);
 }
 function gotoSelected(){
-  if (filter==="heavens"){
-    var ref = $("booksel").value;
-    for (var i=0;i<HEAVENS_REFS.length;i++){
-      if (HEAVENS_REFS[i].ref===ref){ showHeavensEntry(HEAVENS_REFS[i]); return; }
+  if (isCollection(filter)){
+    var ref = $("booksel").value, R = collectionRefs();
+    for (var i=0;i<R.length;i++){
+      if (R[i].ref===ref){ showHeavensEntry(R[i]); return; }
     }
     return;
   }
@@ -1416,13 +1759,14 @@ function gotoSelected(){
     return;
   }
   setPassageLoading();
+  var retry = function(){ gotoSelected(); };
   fetchChapter(book, parseInt(chap,10)).then(function(verses){
     var want = parseInt(verse,10);
     var v = verses.filter(function(x){ return x.verse===want; })[0] || verses[0];
-    if (!v){ showFetchError(); return; }
+    if (!v){ showFetchError(retry); return; }
     var b = BOOK_BY_NAME[book];
     show({ t:b?b[2]:"new", ref:book+" "+chap+":"+v.verse, text:v.text });
-  }).catch(showFetchError);
+  }).catch(function(){ showFetchError(retry); });
 }
 
 function setPassageLoading(){
@@ -1433,13 +1777,24 @@ function setPassageLoading(){
   p.classList.add("loading-pulse");
   setTimeout(function(){ p.classList.remove("loading-pulse"); }, 1200);
 }
-function showFetchError(){
+function showFetchError(retryFn){
   var p=$("passage"); p.classList.add("hint");
   $("ref").textContent="";
   p.textContent = "Couldn\u2019t load scripture from the web" +
-    (lastFetchError ? " (" + lastFetchError + ")" : "") +
-    ". If you\u2019re viewing this inside a preview, save the file and open it in your browser. " +
-    "Or use \u201CLoad Bible from file\u201D below for full offline reading. Enoch and Jubilees work offline now.";
+    (lastFetchError ? " (" + lastFetchError + ")" : "") + ". ";
+  if (navigator.onLine === false){
+    p.textContent = "You appear to be offline. Enoch and Jubilees still work, " +
+      "and any chapters you\u2019ve already opened are saved. ";
+  }
+  // Append a retry button if a retry function was given
+  if (typeof retryFn === "function"){
+    var btn = document.createElement("button");
+    btn.className = "retry-btn";
+    btn.textContent = "Try again";
+    btn.addEventListener("click", function(){ retryFn(); });
+    p.appendChild(document.createElement("br"));
+    p.appendChild(btn);
+  }
 }
 
 /* ---- Voices ---- */
@@ -1494,19 +1849,272 @@ function populateVoices(){
   sel.value = prev && [].some.call(sel.options,function(o){return o.value===prev;}) ? prev : "auto";
 }
 
+/* ---- Verse of the Day ----
+   Deterministic by date, so it's the same verse all day. Draws from a list
+   of well-loved passages; fetches the text like any other verse. */
+var VOTD_POOL = [
+  "John 3:16","Jeremiah 29:11","Philippians 4:13","Proverbs 3:5","Psalms 23:1",
+  "Isaiah 41:10","Romans 8:28","Joshua 1:9","Psalms 46:1","Matthew 6:33",
+  "Philippians 4:6","2 Corinthians 5:7","Psalms 119:105","Isaiah 40:31",
+  "Hebrews 11:1","Romans 12:2","Galatians 5:22","Ephesians 2:8","Psalms 27:1",
+  "1 Corinthians 13:4","Matthew 11:28","John 14:6","Psalms 121:1","Psalms 91:1",
+  "Lamentations 3:22","Micah 6:8","Zephaniah 3:17","Nahum 1:7","James 1:5",
+  "1 Peter 5:7","Colossians 3:23","Deuteronomy 31:6","Psalms 37:4","Proverbs 16:3"
+];
+function dayNumber(){
+  var d = new Date();
+  return Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/86400000);
+}
+function verseOfTheDay(){
+  if ("speechSynthesis" in window) speechSynthesis.cancel();
+  var ref = VOTD_POOL[dayNumber() % VOTD_POOL.length];
+  var p = parseRef(ref), b = BOOK_BY_NAME[p.book];
+  var t = b ? b[2] : "new";
+  var retry = verseOfTheDay;
+  setPassageLoading();
+  fetchChapter(p.book, p.chap).then(function(verses){
+    var v = verses.filter(function(x){ return x.verse===p.verse; })[0];
+    if (!v){ showFetchError(retry); return; }
+    show({ t:t, ref:ref, text:v.text, theme:"Verse of the Day" });
+  }).catch(function(){ showFetchError(retry); });
+}
+
+/* ---- Copy / Share the current verse ---- */
+function shareVerse(){
+  if (!current || !current.text){ return; }
+  var txt = "\u201C" + current.text + "\u201D \u2014 " + current.ref +
+            "  (World English Bible)";
+  var btn = $("share");
+  function flash(msg){
+    var old = btn.textContent; btn.textContent = msg;
+    setTimeout(function(){ btn.textContent = old; }, 1600);
+  }
+  if (navigator.share){
+    navigator.share({ text: txt }).catch(function(){ /* user cancelled */ });
+  } else if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){ flash("Copied \u2713"); })
+      .catch(function(){ flash("Couldn\u2019t copy"); });
+  } else {
+    // last-resort fallback
+    try{
+      var ta=document.createElement("textarea"); ta.value=txt;
+      document.body.appendChild(ta); ta.select(); document.execCommand("copy");
+      document.body.removeChild(ta); flash("Copied \u2713");
+    }catch(e){ flash("Copy not supported"); }
+  }
+}
+
+/* ============ Storage helpers ============ */
+function lsGet(k, dflt){
+  try{ var v=localStorage.getItem(k); return v==null?dflt:JSON.parse(v); }catch(e){ return dflt; }
+}
+function lsSet(k, val){
+  try{ localStorage.setItem(k, JSON.stringify(val)); }catch(e){}
+}
+
+/* ============ Continue where I left off ============ */
+function saveLastRead(entry){
+  if (!entry || !entry.ref) return;
+  lsSet("lastRead", { ref:entry.ref, t:entry.t, theme:entry.theme||null, filter:filter });
+}
+function resumeLastRead(){
+  var last = lsGet("lastRead", null);
+  if (!last || !last.ref){ next(); return; }
+  var p = parseRef(last.ref);
+  if (BOOK_BY_NAME[p.book]){
+    setPassageLoading();
+    fetchChapter(p.book, p.chap).then(function(verses){
+      var v = verses.filter(function(x){ return x.verse===p.verse; })[0];
+      if (!v){ next(); return; }
+      var b=BOOK_BY_NAME[p.book];
+      show({ t:b?b[2]:"new", ref:last.ref, text:v.text });
+    }).catch(function(){ next(); });
+  } else {
+    // curated (Enoch/Jubilees)
+    for (var i=0;i<SCRIPTURE.length;i++){
+      if (SCRIPTURE[i].ref===last.ref){ show(SCRIPTURE[i]); return; }
+    }
+    next();
+  }
+}
+
+/* ============ Bookmarks ============ */
+function getBookmarks(){ return lsGet("bookmarks", []); }
+function isBookmarked(ref){
+  return getBookmarks().some(function(b){ return b.ref===ref; });
+}
+function toggleBookmark(){
+  if (!current || !current.ref) return;
+  var list = getBookmarks();
+  var i = list.findIndex(function(b){ return b.ref===current.ref; });
+  if (i>=0){ list.splice(i,1); }
+  else { list.unshift({ ref:current.ref, text:current.text, t:current.t }); }
+  lsSet("bookmarks", list);
+  updateBookmarkStar();
+}
+function updateBookmarkStar(){
+  var btn = $("bookmark"); if (!btn || !current) return;
+  var on = isBookmarked(current.ref);
+  btn.textContent = on ? "\u2605" : "\u2606";
+  btn.setAttribute("aria-pressed", on ? "true":"false");
+}
+function openBookmarks(){
+  var list = getBookmarks();
+  $("sheetTitle").textContent = "Bookmarks";
+  var body = $("sheetBody"); body.innerHTML = "";
+  if (!list.length){
+    body.innerHTML = '<div class="sheet-note">No bookmarks yet. Tap the \u2606 star beside a verse to save it here.</div>';
+  } else {
+    list.forEach(function(b){
+      var row = document.createElement("div"); row.className="bm-item";
+      var left = document.createElement("div"); left.style.flex="1"; left.style.overflow="hidden";
+      left.innerHTML = '<span class="bm-ref">'+b.ref+'</span> <span class="bm-text">'+
+        (b.text? b.text.slice(0,80) : "")+'</span>';
+      left.addEventListener("click", function(){ closeSheet(); openBookmarkRef(b); });
+      var del = document.createElement("button"); del.className="bm-del"; del.textContent="\u2715";
+      del.setAttribute("aria-label","Remove bookmark");
+      del.addEventListener("click", function(e){
+        e.stopPropagation();
+        var l=getBookmarks().filter(function(x){return x.ref!==b.ref;});
+        lsSet("bookmarks", l); row.remove(); updateBookmarkStar();
+        if(!l.length) openBookmarks();
+      });
+      row.appendChild(left); row.appendChild(del);
+      body.appendChild(row);
+    });
+  }
+  openSheet();
+}
+function openBookmarkRef(b){
+  var p = parseRef(b.ref);
+  if (BOOK_BY_NAME[p.book]){
+    setPassageLoading();
+    fetchChapter(p.book,p.chap).then(function(verses){
+      var v=verses.filter(function(x){return x.verse===p.verse;})[0];
+      if(!v){ if(b.text) show(b); return; }
+      var bb=BOOK_BY_NAME[p.book];
+      show({ t:bb?bb[2]:"new", ref:b.ref, text:v.text });
+    }).catch(function(){ if(b.text) show(b); });
+  } else if (b.text){ show(b); }
+}
+
+/* ============ Reading streak ============ */
+function todayStamp(){
+  var d=new Date(); return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+}
+function markReadToday(){
+  var s = lsGet("streak", {last:null, count:0});
+  var today = todayStamp();
+  if (s.last === today) return;            // already counted today
+  var y = new Date(); y.setDate(y.getDate()-1);
+  var yStamp = y.getFullYear()+"-"+(y.getMonth()+1)+"-"+y.getDate();
+  s.count = (s.last === yStamp) ? (s.count+1) : 1;   // continue or reset
+  s.last = today;
+  lsSet("streak", s);
+  showStreak();
+}
+function showStreak(){
+  var s = lsGet("streak", {count:0});
+  var el = $("streak"); if(!el) return;
+  el.textContent = s.count>1 ? ("\u2728 " + s.count + " days of reading \u2728") : "";
+}
+
+/* ============ Search ============ */
+function openSearch(){
+  $("sheetTitle").textContent = "Search Scripture";
+  var body = $("sheetBody"); body.innerHTML = "";
+  var input = document.createElement("input");
+  input.className="sheet-input"; input.type="search";
+  input.placeholder="Type a word or phrase\u2026"; input.autocomplete="off";
+  var note = document.createElement("div"); note.className="sheet-note";
+  note.textContent = "Searches verses you\u2019ve already loaded or downloaded (plus Enoch, Jubilees, and the collections). Use \u201CDownload for offline use\u201D to search the whole Bible.";
+  var results = document.createElement("div");
+  body.appendChild(input); body.appendChild(results); body.appendChild(note);
+  openSheet();
+  setTimeout(function(){ input.focus(); }, 350);
+
+  var timer=null;
+  input.addEventListener("input", function(){
+    clearTimeout(timer);
+    var q = input.value.trim().toLowerCase();
+    timer = setTimeout(function(){ runSearch(q, results, note); }, 220);
+  });
+}
+function collectSearchable(){
+  // Curated verses + any cached Bible chapters in memory
+  var out = [];
+  SCRIPTURE.forEach(function(s){ out.push({ref:s.ref, text:s.text, t:s.t}); });
+  Object.keys(chapterCache).forEach(function(key){
+    var parts = key.split("/"); var num=+parts[0], chap=+parts[1];
+    var bk = BIBLE_BOOKS[num-1]; if(!bk) return;
+    chapterCache[key].forEach(function(v){
+      out.push({ ref: bk[1]+" "+chap+":"+v.verse, text:v.text, t:bk[2] });
+    });
+  });
+  return out;
+}
+function runSearch(q, results, note){
+  results.innerHTML="";
+  if (q.length < 2){ note.style.display=""; return; }
+  var pool = collectSearchable();
+  var hits = [];
+  for (var i=0;i<pool.length && hits.length<60;i++){
+    if (pool[i].text && pool[i].text.toLowerCase().indexOf(q)>=0) hits.push(pool[i]);
+  }
+  note.style.display = "none";
+  if (!hits.length){
+    results.innerHTML = '<div class="sheet-note">No matches in loaded text. Try downloading the Bible first, or a different word.</div>';
+    return;
+  }
+  hits.forEach(function(h){
+    var row=document.createElement("div"); row.className="result-item";
+    row.innerHTML = '<span class="result-ref">'+h.ref+'</span><span class="result-text">'+
+      h.text.slice(0,70)+'</span>';
+    row.addEventListener("click", function(){ closeSheet(); show(h); });
+    results.appendChild(row);
+  });
+}
+
+/* ============ About ============ */
+function openAbout(){
+  $("sheetTitle").textContent = "About";
+  $("sheetBody").innerHTML =
+    '<div class="about-p"><b>The Vision of the Heavens</b> \u2014 read the whole Bible in a golden throne-room setting, with the Books of Enoch and Jubilees.</div>'+
+    '<div class="about-p"><b>Reading:</b> Tap <b>Next passage</b> for a random verse, or turn on <b>Read in order</b> to read straight through. Use <b>Prev</b> / swipe to move between verses. The app reopens to where you left off.</div>'+
+    '<div class="about-p"><b>Collections:</b> Tap the chips to explore themed passages \u2014 Vision of the Heavens, Comfort &amp; Peace, Faith &amp; Trust, Praise &amp; Worship.</div>'+
+    '<div class="about-p"><b>Tools:</b> Bookmark verses with the \u2606 star, Search loaded text, Copy / Share a verse, and hear it read aloud.</div>'+
+    '<div class="about-p"><b>Offline:</b> Tap <b>Download for offline use</b> to save the whole Bible to your device. Enoch &amp; Jubilees are always offline.</div>'+
+    '<div class="about-p"><b>Themes &amp; motion:</b> Switch reading themes and turn off background animations in the settings row.</div>'+
+    '<div class="about-p" style="color:var(--fire);letter-spacing:.1em;text-transform:uppercase;font-size:.82rem;margin-top:1.2rem;">Engineered by Tebogo Maruping</div>'+
+    '<div class="sheet-note">Bible: World English Bible (Public Domain). Enoch &amp; Jubilees: R.H. Charles, 1913 (Public Domain).</div>';
+  openSheet();
+}
+
+/* ============ Overlay control ============ */
+function openSheet(){ $("overlay").hidden=false; }
+function closeSheet(){ $("overlay").hidden=true; }
+
+
 function read(){
-  if (!current) next();
-  if (!current) return;
   if (!("speechSynthesis" in window)){
     $("label").textContent = "This browser can't read aloud — but you can read it yourself.";
     return;
   }
-  speechSynthesis.cancel();
+  // Tap again while speaking → stop
+  if (speechSynthesis.speaking || speechSynthesis.pending){
+    speechSynthesis.cancel();
+    $("read").textContent = "Read aloud";
+    return;
+  }
+  if (!current){ next(); return; }
   var voice = pickVoice("en-ZA"); // verse text is English
   var u = new SpeechSynthesisUtterance(current.text + " " + current.ref + ".");
   u.lang = "en-ZA";
   if (voice) u.voice = voice;
   u.rate = 0.92; u.pitch = 1.0; u.volume = 1;   // calm, even reading
+  u.onend = function(){ $("read").textContent = "Read aloud"; };
+  u.onerror = function(){ $("read").textContent = "Read aloud"; };
+  $("read").textContent = "Stop";
   speechSynthesis.speak(u);
 }
 
@@ -1526,6 +2134,23 @@ function toggleAuto(){
 }
 
 /* ---- Wiring ---- */
+/* Swipe left/right on the reading panel to advance (mobile-native feel) */
+(function(){
+  var area = document.querySelector(".reader-frame") || document.querySelector(".reader");
+  if (!area) return;
+  var x0=null, y0=null;
+  area.addEventListener("touchstart", function(e){
+    var t=e.changedTouches[0]; x0=t.clientX; y0=t.clientY;
+  }, {passive:true});
+  area.addEventListener("touchend", function(e){
+    if (x0===null) return;
+    var t=e.changedTouches[0], dx=t.clientX-x0, dy=t.clientY-y0;
+    // horizontal swipe, not a vertical scroll
+    if (Math.abs(dx)>55 && Math.abs(dx)>Math.abs(dy)*1.6){ next(); }
+    x0=y0=null;
+  }, {passive:true});
+})();
+
 var chips = document.querySelectorAll(".chip");
 for (var c=0;c<chips.length;c++){
   chips[c].addEventListener("click", function(){
@@ -1544,6 +2169,8 @@ for (var c=0;c<chips.length;c++){
 }
 $("next").addEventListener("click", next);
 $("read").addEventListener("click", read);
+$("votd").addEventListener("click", verseOfTheDay);
+$("share").addEventListener("click", shareVerse);
 $("autoplay").addEventListener("click", toggleAuto);
 $("download").addEventListener("click", downloadAll);
 $("loadfile").addEventListener("click", function(){ $("fileinput").click(); });
@@ -1646,6 +2273,52 @@ if ("serviceWorker" in navigator){
   // Confirm installation
   window.addEventListener("appinstalled", function(){ remember(); hidePop(); });
 })();
+/* ---- Reading theme (Throne dark / Sepia / Light) ---- */
+(function(){
+  var btn = $("themeBtn"), label = $("themeLabel");
+  if (!btn) return;
+  var THEMES = [
+    { cls:"",            name:"Throne (dark)" },
+    { cls:"theme-sepia", name:"Sepia (warm)" },
+    { cls:"theme-light", name:"Light" }
+  ];
+  function applyIndex(i){
+    document.body.classList.remove("theme-sepia","theme-light");
+    if (THEMES[i].cls) document.body.classList.add(THEMES[i].cls);
+    if (label) label.textContent = "Theme: " + THEMES[i].name;
+    try{ localStorage.setItem("themeIndex", String(i)); }catch(e){}
+  }
+  var start = 0;
+  try{ var s = parseInt(localStorage.getItem("themeIndex"),10); if(!isNaN(s)&&s>=0&&s<THEMES.length) start=s; }catch(e){}
+  applyIndex(start);
+  var idx = start;
+  btn.addEventListener("click", function(){
+    idx = (idx+1) % THEMES.length;
+    applyIndex(idx);
+  });
+})();
+
+/* ---- Background animation toggle (for older / slower phones) ---- */
+(function(){
+  var btn = $("animToggle"), label = $("animLabel");
+  if (!btn) return;
+  function getPref(){
+    try{ return localStorage.getItem("animOff")==="1"; }catch(e){ return false; }
+  }
+  function apply(off){
+    document.body.classList.toggle("no-anim", off);
+    btn.classList.toggle("on", !off);
+    btn.setAttribute("aria-checked", off ? "false" : "true");
+    if (label) label.textContent = "Background animations: " + (off ? "off" : "on");
+  }
+  apply(getPref());
+  btn.addEventListener("click", function(){
+    var off = !document.body.classList.contains("no-anim");
+    apply(off);
+    try{ localStorage.setItem("animOff", off ? "1" : "0"); }catch(e){}
+  });
+})();
+
 /* ---- Credits tap ---- */
 (function(){
   var tap = $("creditsTap"), panel = $("creditsPanel");
