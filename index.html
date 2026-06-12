@@ -3,6 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<!-- Always fetch the freshest version (avoids stale cache on mobile after a new commit) -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<script>
+/* Auto-update: bump APP_VERSION whenever you commit a change you want pushed to phones.
+   On load we compare it to the last seen value; if it changed, we hard-reload once
+   (cache-busted) so the device always ends up on the newest build. */
+(function(){
+  var APP_VERSION = "2026-06-12-01";
+  try {
+    var seen = localStorage.getItem("app_version");
+    if (seen && seen !== APP_VERSION && !location.search.includes("v=")) {
+      localStorage.setItem("app_version", APP_VERSION);
+      location.replace(location.pathname + "?v=" + Date.now());
+      return;
+    }
+    localStorage.setItem("app_version", APP_VERSION);
+  } catch(e){}
+})();
+</script>
 <title>Vision of the Heavens — Scripture</title>
 <meta name="description" content="Read the whole Bible with the Books of Enoch and Jubilees. Engineered by Tebogo Maruping.">
 <meta name="apple-mobile-web-app-capable" content="yes">
