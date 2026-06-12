@@ -856,6 +856,71 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
 }
 .sheet-input:focus { outline: 2px solid rgba(200,169,110,.55); outline-offset: 0; border-color: rgba(200,169,110,.40); }
 
+/* ===== TESTIMONIES ===== */
+.testi-player {
+  position: relative; width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: #000;
+  border: 1px solid rgba(255,224,150,.18);
+  box-shadow: 0 8px 28px rgba(0,0,0,.5), inset 0 0 0 1px rgba(255,255,255,.04);
+  margin-bottom: 14px;
+}
+.testi-player iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.testi-now {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 1.02rem; font-weight: 600; color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.testi-now-sub { font-size: .76rem; color: var(--text-muted); letter-spacing: .04em; margin-bottom: 14px; }
+.testi-divider {
+  text-align: center; font-size: .68rem; letter-spacing: .2em;
+  color: rgba(200,169,110,.4); margin: 6px 0 12px; user-select: none;
+}
+.testi-list { display: flex; flex-direction: column; gap: 8px; }
+.testi-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px; cursor: pointer;
+  border-radius: var(--radius-sm);
+  background: rgba(255,230,150,.04);
+  border: 1px solid rgba(255,224,150,.10);
+  transition: background .18s, border-color .18s, transform .12s;
+  -webkit-tap-highlight-color: transparent;
+  text-align: left;
+}
+.testi-item:hover, .testi-item.active {
+  background: rgba(200,169,110,.12);
+  border-color: rgba(200,169,110,.30);
+}
+.testi-item:active { transform: scale(.985); }
+.testi-thumb {
+  position: relative; flex-shrink: 0;
+  width: 96px; aspect-ratio: 16/9;
+  border-radius: 6px; overflow: hidden;
+  background: #14110a center/cover no-repeat;
+  border: 1px solid rgba(255,224,150,.14);
+}
+.testi-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.testi-thumb::after {
+  content: '▶'; position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .9rem; color: #fff;
+  background: rgba(0,0,0,.28); text-shadow: 0 1px 4px rgba(0,0,0,.6);
+  opacity: .9;
+}
+.testi-meta { flex: 1; min-width: 0; }
+.testi-title {
+  font-size: .9rem; font-weight: 600; color: var(--text-primary);
+  line-height: 1.3; margin-bottom: 3px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.testi-by { font-size: .72rem; color: var(--text-muted); letter-spacing: .02em; }
+.testi-empty {
+  font-size: .82rem; color: var(--text-sec); line-height: 1.6;
+  padding: 16px 0; text-align: center;
+}
+
 /* Bookmark / search results */
 .bm-item, .result-item {
   display: flex; align-items: flex-start; gap: 12px;
@@ -1173,6 +1238,10 @@ try {
     <button class="action-tile" id="loadfile">
       <span class="action-tile-icon">📂</span>
       <span class="action-tile-label">Load File</span>
+    </button>
+    <button class="action-tile" id="testimonies">
+      <span class="action-tile-icon">🎥</span>
+      <span class="action-tile-label">Watch Testimonies</span>
     </button>
   </div>
   <input type="file" id="fileinput" accept=".json,application/json">
@@ -1947,7 +2016,116 @@ function openAbout(){
 }
 
 function openSheet(){$("overlay").hidden=false;}
-function closeSheet(){$("overlay").hidden=true;}
+function closeSheet(){$("overlay").hidden=true;var p=document.getElementById("testiPlayer");if(p)p.innerHTML="";}
+
+/* ===== Watch Testimonies ===== */
+/* Reads a static JSON file so it works on GitHub Pages (no PHP/server needed).
+   Edit testimonies.json to add/remove YouTube links.
+   Format: { "videos": [ { "url":"https://youtu.be/ID", "title":"...", "by":"..." }, ... ] } */
+var TESTIMONY_ENDPOINT = "testimonies.json";
+/* Fallback used if the backend isn't reachable yet (e.g. opened as a local file). */
+var TESTIMONY_FALLBACK = [];
+var testimoniesCache = null;
+
+function youtubeId(url){
+  if(!url)return null;
+  var s=String(url).trim();
+  /* plain 11-char id */
+  if(/^[A-Za-z0-9_-]{11}$/.test(s))return s;
+  var m;
+  m=s.match(/[?&]v=([A-Za-z0-9_-]{11})/);       if(m)return m[1];
+  m=s.match(/youtu\.be\/([A-Za-z0-9_-]{11})/);   if(m)return m[1];
+  m=s.match(/\/embed\/([A-Za-z0-9_-]{11})/);     if(m)return m[1];
+  m=s.match(/\/shorts\/([A-Za-z0-9_-]{11})/);    if(m)return m[1];
+  m=s.match(/\/live\/([A-Za-z0-9_-]{11})/);      if(m)return m[1];
+  return null;
+}
+
+function normalizeTestimonies(data){
+  var raw=[];
+  if(Array.isArray(data))raw=data;
+  else if(data&&Array.isArray(data.videos))raw=data.videos;
+  else if(data&&Array.isArray(data.testimonies))raw=data.testimonies;
+  var out=[];
+  for(var i=0;i<raw.length;i++){
+    var item=raw[i];
+    var url=typeof item==="string"?item:(item.url||item.link||item.youtube||"");
+    var id=youtubeId(url);
+    if(!id)continue;
+    out.push({
+      id:id,
+      title:(typeof item==="object"&&(item.title||item.name))?(item.title||item.name):"Testimony",
+      by:(typeof item==="object"&&(item.by||item.author||item.channel))?(item.by||item.author||item.channel):""
+    });
+  }
+  return out;
+}
+
+function fetchTestimonies(){
+  if(testimoniesCache)return Promise.resolve(testimoniesCache);
+  return fetch(TESTIMONY_ENDPOINT,{cache:"no-store"})
+    .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();})
+    .then(function(d){var list=normalizeTestimonies(d);testimoniesCache=list;return list;})
+    .catch(function(){return normalizeTestimonies(TESTIMONY_FALLBACK);});
+}
+
+function renderTestimonies(list){
+  var body=$("sheetBody");body.innerHTML="";
+  if(!list.length){
+    var e=document.createElement("div");e.className="testi-empty";
+    e.innerHTML="No testimonies available yet.<br>Add YouTube links to <b>testimonies.json</b> in your repository.";
+    body.appendChild(e);return;
+  }
+  /* Player */
+  var player=document.createElement("div");player.className="testi-player";player.id="testiPlayer";
+  var nowTitle=document.createElement("div");nowTitle.className="testi-now";nowTitle.id="testiNowTitle";
+  var nowSub=document.createElement("div");nowSub.className="testi-now-sub";nowSub.id="testiNowSub";
+  body.appendChild(player);body.appendChild(nowTitle);body.appendChild(nowSub);
+
+  if(list.length>1){
+    var div=document.createElement("div");div.className="testi-divider";div.textContent="MORE TESTIMONIES";
+    body.appendChild(div);
+  }
+
+  var listWrap=document.createElement("div");listWrap.className="testi-list";body.appendChild(listWrap);
+
+  function playAt(i){
+    var v=list[i];
+    player.innerHTML='<iframe src="https://www.youtube-nocookie.com/embed/'+v.id+
+      '?rel=0&modestbranding=1&playsinline=1" title="'+(v.title||"Testimony").replace(/"/g,"&quot;")+
+      '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>';
+    nowTitle.textContent=v.title||"Testimony";
+    nowSub.textContent=v.by?("\u2014 "+v.by):"";
+    var rows=listWrap.querySelectorAll(".testi-item");
+    for(var k=0;k<rows.length;k++)rows[k].classList.toggle("active",+rows[k].getAttribute("data-i")===i);
+  }
+
+  for(var i=0;i<list.length;i++){
+    (function(idx){
+      var v=list[idx];
+      var row=document.createElement("button");row.className="testi-item";row.setAttribute("data-i",idx);
+      row.innerHTML=
+        '<span class="testi-thumb"><img loading="lazy" src="https://img.youtube.com/vi/'+v.id+'/mqdefault.jpg" alt=""></span>'+
+        '<span class="testi-meta"><span class="testi-title">'+escapeHtml(v.title)+'</span>'+
+        (v.by?'<span class="testi-by">'+escapeHtml(v.by)+'</span>':'')+'</span>';
+      row.addEventListener("click",function(){playAt(idx);body.scrollTop=0;});
+      listWrap.appendChild(row);
+    })(i);
+  }
+  playAt(0);
+}
+
+function escapeHtml(s){return String(s||"").replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c];});}
+
+function openTestimonies(){
+  if("speechSynthesis" in window)speechSynthesis.cancel();
+  $("sheetTitle").textContent="Watch Testimonies";
+  var body=$("sheetBody");body.innerHTML='<div class="sheet-note">Loading testimonies\u2026</div>';
+  openSheet();
+  fetchTestimonies().then(renderTestimonies).catch(function(){
+    $("sheetBody").innerHTML='<div class="testi-empty">Couldn\u2019t load testimonies right now. Please try again later.</div>';
+  });
+}
 
 function read(){
   if(!("speechSynthesis" in window)){alert("This browser can't read aloud.");return;}
@@ -2032,6 +2210,17 @@ function flipPage(dir){
   setTimeout(cleanup,750);
 }
 
+/* ---- Smooth-scroll the verse card into view ---- */
+function scrollToVerseCard(){
+  var card=document.querySelector(".verse-card");if(!card)return;
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var navVar=getComputedStyle(document.documentElement).getPropertyValue("--nav-h");
+  var navH=parseInt(navVar,10)||68; // sticky header height
+  var top=card.getBoundingClientRect().top+window.pageYOffset-navH-12;
+  if(top<0)top=0;
+  window.scrollTo({top:top,behavior:reduce?"auto":"smooth"});
+}
+
 $("next").addEventListener("click",function(){flipPage(1);next();});
 function goPrev(){
   flipPage(-1);
@@ -2049,11 +2238,12 @@ $("bookmarksBtn").addEventListener("click",openBookmarks);
 $("searchBtn").addEventListener("click",openSearch);
 $("aboutBtn").addEventListener("click",openAbout);
 $("read").addEventListener("click",read);
-$("votd").addEventListener("click",verseOfTheDay);
+$("votd").addEventListener("click",function(){scrollToVerseCard();verseOfTheDay();});
 $("share").addEventListener("click",shareVerse);
 $("autoplay").addEventListener("click",toggleAuto);
 $("download").addEventListener("click",downloadAll);
 $("loadfile").addEventListener("click",function(){$("fileinput").click();});
+$("testimonies").addEventListener("click",openTestimonies);
 $("fileinput").addEventListener("change",function(){if(this.files&&this.files[0])loadBibleFile(this.files[0]);});
 
 $("langsel").addEventListener("change",function(){lang=this.value;if(current){var book=L().names[current.t]||"";$("ref").textContent=current.ref+(book?"  \u00B7  "+book:"");}populateVoices();});
@@ -2061,7 +2251,7 @@ $("voicesel").addEventListener("change",function(){chosenVoiceURI=this.value;});
 
 $("booksel").addEventListener("change",refreshChapters);
 $("chapsel").addEventListener("change",refreshVerses);
-$("goto").addEventListener("click",gotoSelected);
+$("goto").addEventListener("click",function(){scrollToVerseCard();gotoSelected();});
 refreshPicker(false);
 refreshOfflineLabel();
 
