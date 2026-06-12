@@ -177,8 +177,6 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
 .scroll-area {
   position: relative; z-index: 1;
   padding-top: calc(var(--nav-h) + 12px);
-  padding-left: 0;
-  padding-right: 0;
   padding-bottom: 0;
   height: 100dvh;
   display: flex;
@@ -210,17 +208,24 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
 .lower-scroll::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, rgba(95,210,232,.7), rgba(200,169,110,.6)); }
 .lower-scroll { scrollbar-width: thin; scrollbar-color: rgba(95,210,232,.5) rgba(255,255,255,.04); }
 
-/* On short/landscape or very small screens, fall back to normal page scroll so nothing gets cut off */
-@media (max-height: 620px) {
+/* On shorter screens, fall back to normal page scroll so nothing gets cut off or cramped */
+@media (max-height: 780px) {
   .scroll-area { height: auto; min-height: 100dvh; overflow: visible; display: block; padding-bottom: calc(var(--tab-h) + 20px); }
-  .lower-scroll { overflow: visible; height: auto; border-top: none; -webkit-mask-image: none; mask-image: none; padding-bottom: 0; }
+  .lower-scroll { overflow: visible; height: auto; min-height: 0; border-top: none; -webkit-mask-image: none; mask-image: none; padding-bottom: 0; }
 }
 
-/* Keep the pinned top block compact so the card always shows alongside the scrolling panel */
-.scroll-area > .celestial-bar { margin-bottom: 8px; }
-.scroll-area > .filter-bar-wrap { padding-top: 2px; padding-bottom: 4px; }
-.scroll-area > .trans-bar { margin-bottom: 8px; }
-.scroll-area > .verse-card { margin-bottom: 0; flex-shrink: 0; }
+/* Keep the pinned top block from being squashed by flex — each holds its natural height */
+.scroll-area > .celestial-bar,
+.scroll-area > .filter-bar-wrap,
+.scroll-area > .trans-bar,
+.scroll-area > .verse-card,
+.scroll-area > .nav-actions { flex: 0 0 auto; }
+
+.scroll-area > .celestial-bar { margin-bottom: 12px; }
+.scroll-area > .filter-bar-wrap { padding-top: 4px; padding-bottom: 10px; }
+.scroll-area > .trans-bar { margin-bottom: 10px; }
+.scroll-area > .verse-card { margin-bottom: 14px; }
+.scroll-area > .nav-actions { margin-bottom: 6px; }
 
 /* ===== SECTION FILTERS ===== */
 .filter-bar-wrap {
@@ -433,9 +438,8 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
   border-left: none;
   border-radius: 0 18px 18px 0;
   box-shadow: inset 0 1px 0 rgba(255,255,255,.10), inset 0 0 40px rgba(95,210,232,.04);
-  overflow: visible;
-  min-height: 220px;
-  display: flex; flex-direction: column;
+  overflow: hidden;
+  min-height: 260px;
 }
 
 /* Top page edge highlight */
@@ -543,14 +547,14 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
 
 /* Ribbon bookmark */
 .book-ribbon {
-  position: absolute; top: -4px; right: 28px;
-  width: 14px; z-index: 10;
+  position: absolute; top: -4px; right: 18px;
+  width: 12px; z-index: 9;
   pointer-events: none;
 }
 .book-ribbon::before {
   content: '';
   position: absolute; top: 0; left: 0;
-  width: 14px; height: 52px;
+  width: 12px; height: 44px;
   background: linear-gradient(180deg, #c8783c 0%, #a05828 60%, #8a4420 100%);
   clip-path: polygon(0 0, 100% 0, 100% 88%, 50% 100%, 0 88%);
   box-shadow: 1px 2px 8px rgba(0,0,0,.4);
@@ -558,7 +562,7 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
 .book-ribbon::after {
   content: '';
   position: absolute; top: 0; left: 2px;
-  width: 4px; height: 52px;
+  width: 3px; height: 44px;
   background: linear-gradient(180deg, rgba(255,200,140,.35) 0%, rgba(255,200,140,.10) 100%);
   clip-path: polygon(0 0, 100% 0, 100% 88%, 0 88%);
 }
@@ -567,66 +571,6 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
 .book-content {
   position: relative; z-index: 2;
   padding: 22px 22px 18px 28px;
-  flex: 1 1 auto;
-  max-height: 310px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
-  scroll-behavior: smooth;
-}
-/* Subtle scrollbar for the verse card */
-.book-content::-webkit-scrollbar { width: 4px; }
-.book-content::-webkit-scrollbar-track { background: transparent; }
-.book-content::-webkit-scrollbar-thumb {
-  background: rgba(200,169,110,.35);
-  border-radius: 4px;
-}
-.book-content::-webkit-scrollbar-thumb:hover { background: rgba(200,169,110,.55); }
-.book-content { scrollbar-width: thin; scrollbar-color: rgba(200,169,110,.35) transparent; }
-
-/* Verse card internal scroll nav */
-.verse-card-nav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 6px 16px 10px;
-  position: relative;
-  z-index: 5;
-}
-.verse-scroll-btn {
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  background: rgba(200,169,110,.10);
-  border: 1px solid rgba(200,169,110,.22);
-  color: rgba(200,169,110,.70);
-  font-size: 13px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  transition: background .15s, color .15s, border-color .15s;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-.verse-scroll-btn:hover, .verse-scroll-btn:active {
-  background: rgba(200,169,110,.22);
-  border-color: rgba(200,169,110,.45);
-  color: var(--accent);
-}
-.verse-scroll-indicator {
-  display: flex; align-items: center; gap: 4px;
-  font-size: .58rem; color: rgba(200,169,110,.40); letter-spacing: .08em;
-  text-transform: uppercase; font-weight: 500;
-  user-select: none;
-  pointer-events: none;
-}
-.verse-scroll-indicator .scroll-dot {
-  width: 4px; height: 4px; border-radius: 50%;
-  background: rgba(200,169,110,.35);
-}
-.verse-scroll-indicator .scroll-dot.active {
-  background: var(--accent);
-  width: 12px; border-radius: 3px;
 }
 
 /* Book header row */
@@ -634,17 +578,20 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
   display: flex; align-items: center; justify-content: space-between;
   margin-bottom: 16px;
   padding-bottom: 10px;
+  padding-right: 92px; /* clear the bookmark tab + ribbon in the top-right corner */
   border-bottom: 1px solid rgba(200,160,80,.18);
+  min-height: 22px;
 }
 .book-chapter-label {
   font-family: 'EB Garamond', Georgia, serif;
   font-size: .78rem; font-style: italic; letter-spacing: .06em;
   color: rgba(200,169,110,.75);
+  white-space: nowrap;
 }
 .book-page-num {
   font-family: 'EB Garamond', Georgia, serif;
   font-size: .72rem; color: rgba(200,169,110,.55);
-  letter-spacing: .12em;
+  letter-spacing: .12em; white-space: nowrap;
 }
 
 /* Drop-cap ornament */
@@ -722,23 +669,23 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
 
 /* Bookmark button repositioned as a tab on the page top edge */
 .bookmark-btn {
-  position: absolute; top: 0; right: 48px; z-index: 10;
-  width: 32px; height: 42px;
-  background: linear-gradient(180deg, rgba(200,169,110,.22), rgba(200,169,110,.10));
-  border: 1px solid rgba(255,224,150,.25); border-top: none;
+  position: absolute; top: 0; right: 40px; z-index: 10;
+  width: 30px; height: 40px;
+  background: linear-gradient(180deg, rgba(95,210,232,.18), rgba(95,210,232,.06));
+  border: 1px solid rgba(95,210,232,.30); border-top: none;
   backdrop-filter: blur(12px) saturate(2);
   -webkit-backdrop-filter: blur(12px) saturate(2);
-  border-radius: 0 0 6px 6px;
+  border-radius: 0 0 7px 7px;
   cursor: pointer;
-  font-size: 1rem; color: rgba(200,169,110,.60);
+  font-size: 1rem; color: rgba(180,235,250,.7);
   display: flex; align-items: flex-end; justify-content: center;
   padding-bottom: 6px;
   box-shadow: 0 3px 10px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.12);
   transition: color .2s, background .2s;
   -webkit-tap-highlight-color: transparent;
 }
-.bookmark-btn:hover { color: var(--accent); background: linear-gradient(180deg, rgba(200,169,110,.30), rgba(200,169,110,.18)); }
-.bookmark-btn[aria-pressed="true"] { color: var(--accent); background: linear-gradient(180deg, rgba(200,169,110,.35), rgba(200,169,110,.22)); }
+.bookmark-btn:hover { color: var(--ai-cyan); background: linear-gradient(180deg, rgba(95,210,232,.28), rgba(95,210,232,.14)); }
+.bookmark-btn[aria-pressed="true"] { color: var(--accent); background: linear-gradient(180deg, rgba(200,169,110,.35), rgba(200,169,110,.22)); border-color: rgba(255,224,150,.3); }
 
 /* ===== PAGE-TURN ANIMATION ===== */
 /* The page needs a 3-D context for the turning leaf */
@@ -1067,7 +1014,7 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
 /* ===== CELESTIAL INFO BAR (date/time + weather) ===== */
 .celestial-bar {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  margin: 0 16px 14px;
+  margin: 0 0 14px;
   padding: 11px 15px;
   border-radius: var(--radius);
   background:
@@ -1128,8 +1075,7 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
 .trans-bar {
   display: flex; gap: 6px; flex-wrap: wrap;
   align-items: center; justify-content: center;
-  margin: 0 16px 12px;
-  padding: 0 2px;
+  margin: 0 0 12px;
 }
 .trans-pill {
   font-family: inherit; font-size: .74rem; font-weight: 600; letter-spacing: .04em;
@@ -1725,30 +1671,12 @@ try {
             <button class="va-btn" id="noteBtn" type="button"><span class="va-ico">📝</span> Note</button>
           </div>
         </div>
-
-        <!-- Verse card internal scroll nav -->
-        <div class="verse-card-nav" id="verseCardNav">
-          <button class="verse-scroll-btn" id="verseScrollUp" aria-label="Scroll verse up" title="Scroll up">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 8l4-4 4 4"/></svg>
-          </button>
-          <div class="verse-scroll-indicator" aria-hidden="true">
-            <span class="scroll-dot active" id="vsDot1"></span>
-            <span class="scroll-dot" id="vsDot2"></span>
-            <span class="scroll-dot" id="vsDot3"></span>
-          </div>
-          <button class="verse-scroll-btn" id="verseScrollDown" aria-label="Scroll verse down" title="Scroll down">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 4l4 4 4-4"/></svg>
-          </button>
-        </div>
       </div>
     </div>
   </div>
 
-  <!-- Reading Badges -->
-  <div class="lower-scroll" id="lowerScroll">
-
   <!-- Prev / Next -->
-  <div class="nav-actions" style="padding-top:8px;">
+  <div class="nav-actions">
     <button class="btn-prev" id="prev" aria-label="Previous verse">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 3L5 8l5 5"/></svg>
       Previous
@@ -1758,6 +1686,9 @@ try {
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 3l5 5-5 5"/></svg>
     </button>
   </div>
+
+  <!-- Reading Badges -->
+  <div class="lower-scroll" id="lowerScroll">
 
   <!-- Daily devotional -->
   <div class="devo-card" id="devoCard" hidden>
@@ -3495,53 +3426,6 @@ resumeLastRead();
   applyIndex(start);
   var idx=start;
   btn.addEventListener("click",function(){idx=(idx+1)%THEMES.length;applyIndex(idx);});
-})();
-
-/* ---- Verse card internal scroll nav ---- */
-(function(){
-  var content = document.querySelector(".book-content");
-  var upBtn   = document.getElementById("verseScrollUp");
-  var downBtn = document.getElementById("verseScrollDown");
-  var dot1    = document.getElementById("vsDot1");
-  var dot2    = document.getElementById("vsDot2");
-  var dot3    = document.getElementById("vsDot3");
-  var nav     = document.getElementById("verseCardNav");
-  if(!content||!upBtn||!downBtn)return;
-
-  var STEP = 90; // px per click
-
-  function updateNav(){
-    var st = content.scrollTop;
-    var sh = content.scrollHeight;
-    var ch = content.clientHeight;
-    var scrollable = sh > ch + 4;
-    nav.style.display = scrollable ? "flex" : "none";
-    if(!scrollable) return;
-    // dots show scroll position thirds
-    var ratio = sh > ch ? st / (sh - ch) : 0;
-    dot1.classList.toggle("active", ratio < 0.33);
-    dot2.classList.toggle("active", ratio >= 0.33 && ratio < 0.67);
-    dot3.classList.toggle("active", ratio >= 0.67);
-  }
-
-  upBtn.addEventListener("click", function(){
-    content.scrollBy({top: -STEP, behavior: "smooth"});
-  });
-  downBtn.addEventListener("click", function(){
-    content.scrollBy({top: STEP, behavior: "smooth"});
-  });
-  content.addEventListener("scroll", updateNav, {passive: true});
-
-  // Re-check after each verse loads (MutationObserver on verse-body)
-  var vb = document.getElementById("verse-body");
-  if(vb){
-    var mo = new MutationObserver(function(){
-      setTimeout(updateNav, 80);
-    });
-    mo.observe(vb, {childList:true, subtree:true, characterData:true});
-  }
-  // initial
-  setTimeout(updateNav, 200);
 })();
 
 /* ---- Animation toggle ---- */
