@@ -1273,6 +1273,88 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
 .devo-text{font-family:'EB Garamond',Georgia,serif;font-size:1.02rem;line-height:1.55;color:var(--text-primary);}
 .devo-prompt{font-size:.8rem;color:var(--text-sec);line-height:1.55;margin-top:9px;padding-top:9px;border-top:1px solid rgba(255,224,150,.1);font-style:italic;}
 
+/* ===== CONSOLIDATED SETTINGS ===== */
+.set-group { margin-bottom: 20px; }
+.set-group-label { font-size: .66rem; letter-spacing: .16em; text-transform: uppercase; color: var(--text-muted); margin: 4px 4px 9px; }
+.set-rows { border-radius: var(--radius-sm); overflow: hidden; border: 1px solid rgba(255,224,150,.10); background: rgba(255,230,150,.03); }
+.set-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 15px;
+  border-bottom: 1px solid rgba(255,224,150,.07);
+}
+.set-row:last-child { border-bottom: none; }
+.set-row-icon { font-size: 1.15rem; width: 24px; text-align: center; flex-shrink: 0; }
+.set-row-body { flex: 1; min-width: 0; }
+.set-row-title { font-size: .92rem; color: var(--text-primary); }
+.set-row-desc { font-size: .72rem; color: var(--text-muted); margin-top: 2px; }
+.set-row-control { flex-shrink: 0; }
+
+/* iOS-style toggle */
+.set-toggle { width: 46px; height: 28px; border-radius: 28px; background: rgba(255,255,255,.14); border: none; position: relative; cursor: pointer; transition: background .2s; -webkit-tap-highlight-color: transparent; padding: 0; }
+.set-toggle::after { content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,.35); transition: transform .2s; }
+.set-toggle.on { background: linear-gradient(135deg, #4db8ff, #87ceeb); }
+.set-toggle.on::after { transform: translateX(18px); }
+
+/* segmented control */
+.set-seg { display: flex; gap: 4px; background: rgba(0,0,0,.25); padding: 3px; border-radius: 12px; }
+.set-seg-btn { padding: 7px 13px; border-radius: 9px; font-size: .78rem; font-weight: 600; color: var(--text-sec); background: transparent; border: none; cursor: pointer; transition: background .16s, color .16s; -webkit-tap-highlight-color: transparent; white-space: nowrap; }
+.set-seg-btn.active { color: #06243a; background: linear-gradient(135deg, var(--accent), var(--gold-hi)); }
+
+/* full-width slider row */
+.set-row-slider { display: block; }
+.set-slider-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.set-slider-val { font-size: .82rem; font-weight: 600; color: var(--accent); font-variant-numeric: tabular-nums; }
+.set-slider { width: 100%; accent-color: var(--accent); }
+.set-preview { font-family: 'EB Garamond', Georgia, serif; color: var(--text-sec); margin-top: 10px; line-height: 1.4; }
+
+.set-danger-btn {
+  width: 100%; padding: 13px; cursor: pointer; margin-top: 2px;
+  font-size: .9rem; font-weight: 600; color: var(--red);
+  background: rgba(224,85,85,.07); border: 1px solid rgba(224,85,85,.25);
+  border-radius: var(--radius-sm); -webkit-tap-highlight-color: transparent;
+}
+.set-danger-btn:active { background: rgba(224,85,85,.14); }
+.set-about-line { font-size: .76rem; color: var(--text-muted); text-align: center; padding: 8px 0; line-height: 1.6; }
+
+
+.vi-preview-wrap {
+  display: flex; justify-content: center; margin-bottom: 16px;
+}
+.vi-canvas {
+  width: 100%; max-width: 300px; height: auto;
+  border-radius: 14px;
+  box-shadow: 0 10px 36px rgba(0,0,0,.55), 0 0 0 1px rgba(255,224,150,.15);
+  display: block;
+}
+.vi-formats { display: flex; gap: 8px; margin-bottom: 14px; }
+.vi-fmt {
+  flex: 1; padding: 10px; cursor: pointer; text-align: center;
+  font-size: .78rem; font-weight: 600; letter-spacing: .02em;
+  color: var(--text-sec); border-radius: var(--radius-sm);
+  background: rgba(255,230,150,.04); border: 1px solid rgba(255,224,150,.12);
+  transition: background .16s, border-color .16s, color .16s;
+  -webkit-tap-highlight-color: transparent;
+}
+.vi-fmt.active { color: #06243a; background: linear-gradient(135deg, var(--accent), var(--gold-hi)); border-color: rgba(200,169,110,.6); }
+.vi-styles { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; justify-content: center; }
+.vi-style {
+  width: 38px; height: 38px; border-radius: 50%; cursor: pointer;
+  border: 2px solid transparent; transition: transform .12s, border-color .16s;
+  -webkit-tap-highlight-color: transparent; padding: 0;
+}
+.vi-style.active { border-color: var(--gold-hi); transform: scale(1.08); }
+.vi-actions { display: flex; gap: 10px; }
+.vi-btn {
+  flex: 1; padding: 14px; cursor: pointer; border: none;
+  font-size: .92rem; font-weight: 700; border-radius: var(--radius-sm);
+  -webkit-tap-highlight-color: transparent;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+}
+.vi-btn-share { color: #06243a; background: linear-gradient(135deg, #4db8ff, #87ceeb); box-shadow: 0 6px 20px rgba(95,210,232,.3); }
+.vi-btn-download { color: var(--accent); background: rgba(200,169,110,.10); border: 1px solid rgba(200,169,110,.3); }
+.vi-btn:active { transform: scale(.98); }
+.vi-hint { font-size: .74rem; color: var(--text-muted); text-align: center; margin-top: 12px; line-height: 1.5; }
+
 .sheet {
   background: rgba(255,220,130,.04);
   backdrop-filter: blur(48px) saturate(3.5) brightness(1.1);
@@ -1505,10 +1587,185 @@ body.theme-light::after    { opacity: .20!important; }
   .scroll-area { padding-left: 16px; padding-right: 16px; }
 }
 
-/* reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+/* ===== APP SECTIONS (Home / Bible / Search / More) ===== */
+.app-view { display: none; }
+.app-view.active { display: block; }
+
+/* Generic scrolling page used by Home / Search / More */
+.page-view {
+  position: relative; z-index: 1;
+  height: 100dvh;
+  overflow-y: auto; overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: calc(var(--nav-h) + 18px) 18px calc(var(--tab-h) + 24px);
+  max-width: 600px; margin: 0 auto;
 }
+.page-view::-webkit-scrollbar { width: 8px; }
+.page-view::-webkit-scrollbar-thumb { background: linear-gradient(180deg, rgba(95,210,232,.5), rgba(200,169,110,.4)); border-radius: 8px; }
+
+.pv-hero { text-align: center; padding: 8px 0 22px; }
+.pv-hero-mark {
+  width: 64px; height: 64px; margin: 0 auto 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem; border-radius: 20px;
+  background: linear-gradient(135deg, rgba(200,169,110,.22), rgba(95,210,232,.16));
+  border: 1px solid rgba(200,169,110,.3);
+  box-shadow: 0 8px 28px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.12);
+}
+.pv-hero-title { font-family: 'EB Garamond', Georgia, serif; font-size: 1.7rem; font-weight: 700; color: var(--text-primary); }
+.pv-hero-sub { font-size: .82rem; color: var(--text-sec); margin-top: 4px; letter-spacing: .03em; }
+
+.pv-section-label { font-size: .68rem; letter-spacing: .16em; text-transform: uppercase; color: var(--text-muted); margin: 22px 4px 11px; }
+
+/* Home — greeting + quick cards */
+.home-greeting {
+  padding: 16px 18px; border-radius: var(--radius);
+  background: radial-gradient(120% 160% at 85% -20%, rgba(95,210,232,.12), transparent 60%), linear-gradient(135deg, rgba(40,32,16,.6), rgba(20,17,10,.55));
+  border: 1px solid var(--border);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 6px 22px rgba(0,0,0,.3);
+  margin-bottom: 18px;
+}
+.home-greeting-hi { font-family: 'EB Garamond', Georgia, serif; font-size: 1.35rem; font-weight: 700; color: var(--text-primary); }
+.home-greeting-sub { font-size: .8rem; color: var(--text-sec); margin-top: 3px; }
+
+.home-cta {
+  display: flex; align-items: center; gap: 14px;
+  width: 100%; text-align: left; cursor: pointer;
+  padding: 16px 18px; margin-bottom: 11px;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, rgba(200,169,110,.16), rgba(200,169,110,.05));
+  border: 1px solid rgba(200,169,110,.26);
+  transition: transform .12s, background .18s, border-color .18s;
+  -webkit-tap-highlight-color: transparent;
+}
+.home-cta:hover { background: linear-gradient(135deg, rgba(200,169,110,.24), rgba(200,169,110,.10)); border-color: rgba(200,169,110,.45); }
+.home-cta:active { transform: scale(.99); }
+.home-cta-emoji { font-size: 1.8rem; flex-shrink: 0; }
+.home-cta-body { flex: 1; min-width: 0; }
+.home-cta-title { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
+.home-cta-desc { font-size: .76rem; color: var(--text-sec); margin-top: 2px; }
+.home-cta-arrow { color: var(--text-muted); font-size: 1.1rem; }
+
+.home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+.home-tile {
+  display: flex; flex-direction: column; gap: 6px; cursor: pointer;
+  padding: 16px 14px; border-radius: var(--radius);
+  background: rgba(255,230,150,.04); border: 1px solid rgba(255,224,150,.12);
+  transition: transform .12s, background .18s, border-color .18s;
+  -webkit-tap-highlight-color: transparent; text-align: left;
+}
+.home-tile:hover { background: rgba(95,210,232,.08); border-color: rgba(95,210,232,.28); }
+.home-tile:active { transform: scale(.98); }
+.home-tile-emoji { font-size: 1.6rem; }
+.home-tile-title { font-size: .86rem; font-weight: 600; color: var(--text-primary); }
+.home-tile-sub { font-size: .68rem; color: var(--text-muted); }
+
+/* Home verse-of-day mini card */
+.home-votd {
+  padding: 18px; border-radius: var(--radius); margin-bottom: 18px;
+  background: linear-gradient(135deg, rgba(30,34,40,.6), rgba(34,30,26,.55));
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: inset 0 0 30px rgba(95,210,232,.04);
+}
+.home-votd-label { font-size: .64rem; letter-spacing: .16em; text-transform: uppercase; color: var(--ai-cyan); margin-bottom: 8px; }
+.home-votd-text { font-family: 'EB Garamond', Georgia, serif; font-size: 1.15rem; line-height: 1.5; color: var(--text-primary); font-style: italic; }
+.home-votd-ref { font-size: .8rem; color: var(--accent); margin-top: 8px; letter-spacing: .04em; }
+
+/* Search view */
+.search-view-box {
+  display: flex; gap: 8px; margin-bottom: 16px;
+}
+.search-view-input {
+  flex: 1; font-family: inherit; font-size: 1rem;
+  background: rgba(255,230,150,.05); border: 1px solid rgba(255,224,150,.18);
+  border-radius: var(--radius-sm); color: var(--text-primary); padding: 13px 15px;
+}
+.search-view-input:focus { outline: 2px solid rgba(95,210,232,.5); border-color: rgba(95,210,232,.4); }
+.search-view-btn {
+  padding: 0 18px; border-radius: var(--radius-sm); cursor: pointer;
+  font-weight: 700; color: #06243a;
+  background: linear-gradient(135deg, #4db8ff, #87ceeb); border: none;
+}
+.search-view-hint { font-size: .8rem; color: var(--text-muted); line-height: 1.6; padding: 8px 2px; }
+.search-chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.search-chip {
+  font-size: .76rem; padding: 7px 14px; border-radius: 30px; cursor: pointer;
+  color: var(--text-sec); background: rgba(95,210,232,.06); border: 1px solid rgba(95,210,232,.2);
+  -webkit-tap-highlight-color: transparent;
+}
+.search-chip:hover { color: var(--text-primary); border-color: rgba(95,210,232,.45); }
+
+/* More view — account + menu */
+.account-card {
+  display: flex; align-items: center; gap: 14px;
+  padding: 18px; border-radius: var(--radius); margin-bottom: 8px;
+  background: radial-gradient(120% 160% at 85% -20%, rgba(95,210,232,.12), transparent 60%), linear-gradient(135deg, rgba(40,32,16,.6), rgba(20,17,10,.55));
+  border: 1px solid var(--border);
+}
+.account-avatar {
+  width: 52px; height: 52px; flex-shrink: 0; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; font-weight: 700; color: #06243a;
+  background: linear-gradient(135deg, #4db8ff, #87ceeb);
+  box-shadow: 0 4px 14px rgba(95,210,232,.3);
+}
+.account-info { flex: 1; min-width: 0; }
+.account-name { font-size: 1.02rem; font-weight: 700; color: var(--text-primary); }
+.account-email { font-size: .76rem; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.account-signout {
+  font-size: .74rem; font-weight: 600; color: var(--red);
+  background: rgba(224,85,85,.08); border: 1px solid rgba(224,85,85,.25);
+  border-radius: 30px; padding: 7px 14px; cursor: pointer;
+}
+
+.menu-list { display: flex; flex-direction: column; gap: 2px; margin-top: 8px; }
+.menu-item {
+  display: flex; align-items: center; gap: 14px;
+  width: 100%; text-align: left; cursor: pointer;
+  padding: 15px 16px; border-radius: var(--radius-sm);
+  background: rgba(255,230,150,.03); border: 1px solid transparent;
+  transition: background .16s, border-color .16s;
+  -webkit-tap-highlight-color: transparent;
+}
+.menu-item:hover { background: rgba(95,210,232,.07); border-color: rgba(95,210,232,.2); }
+.menu-item-emoji { font-size: 1.25rem; width: 26px; text-align: center; flex-shrink: 0; }
+.menu-item-label { flex: 1; font-size: .92rem; color: var(--text-primary); }
+.menu-item-arrow { color: var(--text-muted); font-size: 1rem; }
+
+/* Login form */
+.login-wrap { padding: 6px 0; }
+.login-tabs { display: flex; gap: 6px; margin-bottom: 18px; background: rgba(255,255,255,.04); padding: 4px; border-radius: 30px; }
+.login-tab {
+  flex: 1; text-align: center; padding: 9px; border-radius: 26px; cursor: pointer;
+  font-size: .84rem; font-weight: 600; color: var(--text-sec); background: transparent; border: none;
+  transition: background .18s, color .18s;
+}
+.login-tab.active { color: #06243a; background: linear-gradient(135deg, #4db8ff, #87ceeb); }
+.login-field { margin-bottom: 13px; }
+.login-label { display: block; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+.login-input {
+  width: 100%; font-family: inherit; font-size: .95rem;
+  background: rgba(255,230,150,.05); border: 1px solid rgba(255,224,150,.16);
+  border-radius: var(--radius-sm); color: var(--text-primary); padding: 13px 14px;
+}
+.login-input:focus { outline: 2px solid rgba(95,210,232,.5); border-color: rgba(95,210,232,.4); }
+.login-submit {
+  width: 100%; margin-top: 6px; padding: 14px; cursor: pointer;
+  font-size: .95rem; font-weight: 700; color: #06243a;
+  border-radius: var(--radius-sm); border: none;
+  background: linear-gradient(135deg, #4db8ff, #87ceeb);
+  box-shadow: 0 6px 20px rgba(95,210,232,.3);
+  transition: transform .12s, box-shadow .2s;
+}
+.login-submit:hover { box-shadow: 0 8px 26px rgba(95,210,232,.45); }
+.login-submit:active { transform: scale(.99); }
+.login-error { font-size: .8rem; color: var(--red); margin-top: 10px; text-align: center; min-height: 18px; }
+.login-note { font-size: .74rem; color: var(--text-muted); text-align: center; margin-top: 14px; line-height: 1.6; }
+
+/* Tab bar becomes the real nav */
+.tab-item { background: none; border: none; }
+
+
 body.no-anim *, body.no-anim *::before, body.no-anim *::after {
   animation-duration: .001ms !important; transition-duration: .001ms !important;
 }
@@ -1605,6 +1862,8 @@ try {
   </div>
 </nav>
 
+<!-- ===== BIBLE VIEW (the reader) ===== -->
+<div class="app-view active" id="view-bible">
 <!-- Main scroll area -->
 <div class="scroll-area">
 
@@ -1737,6 +1996,10 @@ try {
       <span class="action-tile-icon">↗</span>
       <span class="action-tile-label">Copy &amp; Share</span>
     </button>
+    <button class="action-tile" id="shareImage">
+      <span class="action-tile-icon">🖼️</span>
+      <span class="action-tile-label">Share Image</span>
+    </button>
     <button class="action-tile" id="seqToggle" aria-pressed="true">
       <span class="action-tile-icon">📖</span>
       <span class="action-tile-label" id="seqLabel">In Order: On</span>
@@ -1800,44 +2063,140 @@ try {
   <div class="section-header" style="padding-top:4px;">
     <span class="section-header-title">Settings</span>
   </div>
-  <div class="settings-strip">
-    <button class="setting-pill anim-toggle" id="animToggle" role="switch" aria-checked="true" aria-label="Background animations">
-      <span class="setting-label" id="animLabel">Animations</span>
-      <div class="toggle-track"><div class="toggle-knob"></div></div>
-    </button>
-    <button class="setting-pill" id="themeBtn" aria-label="Change reading theme">
-      <span class="setting-label">Theme</span>
-      <span class="theme-pill-val" id="themeLabel">Dark</span>
-    </button>
-  </div>
-  <div class="picker-card" style="margin-top:11px;">
-    <div class="comfort-row">
-      <label for="fontRange">🅰 Text size</label>
-      <input type="range" class="comfort-slider" id="fontRange" min="100" max="170" step="5" value="100">
-      <span class="comfort-val" id="fontVal">100%</span>
-    </div>
+  <button class="menu-item" onclick="openSettings()" style="border:1px solid rgba(255,224,150,.12);border-radius:var(--radius-sm);background:rgba(255,230,150,.04);">
+    <span class="menu-item-emoji">⚙️</span>
+    <span class="menu-item-label">All Settings — theme, text size, translation & more</span>
+    <span class="menu-item-arrow">›</span>
+  </button>
+  <!-- hidden controls kept for state sync (driven by the Settings screen) -->
+  <div style="display:none">
+    <button id="animToggle" role="switch" aria-checked="true"><span id="animLabel"></span></button>
+    <button id="themeBtn"><span id="themeLabel"></span></button>
+    <input type="range" id="fontRange" min="100" max="170" step="5" value="100">
+    <span id="fontVal">100%</span>
   </div>
 
   </div><!-- end lower-scroll -->
 </div><!-- end scroll-area -->
+</div><!-- end view-bible -->
 
-<!-- Bottom Tab Bar (decorative tabs; functional buttons already in toolbar) -->
+<!-- ===== HOME VIEW ===== -->
+<div class="app-view" id="view-home">
+  <div class="page-view">
+    <div class="home-greeting">
+      <div class="home-greeting-hi" id="homeGreeting">Peace be with you ✦</div>
+      <div class="home-greeting-sub" id="homeGreetingSub">Welcome back to the Word</div>
+    </div>
+
+    <div class="home-votd">
+      <div class="home-votd-label">✦ Verse of the Day</div>
+      <div class="home-votd-text" id="homeVotdText">Loading today's verse…</div>
+      <div class="home-votd-ref" id="homeVotdRef"></div>
+    </div>
+
+    <button class="home-cta" onclick="continueReading()">
+      <span class="home-cta-emoji">📖</span>
+      <span class="home-cta-body">
+        <span class="home-cta-title" id="homeContinueTitle">Start Reading</span>
+        <span class="home-cta-desc" id="homeContinueDesc">Open the Scriptures</span>
+      </span>
+      <span class="home-cta-arrow">›</span>
+    </button>
+
+    <div class="pv-section-label">Explore</div>
+    <div class="home-grid">
+      <button class="home-tile" onclick="goSection('bible');setTimeout(function(){verseOfTheDay&&verseOfTheDay();},80)">
+        <span class="home-tile-emoji">✨</span>
+        <span class="home-tile-title">Verse of the Day</span>
+        <span class="home-tile-sub">Daily light</span>
+      </button>
+      <button class="home-tile" onclick="openPlans()">
+        <span class="home-tile-emoji">🗓️</span>
+        <span class="home-tile-title">Reading Plans</span>
+        <span class="home-tile-sub">Guided journeys</span>
+      </button>
+      <button class="home-tile" onclick="openBadges()">
+        <span class="home-tile-emoji">👑</span>
+        <span class="home-tile-title">Badges</span>
+        <span class="home-tile-sub" id="homeBadgeSub">Your progress</span>
+      </button>
+      <button class="home-tile" onclick="openTestimonies()">
+        <span class="home-tile-emoji">🎥</span>
+        <span class="home-tile-title">Testimonies</span>
+        <span class="home-tile-sub">Watch & be encouraged</span>
+      </button>
+    </div>
+  </div>
+</div><!-- end view-home -->
+
+<!-- ===== SEARCH VIEW ===== -->
+<div class="app-view" id="view-search">
+  <div class="page-view">
+    <div class="pv-hero">
+      <div class="pv-hero-mark">🔍</div>
+      <div class="pv-hero-title">Search Scripture</div>
+      <div class="pv-hero-sub">Find any word or phrase across the Word</div>
+    </div>
+    <div class="search-view-box">
+      <input class="search-view-input" id="searchViewInput" type="search" placeholder="Search e.g. “love”, “light”, “shepherd”…" autocomplete="off">
+      <button class="search-view-btn" id="searchViewBtn">Go</button>
+    </div>
+    <div class="search-chip-row" id="searchChips"></div>
+    <div id="searchViewResults"></div>
+  </div>
+</div><!-- end view-search -->
+
+<!-- ===== MORE VIEW ===== -->
+<div class="app-view" id="view-more">
+  <div class="page-view">
+    <div class="pv-hero">
+      <div class="pv-hero-mark">✦</div>
+      <div class="pv-hero-title">More</div>
+      <div class="pv-hero-sub">Your account & settings</div>
+    </div>
+
+    <!-- Account / login slot -->
+    <div id="accountSlot"></div>
+
+    <div class="pv-section-label">Library</div>
+    <div class="menu-list">
+      <button class="menu-item" onclick="openBookmarks()"><span class="menu-item-emoji">🔖</span><span class="menu-item-label">Bookmarks</span><span class="menu-item-arrow">›</span></button>
+      <button class="menu-item" onclick="openHighlightsList()"><span class="menu-item-emoji">🖍️</span><span class="menu-item-label">Highlights</span><span class="menu-item-arrow">›</span></button>
+      <button class="menu-item" onclick="openNotesList()"><span class="menu-item-emoji">📓</span><span class="menu-item-label">My Notes</span><span class="menu-item-arrow">›</span></button>
+      <button class="menu-item" onclick="openPlans()"><span class="menu-item-emoji">🗓️</span><span class="menu-item-label">Reading Plans</span><span class="menu-item-arrow">›</span></button>
+      <button class="menu-item" onclick="openBadges()"><span class="menu-item-emoji">👑</span><span class="menu-item-label">Reading Badges</span><span class="menu-item-arrow">›</span></button>
+    </div>
+
+    <div class="pv-section-label">Watch & Listen</div>
+    <div class="menu-list">
+      <button class="menu-item" onclick="openTestimonies()"><span class="menu-item-emoji">🎥</span><span class="menu-item-label">Watch Testimonies</span><span class="menu-item-arrow">›</span></button>
+    </div>
+
+    <div class="pv-section-label">App</div>
+    <div class="menu-list">
+      <button class="menu-item" onclick="openSettings()"><span class="menu-item-emoji">⚙️</span><span class="menu-item-label">Settings</span><span class="menu-item-arrow">›</span></button>
+      <button class="menu-item" onclick="openAbout()"><span class="menu-item-emoji">✦</span><span class="menu-item-label">About</span><span class="menu-item-arrow">›</span></button>
+    </div>
+  </div>
+</div><!-- end view-more -->
+
+<!-- Bottom Tab Bar — section navigation -->
 <nav class="tab-bar" aria-label="App navigation">
-  <button class="tab-item active" onclick="">
-    <span class="tab-icon">📖</span>
-    <span class="tab-label">Read</span>
+  <button class="tab-item" id="tab-home" onclick="goSection('home')">
+    <span class="tab-icon">🏠</span>
+    <span class="tab-label">Home</span>
   </button>
-  <button class="tab-item" id="tabSearch" onclick="openSearch()">
+  <button class="tab-item active" id="tab-bible" onclick="goSection('bible')">
+    <span class="tab-icon">📖</span>
+    <span class="tab-label">Bible</span>
+  </button>
+  <button class="tab-item" id="tab-search" onclick="goSection('search')">
     <span class="tab-icon">🔍</span>
     <span class="tab-label">Search</span>
   </button>
-  <button class="tab-item" id="tabBookmarks" onclick="openBookmarks()">
-    <span class="tab-icon">🔖</span>
-    <span class="tab-label">Saved</span>
-  </button>
-  <button class="tab-item" id="tabAbout" onclick="openAbout()">
+  <button class="tab-item" id="tab-more" onclick="goSection('more')">
     <span class="tab-icon">✦</span>
-    <span class="tab-label">About</span>
+    <span class="tab-label">More</span>
   </button>
 </nav>
 
@@ -2253,6 +2612,7 @@ function openDB(){
 function idbGet(key){ return openDB().then(function(d){return new Promise(function(res){var rq=d.transaction(STORE,"readonly").objectStore(STORE).get(key);rq.onsuccess=function(){res(rq.result||null);};rq.onerror=function(){res(null);};});}).catch(function(){return null;}); }
 function idbSet(key,val){ return openDB().then(function(d){return new Promise(function(res){var tx=d.transaction(STORE,"readwrite");tx.objectStore(STORE).put(val,key);tx.oncomplete=function(){res(true);};tx.onerror=function(){res(false);};});}).catch(function(){return false;}); }
 function idbCount(){ return openDB().then(function(d){return new Promise(function(res){var rq=d.transaction(STORE,"readonly").objectStore(STORE).count();rq.onsuccess=function(){res(rq.result||0);};rq.onerror=function(){res(0);};});}).catch(function(){return 0;}); }
+function idbClear(){ return openDB().then(function(d){return new Promise(function(res){var tx=d.transaction(STORE,"readwrite");tx.objectStore(STORE).clear();tx.oncomplete=function(){res(true);};tx.onerror=function(){res(false);};});}).catch(function(){return false;}); }
 
 var LOADED_BIBLE=null;
 function netFetchChapter(num,chap){
@@ -2828,6 +3188,187 @@ function shareVerse(){
   else{try{var ta=document.createElement("textarea");ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);flash("Copied \u2713");}catch(e){flash("Not supported");}}
 }
 
+/* ===================================================================
+   SHAREABLE VERSE IMAGE  (canvas — works offline, no libraries)
+   =================================================================== */
+var VI_THEMES=[
+  {name:"Celestial Gold", bg:["#1a1206","#3a2a0e","#0c0a06"], halo:"rgba(255,216,140,", ray:"rgba(255,224,150,", text:"#f8f0dc", ref:"#e7cf95", star:"rgba(255,240,200,"},
+  {name:"Midnight Blue",  bg:["#070d1c","#10204a","#04060f"], halo:"rgba(120,190,255,", ray:"rgba(150,200,255,", text:"#eaf2ff", ref:"#9fd0ff", star:"rgba(220,235,255,"},
+  {name:"Royal Violet",   bg:["#140a24","#341a52","#0a0512"], halo:"rgba(200,150,255,", ray:"rgba(210,170,255,", text:"#f3eaff", ref:"#d2b0ff", star:"rgba(240,225,255,"},
+  {name:"Dawn Rose",      bg:["#241010","#52261f","#120705"], halo:"rgba(255,170,150,", ray:"rgba(255,190,160,", text:"#fff0ea", ref:"#ffc0a8", star:"rgba(255,235,225,"}
+];
+var viFormat="square", viTheme=0;
+
+function viDims(){ return viFormat==="story"?{w:1080,h:1920}:{w:1080,h:1080}; }
+
+function drawVerseImage(canvas){
+  if(!current||!current.text)return;
+  var d=viDims();canvas.width=d.w;canvas.height=d.h;
+  var ctx=canvas.getContext("2d");
+  var T=VI_THEMES[viTheme];
+  var W=d.w,H=d.h,cx=W/2;
+
+  /* background gradient */
+  var bg=ctx.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,T.bg[0]);bg.addColorStop(.55,T.bg[1]);bg.addColorStop(1,T.bg[2]);
+  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+
+  /* throne halo near top */
+  var haloY=H*0.30;
+  var halo=ctx.createRadialGradient(cx,haloY,0,cx,haloY,W*0.62);
+  halo.addColorStop(0,T.halo+"0.55)");
+  halo.addColorStop(.35,T.halo+"0.22)");
+  halo.addColorStop(1,T.halo+"0)");
+  ctx.fillStyle=halo;ctx.fillRect(0,0,W,H);
+
+  /* golden rays from the halo */
+  ctx.save();ctx.translate(cx,haloY);
+  var rays=18;
+  for(var r=0;r<rays;r++){
+    var ang=(Math.PI*2/rays)*r + 0.12;
+    ctx.save();ctx.rotate(ang);
+    var g=ctx.createLinearGradient(0,0,0,-W*0.75);
+    g.addColorStop(0,T.ray+"0.18)");g.addColorStop(1,T.ray+"0)");
+    ctx.fillStyle=g;
+    ctx.beginPath();ctx.moveTo(-W*0.012,0);ctx.lineTo(W*0.012,0);ctx.lineTo(W*0.05,-W*0.8);ctx.lineTo(-W*0.05,-W*0.8);ctx.closePath();ctx.fill();
+    ctx.restore();
+  }
+  ctx.restore();
+
+  /* starfield */
+  var seed=12345;function rnd(){seed=(seed*9301+49297)%233280;return seed/233280;}
+  for(var s=0;s<90;s++){
+    var sx=rnd()*W,sy=rnd()*H,sr=rnd()*2.2+0.4,sa=rnd()*0.6+0.2;
+    ctx.fillStyle=T.star+sa.toFixed(2)+")";
+    ctx.beginPath();ctx.arc(sx,sy,sr,0,Math.PI*2);ctx.fill();
+  }
+
+  /* small cross/star ornament above the text */
+  ctx.fillStyle=T.ref;ctx.font="700 "+Math.round(W*0.05)+"px Georgia, serif";
+  ctx.textAlign="center";ctx.textBaseline="middle";
+  ctx.globalAlpha=.7;ctx.fillText("\u2726",cx,H*0.18);ctx.globalAlpha=1;
+
+  /* verse text — word wrapped, auto-sized to fit */
+  var quote="\u201C"+current.text+"\u201D";
+  var maxW=W*0.82, boxTop=H*0.30, boxBot=H*0.78;
+  var fs=Math.round(W*0.062);
+  var lines, lineH;
+  /* shrink font until it fits the vertical box */
+  while(fs>22){
+    ctx.font="500 "+fs+"px Georgia, serif";
+    lines=wrapText(ctx,quote,maxW);
+    lineH=fs*1.32;
+    if(lines.length*lineH <= (boxBot-boxTop) || fs<=22)break;
+    fs-=3;
+  }
+  ctx.fillStyle=T.text;ctx.textAlign="center";ctx.textBaseline="middle";
+  ctx.shadowColor="rgba(0,0,0,.5)";ctx.shadowBlur=W*0.012;
+  var totalH=lines.length*lineH;
+  var startY=boxTop+(boxBot-boxTop-totalH)/2+lineH/2;
+  for(var i=0;i<lines.length;i++){ ctx.fillText(lines[i],cx,startY+i*lineH); }
+  ctx.shadowBlur=0;
+
+  /* divider */
+  ctx.strokeStyle=T.ref;ctx.globalAlpha=.5;ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(cx-60,H*0.84);ctx.lineTo(cx+60,H*0.84);ctx.stroke();ctx.globalAlpha=1;
+
+  /* reference */
+  ctx.fillStyle=T.ref;ctx.font="700 "+Math.round(W*0.045)+"px Georgia, serif";
+  ctx.fillText(current.ref,cx,H*0.885);
+
+  /* translation + app credit */
+  ctx.fillStyle=T.text;ctx.globalAlpha=.5;ctx.font="400 "+Math.round(W*0.026)+"px Georgia, serif";
+  var trn=(typeof TRANSLATIONS!=="undefined"&&typeof TRANSLATION!=="undefined")?(function(){for(var k=0;k<TRANSLATIONS.length;k++)if(TRANSLATIONS[k].code===TRANSLATION)return TRANSLATIONS[k].name;return "World English Bible";})():"World English Bible";
+  ctx.fillText(trn,cx,H*0.925);
+  ctx.globalAlpha=.4;ctx.font="400 "+Math.round(W*0.024)+"px Georgia, serif";
+  ctx.fillText("\u2726 Vision of the Heavens",cx,H*0.955);
+  ctx.globalAlpha=1;
+}
+function wrapText(ctx,text,maxW){
+  var words=text.split(" "),lines=[],line="";
+  for(var i=0;i<words.length;i++){
+    var test=line?line+" "+words[i]:words[i];
+    if(ctx.measureText(test).width>maxW && line){lines.push(line);line=words[i];}
+    else line=test;
+  }
+  if(line)lines.push(line);
+  return lines;
+}
+
+function openShareImage(){
+  if(!current||!current.text){return;}
+  if("speechSynthesis" in window)speechSynthesis.cancel();
+  $("sheetTitle").textContent="Share Verse Image";
+  var body=$("sheetBody");
+  body.innerHTML=
+    '<div class="vi-preview-wrap"><canvas class="vi-canvas" id="viCanvas"></canvas></div>'+
+    '<div class="vi-formats">'+
+      '<div class="vi-fmt active" data-fmt="square">⬛ Square · Instagram</div>'+
+      '<div class="vi-fmt" data-fmt="story">▮ Story · WhatsApp</div>'+
+    '</div>'+
+    '<div class="vi-styles" id="viStyles"></div>'+
+    '<div class="vi-actions">'+
+      '<button class="vi-btn vi-btn-share" id="viShare">📤 Share</button>'+
+      '<button class="vi-btn vi-btn-download" id="viDownload">⬇ Download</button>'+
+    '</div>'+
+    '<div class="vi-hint">Save it, then post to your WhatsApp status or Instagram story. On phones, “Share” opens your apps directly.</div>';
+  openSheet();
+
+  /* style swatches */
+  var sw=$("viStyles");
+  VI_THEMES.forEach(function(t,i){
+    var b=document.createElement("button");b.className="vi-style"+(i===viTheme?" active":"");
+    b.title=t.name;
+    b.style.background="linear-gradient(135deg,"+t.bg[1]+","+t.bg[0]+")";
+    b.addEventListener("click",function(){viTheme=i;sw.querySelectorAll(".vi-style").forEach(function(x,j){x.classList.toggle("active",j===i);});render();});
+    sw.appendChild(b);
+  });
+  /* format toggles */
+  body.querySelectorAll(".vi-fmt").forEach(function(f){
+    f.addEventListener("click",function(){
+      viFormat=f.getAttribute("data-fmt");
+      body.querySelectorAll(".vi-fmt").forEach(function(x){x.classList.toggle("active",x===f);});
+      render();
+    });
+  });
+
+  var canvas=$("viCanvas");
+  function render(){ drawVerseImage(canvas); }
+  render();
+
+  /* file name */
+  function fileName(){return (current.ref||"verse").replace(/[^a-z0-9]+/gi,"-").toLowerCase()+".png";}
+
+  $("viDownload").addEventListener("click",function(){
+    drawVerseImage(canvas);
+    canvas.toBlob(function(blob){
+      if(!blob)return;
+      var url=URL.createObjectURL(blob);
+      var a=document.createElement("a");a.href=url;a.download=fileName();
+      document.body.appendChild(a);a.click();document.body.removeChild(a);
+      setTimeout(function(){URL.revokeObjectURL(url);},1000);
+    },"image/png");
+  });
+
+  $("viShare").addEventListener("click",function(){
+    drawVerseImage(canvas);
+    canvas.toBlob(function(blob){
+      if(!blob)return;
+      var file=new File([blob],fileName(),{type:"image/png"});
+      var shareData={files:[file],title:"Scripture",text:"\u201C"+current.text+"\u201D \u2014 "+current.ref};
+      if(navigator.canShare&&navigator.canShare({files:[file]})&&navigator.share){
+        navigator.share(shareData).catch(function(){});
+      }else{
+        /* fallback: download */
+        var url=URL.createObjectURL(blob);var a=document.createElement("a");a.href=url;a.download=fileName();
+        document.body.appendChild(a);a.click();document.body.removeChild(a);
+        setTimeout(function(){URL.revokeObjectURL(url);},1000);
+        var h=$("sheetBody").querySelector(".vi-hint");if(h)h.textContent="Image downloaded — your browser can't share files directly, so post it from your gallery.";
+      }
+    },"image/png");
+  });
+}
+
 function lsGet(k,dflt){try{var v=localStorage.getItem(k);return v==null?dflt:JSON.parse(v);}catch(e){return dflt;}}
 function lsSet(k,val){try{localStorage.setItem(k,JSON.stringify(val));}catch(e){}}
 
@@ -3058,6 +3599,200 @@ function openAbout(){
 
 function openSheet(){$("overlay").hidden=false;}
 function closeSheet(){$("overlay").hidden=true;var p=document.getElementById("testiPlayer");if(p)p.innerHTML="";}
+
+/* ===================================================================
+   SECTION NAVIGATION (Home / Bible / Search / More)
+   =================================================================== */
+var currentSection="bible";
+function goSection(name){
+  currentSection=name;
+  var views=["home","bible","search","more"];
+  views.forEach(function(v){
+    var el=document.getElementById("view-"+v);if(el)el.classList.toggle("active",v===name);
+    var tab=document.getElementById("tab-"+v);if(tab)tab.classList.toggle("active",v===name);
+  });
+  /* per-section refresh */
+  if(name==="home")refreshHome();
+  if(name==="more")renderAccount();
+  if(name==="search")setTimeout(function(){var i=$("searchViewInput");if(i)i.focus();},120);
+  /* scroll the active view to top */
+  var av=document.querySelector("#view-"+name+" .page-view, #view-"+name+" .scroll-area");
+  if(av&&av.scrollTo)av.scrollTo({top:0});
+}
+function continueReading(){ goSection("bible"); }
+
+/* ===================================================================
+   ACCOUNT / LOGIN  (client-side, localStorage — works on static hosting)
+   Note: this is a lightweight local sign-in for personalization only.
+   Passwords are lightly hashed and never leave the device.
+   =================================================================== */
+function _hash(str){
+  /* simple non-cryptographic hash — for local gating only, not real security */
+  var h=5381;for(var i=0;i<str.length;i++){h=((h<<5)+h+str.charCodeAt(i))>>>0;}
+  return "h"+h.toString(36);
+}
+function getAccount(){ return lsGet("account",null); }
+function getUsers(){ return lsGet("users",{}); }
+function currentUser(){ var a=getAccount(); if(!a)return null; var u=getUsers()[a]; if(!u)return null; return {email:a,name:u.name}; }
+
+function renderAccount(){
+  var slot=$("accountSlot");if(!slot)return;
+  var u=currentUser();
+  if(u){
+    var initial=(u.name||u.email||"?").trim().charAt(0).toUpperCase();
+    slot.innerHTML=
+      '<div class="account-card">'+
+        '<div class="account-avatar">'+escapeHtml(initial)+'</div>'+
+        '<div class="account-info"><div class="account-name">'+escapeHtml(u.name||"Friend")+'</div>'+
+        '<div class="account-email">'+escapeHtml(u.email)+'</div></div>'+
+        '<button class="account-signout" id="signOutBtn">Sign out</button>'+
+      '</div>';
+    $("signOutBtn").addEventListener("click",function(){
+      lsSet("account",null);renderAccount();refreshHome();
+    });
+  }else{
+    slot.innerHTML=buildLoginForm();
+    wireLoginForm();
+  }
+}
+function buildLoginForm(){
+  return ''+
+  '<div class="login-wrap">'+
+    '<div class="login-tabs">'+
+      '<button class="login-tab active" data-mode="signin">Sign In</button>'+
+      '<button class="login-tab" data-mode="signup">Create Account</button>'+
+    '</div>'+
+    '<div class="login-field" id="nameField" hidden>'+
+      '<label class="login-label" for="lgName">Name</label>'+
+      '<input class="login-input" id="lgName" type="text" autocomplete="name" placeholder="Your name">'+
+    '</div>'+
+    '<div class="login-field">'+
+      '<label class="login-label" for="lgEmail">Email</label>'+
+      '<input class="login-input" id="lgEmail" type="email" autocomplete="email" placeholder="you@example.com">'+
+    '</div>'+
+    '<div class="login-field">'+
+      '<label class="login-label" for="lgPass">Password</label>'+
+      '<input class="login-input" id="lgPass" type="password" autocomplete="current-password" placeholder="••••••••">'+
+    '</div>'+
+    '<button class="login-submit" id="lgSubmit">Sign In</button>'+
+    '<div class="login-error" id="lgError"></div>'+
+    '<div class="login-note">Your account is stored only on this device for a personalized experience. No data is sent anywhere.</div>'+
+  '</div>';
+}
+var loginMode="signin";
+function wireLoginForm(){
+  var tabs=document.querySelectorAll(".login-tab");
+  tabs.forEach(function(t){
+    t.addEventListener("click",function(){
+      loginMode=t.getAttribute("data-mode");
+      tabs.forEach(function(x){x.classList.toggle("active",x===t);});
+      $("nameField").hidden=(loginMode!=="signup");
+      $("lgSubmit").textContent=(loginMode==="signup")?"Create Account":"Sign In";
+      $("lgPass").setAttribute("autocomplete",loginMode==="signup"?"new-password":"current-password");
+      $("lgError").textContent="";
+    });
+  });
+  $("lgSubmit").addEventListener("click",submitLogin);
+  $("lgPass").addEventListener("keydown",function(e){if(e.key==="Enter")submitLogin();});
+}
+function submitLogin(){
+  var err=$("lgError");err.textContent="";
+  var email=($("lgEmail").value||"").trim().toLowerCase();
+  var pass=$("lgPass").value||"";
+  var name=($("lgName")?$("lgName").value:"").trim();
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){err.textContent="Please enter a valid email.";return;}
+  if(pass.length<4){err.textContent="Password must be at least 4 characters.";return;}
+  var users=getUsers();
+  if(loginMode==="signup"){
+    if(!name){err.textContent="Please enter your name.";return;}
+    if(users[email]){err.textContent="An account with this email already exists. Try signing in.";return;}
+    users[email]={name:name,pass:_hash(pass)};
+    lsSet("users",users);lsSet("account",email);
+    renderAccount();refreshHome();
+  }else{
+    var u=users[email];
+    if(!u){err.textContent="No account found. Create one above.";return;}
+    if(u.pass!==_hash(pass)){err.textContent="Incorrect password.";return;}
+    lsSet("account",email);
+    renderAccount();refreshHome();
+  }
+}
+
+/* ===================================================================
+   HOME
+   =================================================================== */
+function refreshHome(){
+  var u=currentUser();
+  var g=$("homeGreeting"),gs=$("homeGreetingSub");
+  var hour=new Date().getHours();
+  var part=hour<12?"Good morning":hour<18?"Good afternoon":"Good evening";
+  if(g)g.textContent=u?(part+", "+(u.name.split(" ")[0])+" ✦"):"Peace be with you ✦";
+  if(gs)gs.textContent=u?"Welcome back to the Word":"Sign in from More to personalize";
+  /* continue-reading label */
+  try{
+    var last=lsGet("lastRead",null);
+    if(last&&last.ref){
+      $("homeContinueTitle").textContent="Continue Reading";
+      $("homeContinueDesc").textContent=last.ref;
+    }
+  }catch(e){}
+  /* badge sub */
+  try{
+    var s=getProgress();var b=currentBadge(s.total);
+    var bs=$("homeBadgeSub");if(bs)bs.textContent=b?b.name:"Start today";
+  }catch(e){}
+  /* verse of the day mini */
+  loadHomeVotd();
+}
+function loadHomeVotd(){
+  var tEl=$("homeVotdText"),rEl=$("homeVotdRef");if(!tEl)return;
+  try{
+    if(typeof VOTD_POOL!=="undefined"&&VOTD_POOL.length){
+      var ref=VOTD_POOL[(typeof dayNumber==="function"?dayNumber():0)%VOTD_POOL.length];
+      var p=parseRef(ref);
+      if(BOOK_BY_NAME[p.book]){
+        fetchChapter(p.book,p.chap).then(function(vs){
+          var v=vs.filter(function(x){return x.verse===p.verse;})[0];
+          if(v){tEl.textContent="“"+v.text+"”";rEl.textContent=ref;}
+          else{tEl.textContent="Open the Bible tab to begin today's reading.";rEl.textContent=ref;}
+        }).catch(function(){tEl.textContent="Tap to open today's verse in the Bible tab.";rEl.textContent=ref;});
+        return;
+      }
+    }
+  }catch(e){}
+  tEl.textContent="Open the Bible tab to begin today's reading.";rEl.textContent="";
+}
+
+/* ===================================================================
+   SEARCH VIEW
+   =================================================================== */
+function runSearchView(){
+  var q=($("searchViewInput").value||"").trim().toLowerCase();
+  var box=$("searchViewResults");if(!box)return;
+  if(q.length<2){box.innerHTML='<div class="search-view-hint">Type at least 2 letters. Searches verses you’ve loaded or downloaded — use “Offline” in the Bible tab to download everything for full search.</div>';return;}
+  var pool=collectSearchable();var hits=[];
+  for(var i=0;i<pool.length&&hits.length<80;i++){if(pool[i].text&&pool[i].text.toLowerCase().indexOf(q)>=0)hits.push(pool[i]);}
+  if(!hits.length){box.innerHTML='<div class="search-view-hint">No matches in loaded text yet. Download the Bible from the Bible tab → Offline for a full search.</div>';return;}
+  box.innerHTML="";
+  hits.forEach(function(h){
+    var row=document.createElement("div");row.className="result-item";
+    row.innerHTML='<div><span class="result-ref">'+escapeHtml(h.ref)+'</span><br><span class="result-text">'+escapeHtml(h.text.slice(0,110))+'</span></div>';
+    row.addEventListener("click",function(){goSection("bible");show(h);});
+    box.appendChild(row);
+  });
+}
+function initSearchView(){
+  var input=$("searchViewInput"),btn=$("searchViewBtn");
+  if(input){var timer=null;input.addEventListener("input",function(){clearTimeout(timer);timer=setTimeout(runSearchView,220);});
+    input.addEventListener("keydown",function(e){if(e.key==="Enter")runSearchView();});}
+  if(btn)btn.addEventListener("click",runSearchView);
+  var chips=$("searchChips");
+  if(chips){["love","light","faith","peace","shepherd","wisdom","hope"].forEach(function(w){
+    var c=document.createElement("button");c.className="search-chip";c.textContent=w;
+    c.addEventListener("click",function(){$("searchViewInput").value=w;runSearchView();});
+    chips.appendChild(c);
+  });}
+}
 
 /* ===== Watch Testimonies ===== */
 /* Reads a static JSON file so it works on GitHub Pages (no PHP/server needed).
@@ -3381,6 +4116,7 @@ $("aboutBtn").addEventListener("click",openAbout);
 $("read").addEventListener("click",read);
 $("votd").addEventListener("click",function(){scrollToVerseCard();verseOfTheDay();});
 $("share").addEventListener("click",shareVerse);
+$("shareImage").addEventListener("click",openShareImage);
 $("autoplay").addEventListener("click",toggleAuto);
 $("download").addEventListener("click",downloadAll);
 $("loadfile").addEventListener("click",function(){$("fileinput").click();});
@@ -3431,41 +4167,154 @@ showStreak();
 (function(){var el=$("streak");if(el)el.addEventListener("click",openBadges);})();
 resumeLastRead();
 
+/* ---- App sections init ---- */
+initSearchView();
+renderAccount();
+/* start on Home so users see the landing section first */
+goSection("home");
+
 
 /* ---- Theme ---- */
+var THEMES=[{cls:"",name:"Dark"},{cls:"theme-sepia",name:"Sepia"},{cls:"theme-light",name:"Light"}];
+var themeIdx=0;
+function applyTheme(i){
+  themeIdx=i;
+  document.body.classList.remove("theme-sepia","theme-light");
+  if(THEMES[i].cls)document.body.classList.add(THEMES[i].cls);
+  var label=$("themeLabel");if(label)label.textContent=THEMES[i].name;
+  try{localStorage.setItem("themeIndex",String(i));}catch(e){}
+  /* keep settings sheet in sync if open */
+  var seg=document.getElementById("setThemeSeg");
+  if(seg)seg.querySelectorAll(".set-seg-btn").forEach(function(b,j){b.classList.toggle("active",j===i);});
+}
 (function(){
-  var btn=$("themeBtn"),label=$("themeLabel");if(!btn)return;
-  var THEMES=[{cls:"",name:"Dark"},{cls:"theme-sepia",name:"Sepia"},{cls:"theme-light",name:"Light"}];
-  function applyIndex(i){
-    document.body.classList.remove("theme-sepia","theme-light");
-    if(THEMES[i].cls)document.body.classList.add(THEMES[i].cls);
-    if(label)label.textContent=THEMES[i].name;
-    try{localStorage.setItem("themeIndex",String(i));}catch(e){}
-  }
+  var btn=$("themeBtn");
   var start=0;
   try{var s=parseInt(localStorage.getItem("themeIndex"),10);if(!isNaN(s)&&s>=0&&s<THEMES.length)start=s;}catch(e){}
-  applyIndex(start);
-  var idx=start;
-  btn.addEventListener("click",function(){idx=(idx+1)%THEMES.length;applyIndex(idx);});
+  applyTheme(start);
+  if(btn)btn.addEventListener("click",function(){applyTheme((themeIdx+1)%THEMES.length);});
 })();
 
 /* ---- Animation toggle ---- */
+function applyAnim(off){
+  document.body.classList.toggle("no-anim",off);
+  var btn=$("animToggle");
+  if(btn){btn.classList.toggle("on",!off);btn.setAttribute("aria-checked",off?"false":"true");}
+  try{localStorage.setItem("animOff",off?"1":"0");}catch(e){}
+  var t=document.getElementById("setAnimToggle");if(t)t.classList.toggle("on",!off);
+}
 (function(){
-  var btn=$("animToggle"),label=$("animLabel");if(!btn)return;
-  function getPref(){try{return localStorage.getItem("animOff")==="1";}catch(e){return false;}}
-  function apply(off){
-    document.body.classList.toggle("no-anim",off);
-    btn.classList.toggle("on",!off);
-    btn.setAttribute("aria-checked",off?"false":"true");
-    if(label)label.textContent="Animations";
-  }
-  apply(getPref());
-  btn.addEventListener("click",function(){
-    var off=!document.body.classList.contains("no-anim");
-    apply(off);
-    try{localStorage.setItem("animOff",off?"1":"0");}catch(e){}
-  });
+  var off=false;try{off=localStorage.getItem("animOff")==="1";}catch(e){}
+  applyAnim(off);
+  var btn=$("animToggle");
+  if(btn)btn.addEventListener("click",function(){applyAnim(!document.body.classList.contains("no-anim"));});
 })();
+
+/* ===================================================================
+   CONSOLIDATED SETTINGS SCREEN
+   =================================================================== */
+function openSettings(){
+  if("speechSynthesis" in window)speechSynthesis.cancel();
+  $("sheetTitle").textContent="Settings";
+  var body=$("sheetBody");
+  var fontPct=lsGet("fontPct",100);
+  var animOff=document.body.classList.contains("no-anim");
+  var seqOn=(typeof seqMode!=="undefined")?seqMode:true;
+
+  body.innerHTML=
+    /* APPEARANCE */
+    '<div class="set-group"><div class="set-group-label">Appearance</div><div class="set-rows">'+
+      '<div class="set-row"><span class="set-row-icon">🎨</span><div class="set-row-body"><div class="set-row-title">Theme</div><div class="set-row-desc">Reading background</div></div>'+
+        '<div class="set-row-control"><div class="set-seg" id="setThemeSeg">'+
+          THEMES.map(function(t,i){return '<button class="set-seg-btn'+(i===themeIdx?" active":"")+'" data-i="'+i+'">'+t.name+'</button>';}).join("")+
+        '</div></div></div>'+
+      '<div class="set-row"><span class="set-row-icon">✨</span><div class="set-row-body"><div class="set-row-title">Animations</div><div class="set-row-desc">Background & card motion</div></div>'+
+        '<div class="set-row-control"><button class="set-toggle'+(animOff?"":" on")+'" id="setAnimToggle" aria-label="Animations"></button></div></div>'+
+      '<div class="set-row set-row-slider"><div class="set-slider-top"><div style="display:flex;align-items:center;gap:12px;"><span class="set-row-icon">🅰</span><div class="set-row-title">Text size</div></div><span class="set-slider-val" id="setFontVal">'+fontPct+'%</span></div>'+
+        '<input type="range" class="set-slider" id="setFontSlider" min="100" max="170" step="5" value="'+fontPct+'">'+
+        '<div class="set-preview" id="setFontPreview" style="font-size:'+(fontPct/100)+'em">“The LORD is my shepherd; I shall not want.”</div></div>'+
+    '</div></div>'+
+
+    /* READING */
+    '<div class="set-group"><div class="set-group-label">Reading</div><div class="set-rows">'+
+      '<div class="set-row"><span class="set-row-icon">📖</span><div class="set-row-body"><div class="set-row-title">Translation</div><div class="set-row-desc">Default Bible version</div></div>'+
+        '<div class="set-row-control"><div class="set-seg" id="setTransSeg">'+
+          (typeof TRANSLATIONS!=="undefined"?TRANSLATIONS.map(function(t){return '<button class="set-seg-btn'+(t.code===TRANSLATION?" active":"")+'" data-code="'+t.code+'">'+t.abbr+'</button>';}).join(""):"")+
+        '</div></div></div>'+
+      '<div class="set-row"><span class="set-row-icon">🔢</span><div class="set-row-body"><div class="set-row-title">Read in order</div><div class="set-row-desc">Sequential vs. random verses</div></div>'+
+        '<div class="set-row-control"><button class="set-toggle'+(seqOn?" on":"")+'" id="setSeqToggle" aria-label="Read in order"></button></div></div>'+
+    '</div></div>'+
+
+    /* DATA */
+    '<div class="set-group"><div class="set-group-label">Data & Storage</div><div class="set-rows">'+
+      '<div class="set-row"><span class="set-row-icon">💾</span><div class="set-row-body"><div class="set-row-title">Offline Bible</div><div class="set-row-desc" id="setOfflineDesc">Download for offline reading</div></div>'+
+        '<div class="set-row-control"><button class="set-seg-btn" id="setDownloadBtn" style="background:rgba(95,210,232,.1);color:var(--ai-cyan);border:1px solid rgba(95,210,232,.3)">Download</button></div></div>'+
+    '</div>'+
+      '<button class="set-danger-btn" id="setClearCache" style="margin-top:10px">Clear downloaded chapters</button>'+
+      '<button class="set-danger-btn" id="setResetAll" style="margin-top:8px">Reset all app data</button>'+
+    '</div>'+
+
+    /* ABOUT */
+    '<div class="set-group"><div class="set-group-label">About</div>'+
+      '<div class="set-about-line"><b style="color:var(--text-sec)">Vision of the Heavens</b><br>The whole Bible with Enoch & Jubilees<br>Engineered by Tebogo Maruping</div>'+
+    '</div>';
+
+  openSheet();
+
+  /* offline count */
+  if(typeof idbCount==="function"){idbCount().then(function(n){var d=$("setOfflineDesc");if(d)d.textContent=n>0?(n+" chapters saved offline"):"Download for offline reading";}).catch(function(){});}
+  body.querySelectorAll("#setThemeSeg .set-seg-btn").forEach(function(b){
+    b.addEventListener("click",function(){applyTheme(+b.getAttribute("data-i"));});
+  });
+  /* ANIMATIONS */
+  $("setAnimToggle").addEventListener("click",function(){applyAnim(!document.body.classList.contains("no-anim"));});
+  /* TEXT SIZE */
+  var fs=$("setFontSlider");
+  fs.addEventListener("input",function(){
+    var v=+this.value;$("setFontVal").textContent=v+"%";
+    $("setFontPreview").style.fontSize=(v/100)+"em";
+    if(typeof applyFontSize==="function")applyFontSize(v);
+    var inline=$("fontRange");if(inline)inline.value=v;
+    var inlineVal=$("fontVal");if(inlineVal)inlineVal.textContent=v+"%";
+    lsSet("fontPct",v);
+  });
+  /* TRANSLATION */
+  body.querySelectorAll("#setTransSeg .set-seg-btn").forEach(function(b){
+    b.addEventListener("click",function(){
+      var code=b.getAttribute("data-code");
+      if(typeof setTranslation==="function"){setTranslation(code);
+        body.querySelectorAll("#setTransSeg .set-seg-btn").forEach(function(x){x.classList.toggle("active",x===b);});
+        if(typeof buildTransBar==="function")buildTransBar();
+        if(typeof reloadCurrent==="function")reloadCurrent();
+      }
+    });
+  });
+  /* READ IN ORDER */
+  var st=$("setSeqToggle");
+  if(st)st.addEventListener("click",function(){
+    var inline=$("seqToggle");if(inline){inline.click();}
+    st.classList.toggle("on",(typeof seqMode!=="undefined")?seqMode:!st.classList.contains("on"));
+  });
+  /* OFFLINE download */
+  var db=$("setDownloadBtn");
+  if(db)db.addEventListener("click",function(){var inline=$("download");if(inline){closeSheet();inline.click();}});
+  /* CLEAR CACHE */
+  $("setClearCache").addEventListener("click",function(){
+    if(!confirm("Clear all downloaded Bible chapters? You can re-download anytime."))return;
+    try{
+      if(typeof chapterCache!=="undefined")for(var k in chapterCache)delete chapterCache[k];
+      if(typeof idbClear==="function"){idbClear();}
+    }catch(e){}
+    this.textContent="Cleared ✓";var self=this;setTimeout(function(){self.textContent="Clear downloaded chapters";},1600);
+  });
+  /* RESET ALL */
+  $("setResetAll").addEventListener("click",function(){
+    if(!confirm("Reset everything? This clears your bookmarks, notes, highlights, badges, account, and settings on this device. This cannot be undone."))return;
+    try{localStorage.clear();}catch(e){}
+    try{if(typeof idbClear==="function")idbClear();}catch(e){}
+    location.reload();
+  });
+}
 
 </script>
 </body>
