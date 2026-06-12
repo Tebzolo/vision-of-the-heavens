@@ -31,6 +31,10 @@
   --border-soft: rgba(255,255,255,.06);
   --red:         #e05555;
   --green:       #5db785;
+  /* Agentic AI accent (used on the verse card) */
+  --ai-cyan:     #5fd2e8;
+  --ai-cyan-dim: rgba(95,210,232,.55);
+  --ai-glow:     rgba(95,210,232,.30);
   /* Layout */
   --nav-h:       68px;
   --tab-h:       calc(60px + env(safe-area-inset-bottom));
@@ -173,9 +177,50 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
 .scroll-area {
   position: relative; z-index: 1;
   padding-top: calc(var(--nav-h) + 12px);
-  padding-bottom: calc(var(--tab-h) + 20px);
-  min-height: 100dvh;
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
+
+/* Lower panel scrolls independently, with its own scrollbar, starting at the badges/quick-actions */
+.lower-scroll {
+  flex: 1 1 auto;
+  min-height: 116px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding-top: 6px;
+  padding-bottom: calc(var(--tab-h) + 20px);
+  /* subtle inset edge to signal the scroll boundary */
+  border-top: 1px solid rgba(95,210,232,.12);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 10px);
+          mask-image: linear-gradient(180deg, transparent 0, #000 10px);
+}
+.lower-scroll::-webkit-scrollbar { width: 8px; }
+.lower-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,.03); border-radius: 8px; }
+.lower-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(95,210,232,.5), rgba(200,169,110,.4));
+  border-radius: 8px;
+}
+.lower-scroll::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, rgba(95,210,232,.7), rgba(200,169,110,.6)); }
+.lower-scroll { scrollbar-width: thin; scrollbar-color: rgba(95,210,232,.5) rgba(255,255,255,.04); }
+
+/* On short/landscape or very small screens, fall back to normal page scroll so nothing gets cut off */
+@media (max-height: 620px) {
+  .scroll-area { height: auto; min-height: 100dvh; overflow: visible; display: block; padding-bottom: calc(var(--tab-h) + 20px); }
+  .lower-scroll { overflow: visible; height: auto; border-top: none; -webkit-mask-image: none; mask-image: none; padding-bottom: 0; }
+}
+
+/* Keep the pinned top block compact so the card always shows alongside the scrolling panel */
+.scroll-area > .celestial-bar { margin-bottom: 8px; }
+.scroll-area > .filter-bar-wrap { padding-top: 2px; padding-bottom: 4px; }
+.scroll-area > .trans-bar { margin-bottom: 8px; }
+.scroll-area > .verse-card { margin-bottom: 0; flex-shrink: 0; }
 
 /* ===== SECTION FILTERS ===== */
 .filter-bar-wrap {
@@ -290,77 +335,107 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
 .book {
   position: relative;
   display: flex;
-  border-radius: 4px 14px 14px 4px;
-  /* Deep book shadow */
-  filter: drop-shadow(0 18px 48px rgba(0,0,0,.55)) drop-shadow(0 4px 12px rgba(0,0,0,.35));
-  transform: rotateX(1deg);
-  transition: filter .4s, transform .4s;
+  border-radius: 6px 18px 18px 6px;
+  /* Deeper, layered book shadow for solid physical weight + faint AI halo */
+  filter:
+    drop-shadow(0 26px 60px rgba(0,0,0,.62))
+    drop-shadow(0 10px 22px rgba(0,0,0,.45))
+    drop-shadow(0 0 1px rgba(95,210,232,.18));
+  transform: rotateX(1.4deg) translateZ(0);
+  transition: filter .45s, transform .45s;
 }
-.book:hover { transform: rotateX(0deg); }
+.book:hover { transform: rotateX(0deg); filter: drop-shadow(0 30px 70px rgba(0,0,0,.66)) drop-shadow(0 12px 26px rgba(0,0,0,.5)) drop-shadow(0 0 14px rgba(95,210,232,.22)); }
+
+/* Focus pulse when a new passage is loaded from the lower panel */
+.verse-card.card-focus .book { animation: card-focus-pulse .7s ease-out; }
+@keyframes card-focus-pulse {
+  0%   { filter: drop-shadow(0 26px 60px rgba(0,0,0,.62)) drop-shadow(0 0 0 rgba(95,210,232,0)); }
+  35%  { filter: drop-shadow(0 26px 60px rgba(0,0,0,.62)) drop-shadow(0 0 22px rgba(95,210,232,.5)); }
+  100% { filter: drop-shadow(0 26px 60px rgba(0,0,0,.62)) drop-shadow(0 0 0 rgba(95,210,232,0)); }
+}
+
+/* Stacked page-edges on the right — gives the book real thickness */
+.book::before {
+  content: '';
+  position: absolute; z-index: 0;
+  top: 5px; bottom: 5px; right: -7px; width: 9px;
+  border-radius: 0 12px 12px 0;
+  background: repeating-linear-gradient(180deg,
+    #efe4c4 0px, #efe4c4 1px,
+    #cdbf98 1px, #cdbf98 2px,
+    #e6d9b6 2px, #e6d9b6 3px);
+  box-shadow: 3px 4px 12px rgba(0,0,0,.5), inset -2px 0 5px rgba(0,0,0,.35);
+  transform: skewY(-1.2deg);
+}
+/* Bottom page-edge sliver for the closed-pages-underneath look */
+.book::after {
+  content: '';
+  position: absolute; z-index: 0;
+  left: 16px; right: -4px; bottom: -6px; height: 8px;
+  border-radius: 0 0 12px 12px;
+  background: repeating-linear-gradient(90deg,
+    #e6d9b6 0px, #e6d9b6 2px,
+    #cdbf98 2px, #cdbf98 3px);
+  box-shadow: 0 5px 14px rgba(0,0,0,.5);
+  transform: skewX(-2deg);
+}
 
 /* LEFT page (spine side) */
 .book-left {
-  position: relative;
-  width: 18px; flex-shrink: 0;
+  position: relative; z-index: 2;
+  width: 22px; flex-shrink: 0;
   background: linear-gradient(90deg,
-    #2a1e08 0%,
-    #4a3412 18%,
-    #6a4e20 38%,
-    #7a5e2c 52%,
-    #5c4418 68%,
-    #3a2810 82%,
-    #2a1e08 100%);
-  border-radius: 4px 0 0 4px;
-  box-shadow: inset -4px 0 8px rgba(0,0,0,.45);
+    #14171b 0%,
+    #20252b 28%,
+    #2b3138 50%,
+    #20252b 72%,
+    #14171b 100%);
+  border-radius: 6px 0 0 6px;
+  box-shadow: inset -3px 0 8px rgba(0,0,0,.55);
   overflow: hidden;
 }
-/* spine ribbing */
+/* spine accent line */
 .book-left::before {
   content: '';
   position: absolute; inset: 0;
   background: repeating-linear-gradient(
     180deg,
-    transparent 0px,
-    transparent 18px,
-    rgba(0,0,0,.18) 18px,
-    rgba(0,0,0,.18) 20px
-  );
+    transparent 0px, transparent 22px,
+    rgba(0,0,0,.22) 22px, rgba(0,0,0,.22) 23px);
 }
 .book-left::after {
   content: '';
   position: absolute; inset: 0;
   background: linear-gradient(90deg,
-    rgba(0,0,0,.35) 0%,
-    transparent 40%,
-    rgba(255,220,140,.08) 60%,
-    rgba(0,0,0,.2) 100%);
+    rgba(0,0,0,.4) 0%,
+    transparent 45%,
+    rgba(95,210,232,.10) 62%,
+    rgba(0,0,0,.25) 100%);
 }
 
 /* RIGHT page — the actual reading surface */
 .book-page {
-  flex: 1;
+  flex: 1; z-index: 1;
   position: relative;
   background:
-    /* paper texture lines */
-    repeating-linear-gradient(
-      180deg,
-      transparent 0px,
-      transparent 27px,
-      rgba(180,140,80,.10) 27px,
-      rgba(180,140,80,.10) 28px
-    ),
-    /* warm page tint with glass */
-    linear-gradient(160deg,
-      rgba(255,240,195,.10) 0%,
-      rgba(255,220,140,.06) 40%,
-      rgba(240,200,120,.05) 100%);
-  backdrop-filter: blur(36px) saturate(3.2) brightness(1.18);
-  -webkit-backdrop-filter: blur(36px) saturate(3.2) brightness(1.18);
-  border: 1px solid rgba(255,224,150,.22);
+    /* faint ruled lines, subtler than before */
+    repeating-linear-gradient(180deg,
+      transparent 0px, transparent 33px,
+      rgba(180,140,80,.05) 33px, rgba(180,140,80,.05) 34px),
+    /* cool-to-warm modern glass gradient */
+    linear-gradient(155deg,
+      rgba(38,46,54,.62) 0%,
+      rgba(30,34,40,.58) 45%,
+      rgba(34,30,26,.55) 100%);
+  backdrop-filter: blur(40px) saturate(2.4) brightness(1.08);
+  -webkit-backdrop-filter: blur(40px) saturate(2.4) brightness(1.08);
+  border: 1px solid rgba(255,255,255,.10);
   border-left: none;
-  border-radius: 0 14px 14px 0;
-  overflow: hidden;
-  min-height: 260px;
+  border-radius: 0 18px 18px 0;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.10), inset 0 0 40px rgba(95,210,232,.04);
+  overflow: visible;
+  min-height: 220px;
+  display: flex; flex-direction: column;
 }
 
 /* Top page edge highlight */
@@ -386,6 +461,60 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
     transparent 100%);
   pointer-events: none;
 }
+
+/* ===== AGENTIC AI LAYER ===== */
+/* Active intelligence edge — a breathing cyan line along the right margin */
+.book-page .ai-edge {
+  position: absolute; top: 14px; bottom: 14px; right: 0; width: 2px;
+  background: linear-gradient(180deg, transparent, var(--ai-cyan-dim) 18%, var(--ai-cyan) 50%, var(--ai-cyan-dim) 82%, transparent);
+  box-shadow: 0 0 10px var(--ai-glow);
+  border-radius: 2px; pointer-events: none; z-index: 3;
+  animation: ai-breathe 3.4s ease-in-out infinite;
+}
+@keyframes ai-breathe { 0%,100%{opacity:.35} 50%{opacity:.9} }
+
+/* Faint circuit traces in the bottom-left corner */
+.book-page .ai-circuit {
+  position: absolute; left: 0; bottom: 0; width: 120px; height: 120px;
+  opacity: .14; pointer-events: none; z-index: 1; color: var(--ai-cyan);
+}
+
+/* A slow scan-shimmer that sweeps the page (behind the text) */
+.book-page .ai-scan {
+  position: absolute; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; border-radius: 0 14px 14px 0;
+}
+.book-page .ai-scan::before {
+  content: ''; position: absolute; top: 0; bottom: 0; width: 40%;
+  left: -50%;
+  background: linear-gradient(90deg, transparent, rgba(95,210,232,.10) 40%, rgba(160,235,250,.18) 50%, rgba(95,210,232,.10) 60%, transparent);
+  animation: ai-sweep 6s ease-in-out infinite;
+}
+@keyframes ai-sweep { 0%{left:-50%} 55%{left:120%} 100%{left:120%} }
+
+/* AI status pill in the header */
+.ai-status {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--font-ui, 'Space Grotesk', system-ui, sans-serif);
+  font-size: .54rem; font-weight: 700; letter-spacing: .18em;
+  color: var(--ai-cyan);
+  padding: 3px 8px; border-radius: 30px;
+  background: rgba(95,210,232,.08);
+  border: 1px solid rgba(95,210,232,.28);
+  box-shadow: inset 0 0 8px rgba(95,210,232,.10);
+  white-space: nowrap;
+}
+.ai-pulse {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--ai-cyan);
+  box-shadow: 0 0 0 0 var(--ai-glow);
+  animation: ai-ping 1.8s ease-out infinite;
+}
+@keyframes ai-ping {
+  0%   { box-shadow: 0 0 0 0 rgba(95,210,232,.5); opacity: 1; }
+  70%  { box-shadow: 0 0 0 7px rgba(95,210,232,0); opacity: .85; }
+  100% { box-shadow: 0 0 0 0 rgba(95,210,232,0); opacity: 1; }
+}
+@media (max-width: 420px){ .ai-status{ font-size:.5rem; padding:2px 6px; letter-spacing:.12em; } }
 
 /* Page curl shadow at bottom-right */
 .book-page-curl {
@@ -438,6 +567,66 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
 .book-content {
   position: relative; z-index: 2;
   padding: 22px 22px 18px 28px;
+  flex: 1 1 auto;
+  max-height: 310px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+}
+/* Subtle scrollbar for the verse card */
+.book-content::-webkit-scrollbar { width: 4px; }
+.book-content::-webkit-scrollbar-track { background: transparent; }
+.book-content::-webkit-scrollbar-thumb {
+  background: rgba(200,169,110,.35);
+  border-radius: 4px;
+}
+.book-content::-webkit-scrollbar-thumb:hover { background: rgba(200,169,110,.55); }
+.book-content { scrollbar-width: thin; scrollbar-color: rgba(200,169,110,.35) transparent; }
+
+/* Verse card internal scroll nav */
+.verse-card-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 16px 10px;
+  position: relative;
+  z-index: 5;
+}
+.verse-scroll-btn {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: rgba(200,169,110,.10);
+  border: 1px solid rgba(200,169,110,.22);
+  color: rgba(200,169,110,.70);
+  font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.verse-scroll-btn:hover, .verse-scroll-btn:active {
+  background: rgba(200,169,110,.22);
+  border-color: rgba(200,169,110,.45);
+  color: var(--accent);
+}
+.verse-scroll-indicator {
+  display: flex; align-items: center; gap: 4px;
+  font-size: .58rem; color: rgba(200,169,110,.40); letter-spacing: .08em;
+  text-transform: uppercase; font-weight: 500;
+  user-select: none;
+  pointer-events: none;
+}
+.verse-scroll-indicator .scroll-dot {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: rgba(200,169,110,.35);
+}
+.verse-scroll-indicator .scroll-dot.active {
+  background: var(--accent);
+  width: 12px; border-radius: 3px;
 }
 
 /* Book header row */
@@ -878,7 +1067,7 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
 /* ===== CELESTIAL INFO BAR (date/time + weather) ===== */
 .celestial-bar {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  margin: 0 0 14px;
+  margin: 0 16px 14px;
   padding: 11px 15px;
   border-radius: var(--radius);
   background:
@@ -939,7 +1128,8 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
 .trans-bar {
   display: flex; gap: 6px; flex-wrap: wrap;
   align-items: center; justify-content: center;
-  margin: 0 0 12px;
+  margin: 0 16px 12px;
+  padding: 0 2px;
 }
 .trans-pill {
   font-family: inherit; font-size: .74rem; font-weight: 600; letter-spacing: .04em;
@@ -969,6 +1159,22 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
 .verse-text .vw.has-study { border-bottom-color: rgba(200,169,110,.45); }
 .verse-text .vw.has-study:hover, .verse-text .vw.has-study:active { color: var(--accent,#c8a96e); border-bottom-color: var(--accent,#c8a96e); }
 
+/* Typewriter reveal — words start hidden and pop in left-to-right */
+.verse-text .vw {
+  opacity: 1; transform: none;
+  transition: opacity .26s ease, transform .26s ease, border-color .15s, color .15s;
+}
+.verse-text .vw.vw-typing { opacity: 0; transform: translateY(2px); }
+.type-caret {
+  display: inline-block; width: 2px; height: 1.05em;
+  margin-left: 1px; vertical-align: -0.16em;
+  background: var(--ai-cyan, #5fd2e8);
+  box-shadow: 0 0 8px var(--ai-glow, rgba(95,210,232,.4));
+  border-radius: 2px;
+  animation: caret-blink .85s steps(1) infinite;
+}
+@keyframes caret-blink { 0%,100%{opacity:1} 50%{opacity:.15} }
+
 .ws-orig {
   font-size: 2rem; font-weight: 700; text-align: center;
   color: var(--text-primary); margin: 4px 0 2px;
@@ -981,6 +1187,124 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
 .ws-val { font-size: .92rem; color: var(--text-sec); line-height: 1.6; }
 .ws-pron { font-size: .82rem; color: var(--text-muted); }
 .ws-tip { font-size: .76rem; color: var(--text-muted); text-align:center; padding: 14px 0 4px; line-height:1.5; }
+
+/* ===== VERSE ACTION TOOLBAR (on the card) ===== */
+.verse-actions {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  margin-top: 12px;
+}
+.va-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+  font-family: inherit; font-size: .72rem; font-weight: 600;
+  color: var(--text-sec); cursor: pointer;
+  background: rgba(255,230,150,.05);
+  border: 1px solid rgba(255,224,150,.14);
+  border-radius: 30px; padding: 6px 12px;
+  transition: background .16s, color .16s, border-color .16s, transform .1s;
+  -webkit-tap-highlight-color: transparent;
+}
+.va-btn:hover { color: var(--text-primary); border-color: rgba(200,169,110,.34); }
+.va-btn:active { transform: scale(.95); }
+.va-btn.on { color: var(--accent); border-color: rgba(200,169,110,.5); background: rgba(200,169,110,.12); }
+.va-ico { font-size: .95rem; line-height: 1; }
+
+/* Highlight color swatches (in note/highlight sheet) */
+.hl-swatches { display: flex; gap: 10px; justify-content: center; margin: 6px 0 16px; flex-wrap: wrap; }
+.hl-swatch {
+  width: 38px; height: 38px; border-radius: 50%; cursor: pointer;
+  border: 2px solid rgba(255,255,255,.18); position: relative;
+  transition: transform .12s; -webkit-tap-highlight-color: transparent;
+}
+.hl-swatch:active { transform: scale(.9); }
+.hl-swatch.sel { border-color: #fff; box-shadow: 0 0 0 3px rgba(255,255,255,.22); }
+.hl-swatch.none { background: transparent; border-style: dashed; color: var(--text-muted); display:flex;align-items:center;justify-content:center;font-size:1.2rem; }
+
+/* Verse highlight tint applied to the page */
+.book-page.hl-yellow .verse-text { background: linear-gradient(transparent 55%, rgba(255,214,90,.34) 55%); }
+.book-page.hl-green  .verse-text { background: linear-gradient(transparent 55%, rgba(120,220,140,.32) 55%); }
+.book-page.hl-blue   .verse-text { background: linear-gradient(transparent 55%, rgba(120,190,255,.32) 55%); }
+.book-page.hl-pink   .verse-text { background: linear-gradient(transparent 55%, rgba(255,150,200,.32) 55%); }
+.book-page.hl-orange .verse-text { background: linear-gradient(transparent 55%, rgba(255,170,90,.34) 55%); }
+.verse-text { border-radius: 4px; transition: background .25s; }
+
+/* Note editor */
+.note-area {
+  width: 100%; min-height: 130px; resize: vertical;
+  font-family: inherit; font-size: .95rem; line-height: 1.6;
+  color: var(--text-primary);
+  background: rgba(255,230,150,.05);
+  border: 1px solid rgba(255,224,150,.16);
+  border-radius: var(--radius-sm); padding: 13px 14px; margin-bottom: 12px;
+}
+.note-area:focus { outline: 2px solid rgba(200,169,110,.5); border-color: rgba(200,169,110,.4); }
+.note-ref { font-family:'EB Garamond',Georgia,serif; font-size:1.1rem; font-weight:700; color:var(--accent); text-align:center; margin-bottom:4px; }
+.note-versetext { font-size:.84rem; color:var(--text-sec); text-align:center; line-height:1.5; margin-bottom:14px; font-style:italic; }
+.note-save {
+  width:100%; font-family:inherit; font-size:.92rem; font-weight:700; letter-spacing:.04em;
+  color:#1a1407; cursor:pointer; border:none; border-radius:30px; padding:13px;
+  background:linear-gradient(135deg,var(--accent,#c8a96e),#e7cf95);
+  box-shadow:0 3px 12px rgba(200,169,110,.3);
+}
+.note-save:active{transform:scale(.98);}
+
+/* Saved note / highlight list rows */
+.entry-item {
+  display:flex; flex-direction:column; gap:4px; padding:12px;
+  border-radius:var(--radius-sm); background:rgba(255,230,150,.04);
+  border:1px solid rgba(255,224,150,.10); margin-bottom:9px; cursor:pointer;
+  position:relative;
+}
+.entry-item:hover{border-color:rgba(200,169,110,.3);background:rgba(200,169,110,.08);}
+.entry-dot{position:absolute;top:12px;right:12px;width:12px;height:12px;border-radius:50%;}
+.entry-ref{font-size:.86rem;font-weight:700;color:var(--accent);}
+.entry-text{font-size:.78rem;color:var(--text-sec);line-height:1.5;}
+.entry-note{font-size:.82rem;color:var(--text-primary);line-height:1.55;margin-top:3px;}
+.entry-del{position:absolute;bottom:10px;right:10px;font-size:.7rem;color:var(--text-muted);background:none;border:none;cursor:pointer;padding:4px 8px;}
+.entry-del:hover{color:var(--red);}
+
+/* ===== READING COMFORT (font size) ===== */
+.comfort-row { display:flex; align-items:center; gap:14px; padding:4px 0 8px; }
+.comfort-row label { font-size:.78rem; color:var(--text-sec); letter-spacing:.04em; white-space:nowrap; }
+.comfort-slider { flex:1; -webkit-appearance:none; appearance:none; height:6px; border-radius:6px; background:rgba(255,255,255,.12); outline:none; }
+.comfort-slider::-webkit-slider-thumb { -webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:linear-gradient(135deg,var(--accent),#e7cf95); cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.4); }
+.comfort-slider::-moz-range-thumb { width:22px;height:22px;border:none;border-radius:50%;background:linear-gradient(135deg,var(--accent),#e7cf95);cursor:pointer; }
+.comfort-val { font-size:.8rem; color:var(--text-primary); font-variant-numeric:tabular-nums; min-width:34px; text-align:right; }
+
+/* ===== READING PLANS ===== */
+.plan-card {
+  padding:14px; border-radius:var(--radius-sm); margin-bottom:11px; cursor:pointer;
+  background:rgba(255,230,150,.04); border:1px solid rgba(255,224,150,.12);
+  transition:border-color .16s, background .16s;
+}
+.plan-card:hover{border-color:rgba(200,169,110,.34);background:rgba(200,169,110,.07);}
+.plan-card.active-plan{border-color:rgba(200,169,110,.5);background:rgba(200,169,110,.1);}
+.plan-head{display:flex;align-items:center;gap:10px;}
+.plan-emoji{font-size:1.6rem;line-height:1;}
+.plan-title{font-size:.95rem;font-weight:700;color:var(--text-primary);}
+.plan-meta{font-size:.72rem;color:var(--text-muted);margin-top:2px;}
+.plan-bar-track{height:6px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:10px;}
+.plan-bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--accent-dim),var(--gold-hi));transition:width .5s;}
+.plan-day-list{margin-top:8px;}
+.plan-day{display:flex;align-items:center;gap:11px;padding:10px 4px;border-top:1px solid rgba(255,224,150,.08);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.plan-day:first-child{border-top:none;}
+.plan-day-check{width:24px;height:24px;border-radius:50%;border:2px solid rgba(200,169,110,.4);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.8rem;color:transparent;transition:all .18s;}
+.plan-day.done .plan-day-check{background:linear-gradient(135deg,var(--accent),#e7cf95);border-color:transparent;color:#1a1407;}
+.plan-day-meta{min-width:0;flex:1;}
+.plan-day-n{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);}
+.plan-day-ref{font-size:.9rem;color:var(--text-primary);font-weight:600;}
+.plan-back{font-size:.78rem;color:var(--accent);background:none;border:none;cursor:pointer;padding:4px 0;margin-bottom:8px;}
+
+/* ===== DAILY DEVOTIONAL ===== */
+.devo-card {
+  margin:0 0 14px; padding:15px 16px; border-radius:var(--radius);
+  background:radial-gradient(120% 150% at 10% -20%, rgba(200,169,110,.14), transparent 55%), linear-gradient(135deg, rgba(40,32,16,.5), rgba(20,17,10,.5));
+  border:1px solid var(--border);
+  backdrop-filter:blur(18px) saturate(2); -webkit-backdrop-filter:blur(18px) saturate(2);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+}
+.devo-label{font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+.devo-text{font-family:'EB Garamond',Georgia,serif;font-size:1.02rem;line-height:1.55;color:var(--text-primary);}
+.devo-prompt{font-size:.8rem;color:var(--text-sec);line-height:1.55;margin-top:9px;padding-top:9px;border-top:1px solid rgba(255,224,150,.1);font-style:italic;}
 
 .sheet {
   background: rgba(255,220,130,.04);
@@ -1356,12 +1680,24 @@ try {
       <div class="book-page">
         <span class="book-ribbon" aria-hidden="true"></span>
         <span class="book-page-curl" aria-hidden="true"></span>
+        <span class="ai-edge" aria-hidden="true"></span>
+        <span class="ai-scan" aria-hidden="true"></span>
+        <svg class="ai-circuit" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+          <path d="M0 96 H24 a6 6 0 0 0 6-6 V70 a6 6 0 0 1 6-6 H64" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M0 78 H14 a6 6 0 0 1 6 6 V110" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M40 120 V98 a6 6 0 0 1 6-6 H86" stroke="currentColor" stroke-width="1.2"/>
+          <circle cx="64" cy="64" r="3" fill="currentColor"/>
+          <circle cx="36" cy="92" r="2.4" fill="currentColor"/>
+          <circle cx="86" cy="92" r="2.4" fill="currentColor"/>
+          <circle cx="20" cy="110" r="2.4" fill="currentColor"/>
+        </svg>
         <button class="bookmark-btn" id="bookmark" aria-pressed="false" aria-label="Bookmark this verse">☆</button>
 
         <div class="book-content">
           <!-- Running head -->
           <div class="book-header">
             <span class="book-chapter-label" id="label">Reading</span>
+            <span class="ai-status" aria-hidden="true"><span class="ai-pulse"></span>AI&nbsp;READING</span>
             <span class="book-page-num" id="book-page-num">✦</span>
           </div>
 
@@ -1382,13 +1718,37 @@ try {
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 7h7M12 7l-3-3M12 7l-3 3"/></svg>
             </div>
           </div>
+
+          <!-- Verse actions -->
+          <div class="verse-actions">
+            <button class="va-btn" id="hlBtn" type="button"><span class="va-ico">🖊</span> Highlight</button>
+            <button class="va-btn" id="noteBtn" type="button"><span class="va-ico">📝</span> Note</button>
+          </div>
+        </div>
+
+        <!-- Verse card internal scroll nav -->
+        <div class="verse-card-nav" id="verseCardNav">
+          <button class="verse-scroll-btn" id="verseScrollUp" aria-label="Scroll verse up" title="Scroll up">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 8l4-4 4 4"/></svg>
+          </button>
+          <div class="verse-scroll-indicator" aria-hidden="true">
+            <span class="scroll-dot active" id="vsDot1"></span>
+            <span class="scroll-dot" id="vsDot2"></span>
+            <span class="scroll-dot" id="vsDot3"></span>
+          </div>
+          <button class="verse-scroll-btn" id="verseScrollDown" aria-label="Scroll verse down" title="Scroll down">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 4l4 4 4-4"/></svg>
+          </button>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Reading Badges -->
+  <div class="lower-scroll" id="lowerScroll">
+
   <!-- Prev / Next -->
-  <div class="nav-actions">
+  <div class="nav-actions" style="padding-top:8px;">
     <button class="btn-prev" id="prev" aria-label="Previous verse">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 3L5 8l5 5"/></svg>
       Previous
@@ -1399,7 +1759,13 @@ try {
     </button>
   </div>
 
-  <!-- Reading Badges -->
+  <!-- Daily devotional -->
+  <div class="devo-card" id="devoCard" hidden>
+    <div class="devo-label">✦ Today's Reflection</div>
+    <div class="devo-text" id="devoText"></div>
+    <div class="devo-prompt" id="devoPrompt"></div>
+  </div>
+
   <div class="streak-bar" id="streak"></div>
 
   <!-- Quick Actions -->
@@ -1438,6 +1804,18 @@ try {
     <button class="action-tile" id="testimonies">
       <span class="action-tile-icon">🎥</span>
       <span class="action-tile-label">Watch Testimonies</span>
+    </button>
+    <button class="action-tile" id="plansBtn">
+      <span class="action-tile-icon">🗓️</span>
+      <span class="action-tile-label">Reading Plans</span>
+    </button>
+    <button class="action-tile" id="highlightsBtn">
+      <span class="action-tile-icon">🖍️</span>
+      <span class="action-tile-label">Highlights</span>
+    </button>
+    <button class="action-tile" id="notesBtn">
+      <span class="action-tile-icon">📓</span>
+      <span class="action-tile-label">My Notes</span>
     </button>
   </div>
   <input type="file" id="fileinput" accept=".json,application/json">
@@ -1480,7 +1858,15 @@ try {
       <span class="theme-pill-val" id="themeLabel">Dark</span>
     </button>
   </div>
+  <div class="picker-card" style="margin-top:11px;">
+    <div class="comfort-row">
+      <label for="fontRange">🅰 Text size</label>
+      <input type="range" class="comfort-slider" id="fontRange" min="100" max="170" step="5" value="100">
+      <span class="comfort-val" id="fontVal">100%</span>
+    </div>
+  </div>
 
+  </div><!-- end lower-scroll -->
 </div><!-- end scroll-area -->
 
 <!-- Bottom Tab Bar (decorative tabs; functional buttons already in toolbar) -->
@@ -1991,11 +2377,12 @@ function show(entry){
     var pn=$("book-page-num");
     if(pn){var m=(current.ref||"").match(/(\d+):(\d+)/);pn.textContent=m?("ch. "+m[1]):"\u2726";}
     passage.classList.remove("hint","verse-leave");
+    passage.classList.remove("verse-enter");
     renderVerseWords(passage,current.text);
-    passage.classList.remove("verse-enter");void passage.offsetWidth;passage.classList.add("verse-enter");
     refEl.classList.remove("ref-enter");void refEl.offsetWidth;refEl.classList.add("ref-enter");
     if(autoOn)scheduleAuto();
     saveLastRead(current);updateBookmarkStar();markReadToday();
+    applyHighlightToCard();updateNoteIndicator();
   }
   var hasContent=passage.textContent&&!passage.classList.contains("hint");
   if(hasContent){
@@ -2007,22 +2394,54 @@ function show(entry){
   }else{render();}
 }
 
-/* Render verse text as tappable words; words with a Strong's entry get underlined */
+/* Render verse text as tappable words that "type" in left-to-right */
+var typeTimer=null;
 function renderVerseWords(el,text){
+  if(typeTimer){clearInterval(typeTimer);typeTimer=null;}
   el.innerHTML="";
+  el.classList.add("typing");
   var tokens=String(text||"").split(/(\s+)/);
+  var wordSpans=[];
   for(var i=0;i<tokens.length;i++){
     var tok=tokens[i];
     if(/^\s+$/.test(tok)||tok===""){el.appendChild(document.createTextNode(tok));continue;}
     var span=document.createElement("span");
-    span.className="vw";
+    span.className="vw vw-typing";
     span.textContent=tok;
     if(lookupStrongs(tok))span.classList.add("has-study");
     (function(word){
       span.addEventListener("click",function(e){e.stopPropagation();openWordStudy(word);});
     })(tok);
     el.appendChild(span);
+    wordSpans.push(span);
   }
+  /* caret rides at the end while typing */
+  var caret=document.createElement("span");caret.className="type-caret";el.appendChild(caret);
+
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var noAnim=document.body.classList.contains("no-anim");
+  if(reduce||noAnim){
+    for(var w=0;w<wordSpans.length;w++)wordSpans[w].classList.remove("vw-typing");
+    if(caret.parentNode)caret.parentNode.removeChild(caret);
+    el.classList.remove("typing");
+    return;
+  }
+  /* speed scales so long verses don't take forever */
+  var per=wordSpans.length>40?26:(wordSpans.length>22?34:46);
+  var idx=0;
+  typeTimer=setInterval(function(){
+    if(idx>=wordSpans.length){
+      clearInterval(typeTimer);typeTimer=null;
+      if(caret.parentNode)caret.parentNode.removeChild(caret);
+      el.classList.remove("typing");
+      return;
+    }
+    var s=wordSpans[idx];
+    s.classList.remove("vw-typing");
+    /* move caret right after the just-revealed word */
+    if(caret.parentNode===el){el.insertBefore(caret,s.nextSibling);}
+    idx++;
+  },per);
 }
 
 function openWordStudy(word){
@@ -2046,6 +2465,225 @@ function openWordStudy(word){
     '<div class="ws-tip">Definitions from Strong\u2019s Concordance (public domain). Tap any underlined word to explore its original meaning.</div>';
   body.innerHTML=html;
   openSheet();
+}
+
+/* ================= LIFE-BIBLE FEATURES ================= */
+
+/* ---- Highlights ---- */
+var HL_COLORS=[
+  {key:"yellow",css:"#ffd65a"},{key:"green",css:"#78dc8c"},
+  {key:"blue",css:"#78beff"},{key:"pink",css:"#ff96c8"},{key:"orange",css:"#ffaa5a"}
+];
+function getHighlights(){return lsGet("highlights",{});}
+function setHighlight(ref,color){
+  var h=getHighlights();
+  if(!color)delete h[ref];else h[ref]=color;
+  lsSet("highlights",h);
+}
+function applyHighlightToCard(){
+  var page=document.querySelector(".book-page");if(!page||!current)return;
+  HL_COLORS.forEach(function(c){page.classList.remove("hl-"+c.key);});
+  var h=getHighlights();var col=h[current.ref];
+  if(col)page.classList.add("hl-"+col);
+  var btn=$("hlBtn");if(btn)btn.classList.toggle("on",!!col);
+}
+function openHighlightPicker(){
+  if(!current||!current.ref)return;
+  var h=getHighlights();var cur=h[current.ref]||null;
+  $("sheetTitle").textContent="Highlight Verse";
+  var body=$("sheetBody");
+  var html='<div class="note-ref">'+escapeHtml(current.ref)+'</div>'+
+    '<div class="note-versetext">'+escapeHtml((current.text||"").slice(0,160))+'</div>'+
+    '<div class="hl-swatches">';
+  HL_COLORS.forEach(function(c){
+    html+='<div class="hl-swatch'+(cur===c.key?" sel":"")+'" data-c="'+c.key+'" style="background:'+c.css+'"></div>';
+  });
+  html+='<div class="hl-swatch none'+(!cur?" sel":"")+'" data-c="">✕</div></div>';
+  body.innerHTML=html;
+  var sw=body.querySelectorAll(".hl-swatch");
+  for(var i=0;i<sw.length;i++){
+    sw[i].addEventListener("click",function(){
+      setHighlight(current.ref,this.getAttribute("data-c"));
+      applyHighlightToCard();closeSheet();
+    });
+  }
+  openSheet();
+}
+function openHighlightsList(){
+  var h=getHighlights();var keys=Object.keys(h);
+  $("sheetTitle").textContent="Highlights";
+  var body=$("sheetBody");body.innerHTML="";
+  if(!keys.length){body.innerHTML='<div class="sheet-note">No highlights yet. Open a verse and tap <b>🖊 Highlight</b> to color-mark it.</div>';openSheet();return;}
+  keys.forEach(function(ref){
+    var color=h[ref];var cobj=HL_COLORS.filter(function(c){return c.key===color;})[0];
+    var row=document.createElement("div");row.className="entry-item";
+    row.innerHTML='<span class="entry-dot" style="background:'+(cobj?cobj.css:"#ffd65a")+'"></span>'+
+      '<span class="entry-ref">'+escapeHtml(ref)+'</span>';
+    row.addEventListener("click",function(){closeSheet();openBookmarkRef({ref:ref});});
+    var del=document.createElement("button");del.className="entry-del";del.textContent="Remove";
+    del.addEventListener("click",function(e){e.stopPropagation();setHighlight(ref,null);applyHighlightToCard();openHighlightsList();});
+    row.appendChild(del);
+    body.appendChild(row);
+  });
+  openSheet();
+}
+
+/* ---- Notes ---- */
+function getNotes(){return lsGet("notes",{});}
+function updateNoteIndicator(){
+  if(!current)return;var n=getNotes();var btn=$("noteBtn");
+  if(btn)btn.classList.toggle("on",!!(n[current.ref]&&n[current.ref].trim()));
+}
+function openNoteEditor(){
+  if(!current||!current.ref)return;
+  var n=getNotes();var existing=n[current.ref]||"";
+  $("sheetTitle").textContent="Note";
+  var body=$("sheetBody");
+  body.innerHTML='<div class="note-ref">'+escapeHtml(current.ref)+'</div>'+
+    '<div class="note-versetext">'+escapeHtml((current.text||"").slice(0,200))+'</div>'+
+    '<textarea class="note-area" id="noteArea" placeholder="Write your reflection, prayer, or insight\u2026"></textarea>'+
+    '<button class="note-save" id="noteSave">Save Note</button>';
+  var ta=$("noteArea");ta.value=existing;
+  $("noteSave").addEventListener("click",function(){
+    var nn=getNotes();var val=ta.value.trim();
+    if(val)nn[current.ref]=val;else delete nn[current.ref];
+    lsSet("notes",nn);updateNoteIndicator();closeSheet();
+  });
+  openSheet();setTimeout(function(){ta.focus();},350);
+}
+function openNotesList(){
+  var n=getNotes();var keys=Object.keys(n);
+  $("sheetTitle").textContent="My Notes";
+  var body=$("sheetBody");body.innerHTML="";
+  if(!keys.length){body.innerHTML='<div class="sheet-note">No notes yet. Open a verse and tap <b>📝 Note</b> to journal your thoughts.</div>';openSheet();return;}
+  keys.forEach(function(ref){
+    var row=document.createElement("div");row.className="entry-item";
+    row.innerHTML='<span class="entry-ref">'+escapeHtml(ref)+'</span>'+
+      '<span class="entry-note">'+escapeHtml(n[ref])+'</span>';
+    row.addEventListener("click",function(){closeSheet();openBookmarkRef({ref:ref});});
+    var del=document.createElement("button");del.className="entry-del";del.textContent="Delete";
+    del.addEventListener("click",function(e){e.stopPropagation();var nn=getNotes();delete nn[ref];lsSet("notes",nn);updateNoteIndicator();openNotesList();});
+    row.appendChild(del);
+    body.appendChild(row);
+  });
+  openSheet();
+}
+
+/* ---- Reading plans ---- */
+var PLANS=[
+  {id:"gospels7",emoji:"\u271D\uFE0F",title:"Meet Jesus in 7 Days",meta:"7 days · Gospels",days:[
+    "John 1:1","John 3:16","Luke 15:11","Matthew 5:3","Mark 10:45","Luke 23:34","John 20:19"]},
+  {id:"psalms14",emoji:"\uD83C\uDFB6",title:"Psalms of Comfort",meta:"14 days · Psalms",days:[
+    "Psalms 23:1","Psalms 27:1","Psalms 34:18","Psalms 46:1","Psalms 51:10","Psalms 62:1","Psalms 73:26",
+    "Psalms 91:1","Psalms 103:1","Psalms 118:24","Psalms 121:1","Psalms 130:1","Psalms 139:14","Psalms 145:18"]},
+  {id:"proverbs7",emoji:"\uD83E\uDD89",title:"Wisdom for Living",meta:"7 days · Proverbs",days:[
+    "Proverbs 1:7","Proverbs 3:5","Proverbs 4:23","Proverbs 11:2","Proverbs 16:3","Proverbs 18:10","Proverbs 31:30"]},
+  {id:"hope10",emoji:"\u2728",title:"Hope & Encouragement",meta:"10 days · Promises",days:[
+    "Isaiah 40:31","Jeremiah 29:11","Romans 8:28","Philippians 4:6","Philippians 4:13","2 Corinthians 12:9",
+    "Joshua 1:9","Isaiah 41:10","Matthew 11:28","Romans 15:13"]}
+];
+function getPlanProgress(){return lsGet("planProgress",{});}
+function planDone(id){var p=getPlanProgress();return p[id]||[];}
+function togglePlanDay(id,idx){
+  var p=getPlanProgress();var done=p[id]||[];var i=done.indexOf(idx);
+  if(i>=0)done.splice(i,1);else done.push(idx);
+  p[id]=done;lsSet("planProgress",p);
+}
+function openPlans(){
+  $("sheetTitle").textContent="Reading Plans";
+  var body=$("sheetBody");body.innerHTML="";
+  PLANS.forEach(function(pl){
+    var done=planDone(pl.id);var pct=Math.round(done.length/pl.days.length*100);
+    var card=document.createElement("div");card.className="plan-card"+(done.length?" active-plan":"");
+    card.innerHTML='<div class="plan-head"><span class="plan-emoji">'+pl.emoji+'</span>'+
+      '<div><div class="plan-title">'+escapeHtml(pl.title)+'</div>'+
+      '<div class="plan-meta">'+escapeHtml(pl.meta)+' · '+done.length+'/'+pl.days.length+' done</div></div></div>'+
+      '<div class="plan-bar-track"><div class="plan-bar-fill" style="width:'+pct+'%"></div></div>';
+    card.addEventListener("click",function(){openPlanDetail(pl.id);});
+    body.appendChild(card);
+  });
+  openSheet();
+}
+function openPlanDetail(id){
+  var pl=PLANS.filter(function(p){return p.id===id;})[0];if(!pl)return;
+  $("sheetTitle").textContent=pl.title;
+  var body=$("sheetBody");
+  function rebuild(){
+    var done=planDone(id);
+    var h='<button class="plan-back" id="planBack">‹ All plans</button>';
+    h+='<div class="plan-meta" style="margin-bottom:6px;">'+done.length+' of '+pl.days.length+' days complete</div>';
+    h+='<div class="plan-bar-track"><div class="plan-bar-fill" style="width:'+Math.round(done.length/pl.days.length*100)+'%"></div></div>';
+    h+='<div class="plan-day-list">';
+    pl.days.forEach(function(ref,i){
+      var isDone=done.indexOf(i)>=0;
+      h+='<div class="plan-day'+(isDone?" done":"")+'" data-i="'+i+'">'+
+        '<span class="plan-day-check">\u2713</span>'+
+        '<span class="plan-day-meta"><span class="plan-day-n">Day '+(i+1)+'</span>'+
+        '<span class="plan-day-ref">'+escapeHtml(ref)+'</span></span></div>';
+    });
+    h+='</div>';
+    body.innerHTML=h;
+    $("planBack").addEventListener("click",openPlans);
+    var rows=body.querySelectorAll(".plan-day");
+    for(var k=0;k<rows.length;k++){
+      rows[k].addEventListener("click",function(e){
+        var i=+this.getAttribute("data-i");var ref=pl.days[i];
+        /* tap the check toggles done; tap the ref opens it */
+        if(e.target.closest(".plan-day-check")){togglePlanDay(id,i);rebuild();return;}
+        togglePlanDay(id,i); /* mark read when opened */
+        if(planDone(id).indexOf(i)<0){} /* ensure visible state */
+        closeSheet();openBookmarkRef({ref:ref});
+      });
+    }
+  }
+  rebuild();
+  openSheet();
+}
+
+/* ---- Daily devotional ---- */
+var DEVOTIONS=[
+  {t:"Be still, and know that I am God.",p:"Where do you most need to trust God's control today?"},
+  {t:"The LORD is my shepherd; I shall not want.",p:"What provision can you thank God for right now?"},
+  {t:"Cast all your anxiety on Him because He cares for you.",p:"Name one worry to release to God this morning."},
+  {t:"Your word is a lamp to my feet and a light to my path.",p:"What next step is Scripture lighting for you?"},
+  {t:"Let everything that has breath praise the LORD.",p:"What is one reason for praise in your life today?"},
+  {t:"Love is patient, love is kind.",p:"Who can you show patient love to today?"},
+  {t:"I can do all things through Christ who strengthens me.",p:"Where do you need God's strength this week?"},
+  {t:"Trust in the LORD with all your heart.",p:"What decision are you trying to lean on your own understanding for?"},
+  {t:"This is the day the LORD has made; let us rejoice.",p:"What gift of today can you celebrate?"},
+  {t:"Come to me, all who labor, and I will give you rest.",p:"What burden can you bring to Jesus right now?"},
+  {t:"The joy of the LORD is your strength.",p:"Where can you choose joy over discouragement?"},
+  {t:"Be strong and courageous; the LORD your God is with you.",p:"What fear is God inviting you to face with Him?"},
+  {t:"Seek first the kingdom of God and His righteousness.",p:"What would putting God first change in your day?"},
+  {t:"Weeping may stay for the night, but joy comes in the morning.",p:"What hope can you hold onto in a hard season?"}
+];
+function showDevotional(){
+  var card=$("devoCard");if(!card)return;
+  var d=new Date();
+  /* deterministic day-of-year index so it changes daily but is stable within a day */
+  var start=new Date(d.getFullYear(),0,0);
+  var doy=Math.floor((d-start)/86400000);
+  var devo=DEVOTIONS[doy%DEVOTIONS.length];
+  $("devoText").textContent="\u201C"+devo.t+"\u201D";
+  $("devoPrompt").textContent=devo.p;
+  card.hidden=false;
+}
+
+/* ---- Reading comfort (font size) ---- */
+function applyFontSize(pct){
+  var p=$("passage");if(p)p.style.fontSize=(pct/100)+"em";
+}
+function initComfort(){
+  var saved=lsGet("fontPct",100);
+  var range=$("fontRange"),val=$("fontVal");
+  if(range){range.value=saved;}
+  if(val){val.textContent=saved+"%";}
+  applyFontSize(saved);
+  if(range){
+    range.addEventListener("input",function(){
+      var v=+this.value;if(val)val.textContent=v+"%";applyFontSize(v);lsSet("fontPct",v);
+    });
+  }
 }
 
 function showHeavensEntry(entry){
@@ -2765,11 +3403,11 @@ function flipPage(dir){
 function scrollToVerseCard(){
   var card=document.querySelector(".verse-card");if(!card)return;
   var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var navVar=getComputedStyle(document.documentElement).getPropertyValue("--nav-h");
-  var navH=parseInt(navVar,10)||68; // sticky header height
-  var top=card.getBoundingClientRect().top+window.pageYOffset-navH-12;
-  if(top<0)top=0;
-  window.scrollTo({top:top,behavior:reduce?"auto":"smooth"});
+  /* Pinned layout: the card is always visible. Reset the lower panel to top
+     and give the card a brief focus pulse so the eye returns to it. */
+  var lower=document.getElementById("lowerScroll");
+  if(lower&&lower.scrollTop>4){lower.scrollTo({top:0,behavior:reduce?"auto":"smooth"});}
+  card.classList.remove("card-focus");void card.offsetWidth;card.classList.add("card-focus");
 }
 
 $("next").addEventListener("click",function(){flipPage(1);next();});
@@ -2800,6 +3438,15 @@ $("fileinput").addEventListener("change",function(){if(this.files&&this.files[0]
 $("booksel").addEventListener("change",refreshChapters);
 $("chapsel").addEventListener("change",refreshVerses);
 $("goto").addEventListener("click",function(){scrollToVerseCard();gotoSelected();});
+
+/* Life Bible features */
+$("hlBtn").addEventListener("click",openHighlightPicker);
+$("noteBtn").addEventListener("click",openNoteEditor);
+$("plansBtn").addEventListener("click",openPlans);
+$("highlightsBtn").addEventListener("click",openHighlightsList);
+$("notesBtn").addEventListener("click",openNotesList);
+initComfort();
+showDevotional();
 refreshPicker(false);
 refreshOfflineLabel();
 buildTransBar();
@@ -2848,6 +3495,53 @@ resumeLastRead();
   applyIndex(start);
   var idx=start;
   btn.addEventListener("click",function(){idx=(idx+1)%THEMES.length;applyIndex(idx);});
+})();
+
+/* ---- Verse card internal scroll nav ---- */
+(function(){
+  var content = document.querySelector(".book-content");
+  var upBtn   = document.getElementById("verseScrollUp");
+  var downBtn = document.getElementById("verseScrollDown");
+  var dot1    = document.getElementById("vsDot1");
+  var dot2    = document.getElementById("vsDot2");
+  var dot3    = document.getElementById("vsDot3");
+  var nav     = document.getElementById("verseCardNav");
+  if(!content||!upBtn||!downBtn)return;
+
+  var STEP = 90; // px per click
+
+  function updateNav(){
+    var st = content.scrollTop;
+    var sh = content.scrollHeight;
+    var ch = content.clientHeight;
+    var scrollable = sh > ch + 4;
+    nav.style.display = scrollable ? "flex" : "none";
+    if(!scrollable) return;
+    // dots show scroll position thirds
+    var ratio = sh > ch ? st / (sh - ch) : 0;
+    dot1.classList.toggle("active", ratio < 0.33);
+    dot2.classList.toggle("active", ratio >= 0.33 && ratio < 0.67);
+    dot3.classList.toggle("active", ratio >= 0.67);
+  }
+
+  upBtn.addEventListener("click", function(){
+    content.scrollBy({top: -STEP, behavior: "smooth"});
+  });
+  downBtn.addEventListener("click", function(){
+    content.scrollBy({top: STEP, behavior: "smooth"});
+  });
+  content.addEventListener("scroll", updateNav, {passive: true});
+
+  // Re-check after each verse loads (MutationObserver on verse-body)
+  var vb = document.getElementById("verse-body");
+  if(vb){
+    var mo = new MutationObserver(function(){
+      setTimeout(updateNav, 80);
+    });
+    mo.observe(vb, {childList:true, subtree:true, characterData:true});
+  }
+  // initial
+  setTimeout(updateNav, 200);
 })();
 
 /* ---- Animation toggle ---- */
