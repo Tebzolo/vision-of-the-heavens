@@ -551,6 +551,58 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
 .bookmark-btn:hover { color: var(--accent); background: linear-gradient(180deg, rgba(200,169,110,.30), rgba(200,169,110,.18)); }
 .bookmark-btn[aria-pressed="true"] { color: var(--accent); background: linear-gradient(180deg, rgba(200,169,110,.35), rgba(200,169,110,.22)); }
 
+/* ===== PAGE-TURN ANIMATION ===== */
+/* The page needs a 3-D context for the turning leaf */
+.book-page { transform-style: preserve-3d; }
+
+/* The turning leaf — a clone of the page surface that sweeps over */
+.page-flip {
+  position: absolute; inset: 0;
+  z-index: 30;
+  transform-origin: left center;
+  pointer-events: none;
+  border-radius: 0 14px 14px 0;
+  backface-visibility: hidden;
+  /* same warm parchment as the page so the leaf matches */
+  background:
+    repeating-linear-gradient(180deg,
+      transparent 0px, transparent 27px,
+      rgba(180,140,80,.10) 27px, rgba(180,140,80,.10) 28px),
+    linear-gradient(160deg,
+      rgba(255,240,195,.16) 0%,
+      rgba(255,220,140,.10) 40%,
+      rgba(240,200,120,.08) 100%);
+  backdrop-filter: blur(36px) saturate(3.2) brightness(1.14);
+  -webkit-backdrop-filter: blur(36px) saturate(3.2) brightness(1.14);
+  box-shadow: 0 0 0 1px rgba(255,224,150,.20) inset;
+  will-change: transform, filter;
+}
+/* shading gradient on the leaf to fake the curved paper as it turns */
+.page-flip::after {
+  content:''; position:absolute; inset:0; border-radius:0 14px 14px 0;
+  background: linear-gradient(90deg,
+    rgba(0,0,0,.42) 0%,
+    rgba(0,0,0,.10) 22%,
+    transparent 45%,
+    rgba(255,240,180,.10) 88%,
+    rgba(255,255,255,.22) 100%);
+}
+
+/* forward turn: leaf lifts from right spine-side and flips left→ closed */
+.flip-forward { animation: page-turn-fwd .62s cubic-bezier(.42,0,.30,1) both; }
+@keyframes page-turn-fwd {
+  0%   { transform: rotateY(0deg);    filter: brightness(1); }
+  100% { transform: rotateY(-178deg); filter: brightness(.72); }
+}
+/* backward turn: leaf comes in from the left and lays flat */
+.flip-back { animation: page-turn-back .62s cubic-bezier(.42,0,.30,1) both; }
+@keyframes page-turn-back {
+  0%   { transform: rotateY(-178deg); filter: brightness(.72); }
+  100% { transform: rotateY(0deg);    filter: brightness(1); }
+}
+/* subtle lift of the whole book while a page turns */
+.book.turning { filter: drop-shadow(0 26px 60px rgba(0,0,0,.62)) drop-shadow(0 6px 16px rgba(0,0,0,.4)); }
+
 /* Verse animations */
 .verse-enter { animation: verse-in .5s cubic-bezier(.2,.8,.2,1) both; }
 .verse-leave { animation: verse-out .22s ease both; }
@@ -901,6 +953,8 @@ body.theme-light::after    { opacity: .20!important; }
   .action-tile-icon { font-size: 1.2rem; }
   .action-tile-label { font-size: .65rem; }
   .verse-text { font-size: clamp(1.15rem, 5vw, 1.5rem); }
+  .book-content { padding: 18px 16px 14px 20px; }
+  .book-left { width: 14px; }
   .picker-card-inner { flex-direction: column; align-items: stretch; }
   .picker-go { width: 100%; text-align: center; }
 }
@@ -1034,23 +1088,44 @@ try {
     </div>
   </div>
 
-  <!-- Verse Card -->
+  <!-- Verse Card — open Bible book -->
   <div class="verse-card">
-    <div class="verse-card-header">
-      <div class="verse-badge">
-        <span class="verse-badge-dot"></span>
-        <span class="verse-badge-label" id="label">Reading</span>
+    <div class="book">
+      <!-- Spine / left page -->
+      <div class="book-left" aria-hidden="true"></div>
+
+      <!-- Right page — the reading surface -->
+      <div class="book-page">
+        <span class="book-ribbon" aria-hidden="true"></span>
+        <span class="book-page-curl" aria-hidden="true"></span>
+        <button class="bookmark-btn" id="bookmark" aria-pressed="false" aria-label="Bookmark this verse">☆</button>
+
+        <div class="book-content">
+          <!-- Running head -->
+          <div class="book-header">
+            <span class="book-chapter-label" id="label">Reading</span>
+            <span class="book-page-num" id="book-page-num">✦</span>
+          </div>
+
+          <!-- Chapter ornament -->
+          <div class="book-ornament" aria-hidden="true">❦ ✦ ❦</div>
+
+          <div class="verse-body" id="verse-body">
+            <div class="verse-ref" id="ref"></div>
+            <p class="verse-text hint" id="passage">The whole Bible is here — choose a passage below, or tap Next to begin reading. Take your time.</p>
+          </div>
+
+          <!-- Footer rule + swipe hint -->
+          <div class="book-footer">
+            <span class="book-footer-rule" aria-hidden="true">· · ✦ · ·</span>
+            <div class="swipe-hint" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9 7H2M2 7l3-3M2 7l3 3"/></svg>
+              <span style="font-size:.65rem;color:rgba(200,169,110,.4);letter-spacing:.04em;">swipe to navigate</span>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 7h7M12 7l-3-3M12 7l-3 3"/></svg>
+            </div>
+          </div>
+        </div>
       </div>
-      <button class="bookmark-btn" id="bookmark" aria-pressed="false" aria-label="Bookmark this verse">☆</button>
-    </div>
-    <div class="verse-body" id="verse-body">
-      <div class="verse-ref" id="ref"></div>
-      <p class="verse-text hint" id="passage">The whole Bible is here — choose a passage below, or tap Next to begin reading. Take your time.</p>
-    </div>
-    <div class="swipe-hint" aria-hidden="true">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9 7H2M2 7l3-3M2 7l3 3"/></svg>
-      <span style="font-size:.65rem;color:var(--text-muted);letter-spacing:.04em;">swipe to navigate</span>
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 7h7M12 7l-3-3M12 7l-3 3"/></svg>
     </div>
   </div>
 
@@ -1555,6 +1630,8 @@ function show(entry){
   var refEl=$("ref"),passage=$("passage");
   function render(){
     refEl.textContent=line;
+    var pn=$("book-page-num");
+    if(pn){var m=(current.ref||"").match(/(\d+):(\d+)/);pn.textContent=m?("ch. "+m[1]):"\u2726";}
     passage.classList.remove("hint","verse-leave");
     passage.textContent=current.text;
     passage.classList.remove("verse-enter");void passage.offsetWidth;passage.classList.add("verse-enter");
@@ -1902,9 +1979,20 @@ function toggleAuto(){
   area.addEventListener("touchend",function(e){
     if(x0===null)return;
     var t=e.changedTouches[0],dx=t.clientX-x0,dy=t.clientY-y0;
-    if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)*1.6){if(dx<0){next();}else{goPrev();}}
+    if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)*1.6){if(dx<0){flipPage(1);next();}else{goPrev();}}
     x0=y0=null;
   },{passive:true});
+  /* Tap the page to turn forward (ignore taps on the bookmark, links, or selected text) */
+  var page=document.querySelector(".book-page");
+  if(page){
+    page.addEventListener("click",function(e){
+      if(e.target.closest(".bookmark-btn,a,button"))return;
+      var sel=window.getSelection&&window.getSelection().toString();
+      if(sel&&sel.length>0)return;
+      flipPage(1);next();
+    });
+    page.style.cursor="pointer";
+  }
 })();
 
 /* ---- Filter chips ---- */
@@ -1923,8 +2011,30 @@ for(var c=0;c<chips.length;c++){
 function $id(id){return document.getElementById(id);}
 function $(id){return document.getElementById(id);}
 
-$("next").addEventListener("click",next);
+/* ---- Page-turn animation ---- */
+var flipBusy=false;
+function flipPage(dir){
+  var page=document.querySelector(".book-page");
+  var book=document.querySelector(".book");
+  if(!page||flipBusy)return;
+  if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  flipBusy=true;
+  var leaf=document.createElement("div");
+  leaf.className="page-flip "+(dir<0?"flip-back":"flip-forward");
+  page.appendChild(leaf);
+  if(book)book.classList.add("turning");
+  var cleanup=function(){
+    if(leaf&&leaf.parentNode)leaf.parentNode.removeChild(leaf);
+    if(book)book.classList.remove("turning");
+    flipBusy=false;
+  };
+  leaf.addEventListener("animationend",cleanup,{once:true});
+  setTimeout(cleanup,750);
+}
+
+$("next").addEventListener("click",function(){flipPage(1);next();});
 function goPrev(){
+  flipPage(-1);
   if(seqMode||(current&&current.ref&&BOOK_BY_NAME[parseRef(current.ref).book])){seqStep(-1);}else{next();}
 }
 $("prev").addEventListener("click",goPrev);
