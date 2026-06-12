@@ -5,7 +5,7 @@
    to installed apps. The cache name is tied to this version, so
    a new version creates a fresh cache and retires the old one.
    ============================================================ */
-const APP_VERSION = "2026-06-12-01";
+const APP_VERSION = "2026-06-13-01";
 const CACHE = "voth-" + APP_VERSION;
 
 /* Core files that make the app shell work offline */
@@ -62,15 +62,21 @@ self.addEventListener("fetch", (event) => {
 
   /* Navigations / the HTML document: NETWORK-FIRST so a new deploy always wins online,
      fall back to the cached shell when offline. */
-  if (req.mode === "navigate" || (req.destination === "document")) {
+  if (req.mode === "navigate" || req.destination === "document") {
     event.respondWith(
       fetch(req)
         .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put("./index.html", copy)).catch(() => {});
+          /* only cache a genuinely good page */
+          if (res && res.ok && res.status === 200 && res.type !== "opaqueredirect") {
+            const copy = res.clone();
+            caches.open(CACHE).then((c) => c.put("./index.html", copy)).catch(() => {});
+          }
           return res;
         })
-        .catch(() => caches.match("./index.html").then((r) => r || caches.match("./")))
+        .catch(() =>
+          caches.match("./index.html").then((r) => r || caches.match("./") )
+            .then((r) => r || fetch("./index.html"))
+        )
     );
     return;
   }
