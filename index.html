@@ -730,7 +730,79 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
   border-radius: var(--radius-sm);
   text-align: center; font-size: .8rem; color: var(--accent); letter-spacing: .05em;
   min-height: 42px; display: flex; align-items: center; justify-content: center;
+  gap: 10px; cursor: pointer; -webkit-tap-highlight-color: transparent;
+  transition: background .18s, border-color .18s;
 }
+.streak-bar:hover { background: rgba(200,169,110,.10); border-color: rgba(200,169,110,.30); }
+.streak-badge-emoji { font-size: 1.4rem; line-height: 1; filter: drop-shadow(0 2px 5px rgba(0,0,0,.4)); }
+.streak-main { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-width: 0; }
+.streak-rank { font-size: .82rem; font-weight: 700; color: var(--text-primary); letter-spacing: .03em; }
+.streak-sub { font-size: .68rem; color: var(--text-sec); letter-spacing: .04em; }
+.streak-chev { color: var(--text-muted); font-size: .9rem; margin-left: auto; }
+
+/* ===== BADGES SHEET ===== */
+.badge-hero {
+  text-align: center; padding: 8px 0 16px;
+}
+.badge-hero-emoji {
+  font-size: 3.4rem; line-height: 1;
+  filter: drop-shadow(0 4px 14px rgba(200,169,110,.4));
+  animation: badge-pop .5s cubic-bezier(.2,.9,.3,1.3) both;
+}
+@keyframes badge-pop { 0%{transform:scale(.4);opacity:0} 100%{transform:scale(1);opacity:1} }
+.badge-hero-rank { font-family:'EB Garamond',Georgia,serif; font-size:1.5rem; font-weight:700; color:var(--text-primary); margin-top:8px; }
+.badge-hero-tag { font-size:.8rem; color:var(--accent); font-style:italic; margin-top:2px; }
+.badge-stats {
+  display:flex; gap:8px; margin:6px 0 18px;
+}
+.badge-stat {
+  flex:1; text-align:center; padding:11px 6px; border-radius:var(--radius-sm);
+  background:rgba(255,230,150,.04); border:1px solid rgba(255,224,150,.10);
+}
+.badge-stat-num { font-size:1.4rem; font-weight:700; color:var(--text-primary); line-height:1; font-variant-numeric:tabular-nums; }
+.badge-stat-lbl { font-size:.64rem; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); margin-top:5px; }
+.badge-progress-wrap { margin-bottom:18px; }
+.badge-progress-top { display:flex; justify-content:space-between; font-size:.72rem; color:var(--text-sec); margin-bottom:6px; }
+.badge-progress-track { height:8px; border-radius:8px; background:rgba(255,255,255,.06); overflow:hidden; box-shadow:inset 0 1px 2px rgba(0,0,0,.4); }
+.badge-progress-fill { height:100%; border-radius:8px; background:linear-gradient(90deg,var(--accent-dim),var(--gold-hi)); box-shadow:0 0 10px rgba(200,169,110,.5); transition:width .6s cubic-bezier(.2,.8,.2,1); }
+.badge-section-label { font-size:.66rem; letter-spacing:.14em; text-transform:uppercase; color:var(--text-muted); margin:4px 0 10px; }
+.badge-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:9px; }
+.badge-cell {
+  display:flex; align-items:center; gap:11px; padding:11px;
+  border-radius:var(--radius-sm);
+  background:rgba(255,230,150,.04); border:1px solid rgba(255,224,150,.10);
+  transition:transform .12s;
+}
+.badge-cell.earned { background:rgba(200,169,110,.12); border-color:rgba(200,169,110,.32); }
+.badge-cell.locked { opacity:.55; }
+.badge-cell-emoji { font-size:1.7rem; line-height:1; flex-shrink:0; }
+.badge-cell.locked .badge-cell-emoji { filter:grayscale(1) brightness(.7); }
+.badge-cell-meta { min-width:0; }
+.badge-cell-name { font-size:.82rem; font-weight:700; color:var(--text-primary); line-height:1.2; }
+.badge-cell-req { font-size:.66rem; color:var(--text-muted); margin-top:2px; letter-spacing:.02em; }
+.badge-cell.earned .badge-cell-req { color:var(--accent); }
+
+/* Badge unlock toast */
+.badge-toast {
+  position: fixed; left: 50%; transform: translateX(-50%) translateY(20px);
+  bottom: calc(var(--tab-h, 70px) + 18px); z-index: 200;
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 18px; border-radius: 40px;
+  background: linear-gradient(135deg, rgba(40,32,16,.96), rgba(24,19,10,.96));
+  border: 1px solid rgba(200,169,110,.5);
+  box-shadow: 0 10px 36px rgba(0,0,0,.55), 0 0 24px rgba(200,169,110,.28);
+  backdrop-filter: blur(18px) saturate(2);
+  -webkit-backdrop-filter: blur(18px) saturate(2);
+  opacity: 0; pointer-events: none;
+  transition: opacity .4s, transform .4s cubic-bezier(.2,.9,.3,1.2);
+  max-width: 90vw;
+}
+.badge-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.badge-toast-emoji { font-size: 2rem; line-height: 1; filter: drop-shadow(0 2px 6px rgba(0,0,0,.4)); }
+.badge-toast-txt { min-width: 0; }
+.badge-toast-h { font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+.badge-toast-name { font-size: .98rem; font-weight: 700; color: var(--text-primary); }
+
 .offline-info {
   margin: 0 16px 10px; font-size: .74rem; color: var(--text-muted);
   text-align: center; letter-spacing: .02em;
@@ -803,6 +875,113 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
 }
 @keyframes overlay-in { from{opacity:0} to{opacity:1} }
 .overlay[hidden] { display: none; }
+/* ===== CELESTIAL INFO BAR (date/time + weather) ===== */
+.celestial-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin: 0 0 14px;
+  padding: 11px 15px;
+  border-radius: var(--radius);
+  background:
+    radial-gradient(120% 160% at 85% -20%, rgba(200,169,110,.14), transparent 60%),
+    linear-gradient(135deg, rgba(40,32,16,.55), rgba(20,17,10,.55));
+  border: 1px solid var(--border);
+  backdrop-filter: blur(18px) saturate(2);
+  -webkit-backdrop-filter: blur(18px) saturate(2);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 6px 22px rgba(0,0,0,.32);
+  overflow: hidden; position: relative;
+}
+.celestial-bar::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    radial-gradient(1px 1px at 20% 35%, rgba(255,240,200,.5), transparent),
+    radial-gradient(1px 1px at 62% 20%, rgba(255,240,200,.35), transparent),
+    radial-gradient(1px 1px at 78% 70%, rgba(255,240,200,.45), transparent),
+    radial-gradient(1px 1px at 40% 80%, rgba(255,240,200,.3), transparent);
+  opacity: .7;
+}
+.cb-left, .cb-right { position: relative; z-index: 1; min-width: 0; }
+.cb-time {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 1.5rem; font-weight: 700; line-height: 1; color: var(--text-primary);
+  letter-spacing: .01em; font-variant-numeric: tabular-nums;
+}
+.cb-time .cb-ampm { font-size: .85rem; font-weight: 600; color: var(--accent); margin-left: 4px; letter-spacing: .06em; }
+.cb-date { font-size: .76rem; color: var(--text-sec); letter-spacing: .04em; margin-top: 4px; }
+.cb-right {
+  display: flex; align-items: center; gap: 10px;
+  cursor: pointer; flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-radius: 12px; padding: 4px 6px; margin: -4px -6px;
+  transition: background .18s;
+}
+.cb-right:hover { background: rgba(200,169,110,.08); }
+.cb-wx-icon { font-size: 1.7rem; line-height: 1; filter: drop-shadow(0 2px 6px rgba(0,0,0,.4)); }
+.cb-wx-meta { text-align: right; min-width: 0; }
+.cb-wx-temp { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); line-height: 1; font-variant-numeric: tabular-nums; }
+.cb-wx-place {
+  font-size: .7rem; color: var(--text-muted); letter-spacing: .03em; margin-top: 3px;
+  max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.cb-wx-loading { font-size: .76rem; color: var(--text-muted); letter-spacing: .04em; }
+.cb-wx-enable {
+  font-size: .72rem; font-weight: 600; color: var(--accent);
+  border: 1px solid rgba(200,169,110,.3); border-radius: 30px;
+  padding: 6px 13px; background: rgba(200,169,110,.06);
+}
+@media (max-width: 420px){
+  .cb-time { font-size: 1.3rem; }
+  .cb-wx-icon { font-size: 1.45rem; }
+  .cb-wx-temp { font-size: 1.1rem; }
+  .cb-wx-place { max-width: 96px; }
+}
+
+/* ===== TRANSLATION SWITCHER ===== */
+.trans-bar {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  align-items: center; justify-content: center;
+  margin: 0 0 12px;
+}
+.trans-pill {
+  font-family: inherit; font-size: .74rem; font-weight: 600; letter-spacing: .04em;
+  padding: 6px 13px; border-radius: 30px; cursor: pointer;
+  color: #bfe3ff;
+  background: rgba(135,206,235,.06);
+  border: 1px solid rgba(135,206,235,.22);
+  transition: background .18s, color .18s, border-color .18s, transform .12s;
+  -webkit-tap-highlight-color: transparent;
+}
+.trans-pill:hover { color: #eaf6ff; border-color: rgba(135,206,235,.5); }
+.trans-pill:active { transform: scale(.96); }
+.trans-pill.active {
+  color: #06243a; font-weight: 700;
+  background: linear-gradient(135deg, #4db8ff, #87ceeb);
+  border-color: rgba(135,206,235,.8);
+  box-shadow: 0 3px 14px rgba(77,184,255,.4);
+}
+
+/* ===== WORD STUDY ===== */
+.verse-text .vw {
+  cursor: pointer;
+  border-bottom: 1px dotted rgba(200,169,110,.0);
+  transition: border-color .15s, color .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.verse-text .vw.has-study { border-bottom-color: rgba(200,169,110,.45); }
+.verse-text .vw.has-study:hover, .verse-text .vw.has-study:active { color: var(--accent,#c8a96e); border-bottom-color: var(--accent,#c8a96e); }
+
+.ws-orig {
+  font-size: 2rem; font-weight: 700; text-align: center;
+  color: var(--text-primary); margin: 4px 0 2px;
+  font-family: 'EB Garamond', Georgia, serif;
+}
+.ws-translit { text-align: center; font-size: .95rem; color: var(--accent,#c8a96e); font-style: italic; letter-spacing: .03em; margin-bottom: 2px; }
+.ws-strong { text-align: center; font-size: .72rem; letter-spacing: .12em; color: var(--text-muted); margin-bottom: 14px; }
+.ws-row { padding: 10px 0; border-top: 1px solid rgba(255,224,150,.10); }
+.ws-label { font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
+.ws-val { font-size: .92rem; color: var(--text-sec); line-height: 1.6; }
+.ws-pron { font-size: .82rem; color: var(--text-muted); }
+.ws-tip { font-size: .76rem; color: var(--text-muted); text-align:center; padding: 14px 0 4px; line-height:1.5; }
+
 .sheet {
   background: rgba(255,220,130,.04);
   backdrop-filter: blur(48px) saturate(3.5) brightness(1.1);
@@ -1138,6 +1317,17 @@ try {
 <!-- Main scroll area -->
 <div class="scroll-area">
 
+  <!-- Date / Time + Weather -->
+  <div class="celestial-bar">
+    <div class="cb-left">
+      <div class="cb-time" id="cbTime">—</div>
+      <div class="cb-date" id="cbDate">—</div>
+    </div>
+    <div class="cb-right" id="cbWeather" role="button" tabindex="0" title="Weather" aria-label="Show weather">
+      <span class="cb-wx-loading" id="cbWxText">Tap for weather</span>
+    </div>
+  </div>
+
   <!-- Collection filter chips -->
   <div class="filter-bar-wrap">
     <div class="filter-bar" role="group" aria-label="Choose a collection">
@@ -1152,6 +1342,9 @@ try {
       <button class="filter-chip" data-t="praise"   aria-pressed="false">Praise &amp; Worship</button>
     </div>
   </div>
+
+  <!-- Translation switcher -->
+  <div class="trans-bar" id="transBar" role="group" aria-label="Bible translation"></div>
 
   <!-- Verse Card — open Bible book -->
   <div class="verse-card">
@@ -1205,6 +1398,9 @@ try {
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 3l5 5-5 5"/></svg>
     </button>
   </div>
+
+  <!-- Reading Badges -->
+  <div class="streak-bar" id="streak"></div>
 
   <!-- Quick Actions -->
   <div class="section-header">
@@ -1268,32 +1464,6 @@ try {
     </div>
   </div>
 
-  <!-- Language & Voice -->
-  <div class="section-header" style="padding-top:4px;">
-    <span class="section-header-title">Language &amp; Voice</span>
-  </div>
-  <div class="lang-row">
-    <div class="lang-field">
-      <label class="lang-label" for="langsel">Language</label>
-      <select class="picker-select" id="langsel">
-        <option value="en">English</option>
-        <option value="zu">isiZulu</option>
-        <option value="ve">Tshivenḓa</option>
-        <option value="af">Afrikaans</option>
-        <option value="tn">Setswana</option>
-        <option value="ts">Xitsonga</option>
-      </select>
-    </div>
-    <div class="lang-field">
-      <label class="lang-label" for="voicesel">Voice</label>
-      <select class="picker-select" id="voicesel">
-        <option value="auto">Auto (best available)</option>
-      </select>
-    </div>
-  </div>
-
-  <!-- Streak -->
-  <div class="streak-bar" id="streak"></div>
   <div class="offline-info" id="offlineinfo"></div>
 
   <!-- Settings -->
@@ -1310,20 +1480,6 @@ try {
       <span class="theme-pill-val" id="themeLabel">Dark</span>
     </button>
   </div>
-
-  <!-- Footer -->
-  <footer class="app-footer">
-    <button class="credits-tap" id="creditsTap" aria-expanded="false" aria-controls="creditsPanel">
-      <span class="credits-chevron" aria-hidden="true">▾</span> Credits &amp; Sources
-    </button>
-    <div class="credits-panel" id="creditsPanel" hidden>
-      <div class="credit-name">Engineered by Tebogo Maruping</div>
-      <div class="credit-meta">
-        Bible: World English Bible (Public Domain), from getbible.net.<br>
-        Enoch &amp; Jubilees: R.H. Charles, 1913 (Public Domain), bundled offline.
-      </div>
-    </div>
-  </footer>
 
 </div><!-- end scroll-area -->
 
@@ -1357,6 +1513,15 @@ try {
     </div>
     <div class="sheet-body" id="sheetBody"></div>
   </div>
+</div>
+
+<!-- Badge unlock toast -->
+<div class="badge-toast" id="badgeToast" role="status" aria-live="polite">
+  <span class="badge-toast-emoji" id="badgeToastEmoji">✦</span>
+  <span class="badge-toast-txt">
+    <span class="badge-toast-h">Badge unlocked</span>
+    <span class="badge-toast-name" id="badgeToastName"></span>
+  </span>
 </div>
 
 <!-- ===== ALL ORIGINAL JAVASCRIPT (unchanged logic) ===== -->
@@ -1540,6 +1705,84 @@ var VERSE_COUNTS = {
 "Revelation":[20,29,22,11,14,17,17,13,21,11,19,17,18,20,8,21,18,24,21,15,27,21]
 };
 
+/* ===== Word Study — curated Strong's (public domain) =====
+   Keyed by lowercase English word (and common variants). Each entry:
+   o=original script, tr=transliteration, pr=pronunciation, s=Strong's #,
+   lang=Hebrew/Greek, d=definition. */
+var STRONGS = {
+  "god":{o:"\u05D0\u05B1\u05DC\u05B9\u05D4\u05B4\u05D9\u05DD",tr:"Elohim",pr:"el-o-HEEM",s:"H430",lang:"Hebrew",d:"God; the supreme God, also used of gods, judges, or mighty ones. A plural form expressing majesty and fullness."},
+  "lord":{o:"\u05D9\u05B0\u05D4\u05D5\u05B8\u05D4",tr:"YHWH / Yahweh",pr:"yeh-ho-VAH",s:"H3068",lang:"Hebrew",d:"The proper, covenant name of the God of Israel; 'the self-Existent / Eternal One.' Rendered LORD in small capitals."},
+  "jesus":{o:"\u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2",tr:"Iēsous",pr:"ee-ay-SOOCE",s:"G2424",lang:"Greek",d:"Jesus; from Hebrew Yeshua, 'Yahweh is salvation.' The name of the Messiah."},
+  "christ":{o:"\u03A7\u03C1\u03B9\u03C3\u03C4\u03CC\u03C2",tr:"Christos",pr:"khris-TOS",s:"G5547",lang:"Greek",d:"Anointed One; the Messiah. Equivalent to the Hebrew Mashiach (Messiah)."},
+  "spirit":{o:"\u03C0\u03BD\u03B5\u1FE6\u03BC\u03B1",tr:"pneuma",pr:"PNYOO-mah",s:"G4151",lang:"Greek",d:"Spirit; breath, wind. Used of the Holy Spirit, the human spirit, and spiritual beings. (Heb. ruach, H7307.)"},
+  "holy":{o:"\u1F05\u03B3\u03B9\u03BF\u03C2",tr:"hagios",pr:"HAG-ee-os",s:"G40",lang:"Greek",d:"Holy, set apart, sacred; consecrated and morally pure. (Heb. qadosh, H6918.)"},
+  "love":{o:"\u1F00\u03B3\u03AC\u03C0\u03B7",tr:"agapē",pr:"ag-AH-pay",s:"G26",lang:"Greek",d:"Love; benevolent, self-giving, unconditional love that seeks the good of another. The love of God."},
+  "loved":{ref:"love"},"loveth":{ref:"love"},"beloved":{ref:"love"},
+  "grace":{o:"\u03C7\u03AC\u03C1\u03B9\u03C2",tr:"charis",pr:"KHAR-ace",s:"G5485",lang:"Greek",d:"Grace; unmerited favor, kindness, a gift freely given. The divine influence on the heart."},
+  "faith":{o:"\u03C0\u03AF\u03C3\u03C4\u03B9\u03C2",tr:"pistis",pr:"PIS-tis",s:"G4102",lang:"Greek",d:"Faith; conviction, trust, and reliance, especially in God; faithfulness and assurance."},
+  "faithful":{ref:"faith"},"believe":{ref:"faith"},"believeth":{ref:"faith"},
+  "peace":{o:"\u05E9\u05B8\u05C1\u05DC\u05D5\u05B9\u05DD",tr:"shalom",pr:"shaw-LOME",s:"H7965",lang:"Hebrew",d:"Peace; completeness, wholeness, welfare, soundness, and well-being \u2014 not merely the absence of conflict. (Gk. eirēnē, G1515.)"},
+  "word":{o:"\u03BB\u03CC\u03B3\u03BF\u03C2",tr:"logos",pr:"LOG-os",s:"G3056",lang:"Greek",d:"Word; a spoken word, message, reason, or divine expression. Used of Christ as the Word of God. (Heb. dabar, H1697.)"},
+  "soul":{o:"\u05E0\u05B6\u05E4\u05B6\u05E9\u05C1",tr:"nephesh",pr:"NEH-fesh",s:"H5315",lang:"Hebrew",d:"Soul; the living being, life, self, person, desire, and appetite \u2014 the whole living creature. (Gk. psychē, G5590.)"},
+  "heart":{o:"\u05DC\u05B5\u05D1",tr:"leb",pr:"labe",s:"H3820",lang:"Hebrew",d:"Heart; the inner person \u2014 mind, will, understanding, and emotions; the seat of thought and decision. (Gk. kardia, G2588.)"},
+  "light":{o:"\u05D0\u05D5\u05B9\u05E8",tr:"or",pr:"ore",s:"H216",lang:"Hebrew",d:"Light; illumination, daylight, brightness; figuratively life, prosperity, and instruction. (Gk. phōs, G5457.)"},
+  "life":{o:"\u03B6\u03C9\u03AE",tr:"zōē",pr:"dzo-AY",s:"G2222",lang:"Greek",d:"Life; both physical life and the eternal, abundant life of God. (Heb. chay/chayyim, H2416.)"},
+  "truth":{o:"\u1F00\u03BB\u03AE\u03B8\u03B5\u03B9\u03B1",tr:"alētheia",pr:"al-AY-thi-a",s:"G225",lang:"Greek",d:"Truth; what is real and certain; sincerity and reliability. (Heb. emeth, H571.)"},
+  "righteousness":{o:"\u05E6\u05B0\u05D3\u05B8\u05E7\u05B8\u05D4",tr:"tsedaqah",pr:"tsed-aw-KAW",s:"H6666",lang:"Hebrew",d:"Righteousness; rightness, justice, and conformity to a moral or covenant standard. (Gk. dikaiosynē, G1343.)"},
+  "righteous":{ref:"righteousness"},
+  "salvation":{o:"\u05D9\u05B0\u05E9\u05C1\u05D5\u05BC\u05E2\u05B8\u05D4",tr:"yeshuah",pr:"yesh-OO-aw",s:"H3444",lang:"Hebrew",d:"Salvation; deliverance, rescue, victory, and welfare. Root of the name Jesus. (Gk. sōtēria, G4991.)"},
+  "saved":{ref:"salvation"},"save":{ref:"salvation"},
+  "glory":{o:"\u05DB\u05B8\u05D1\u05D5\u05B9\u05D3",tr:"kabod",pr:"kaw-BODE",s:"H3519",lang:"Hebrew",d:"Glory; weight, honor, splendor, and abundance; the manifest presence of God. (Gk. doxa, G1391.)"},
+  "blessed":{o:"\u05D0\u05B6\u05E9\u05C1\u05B6\u05E8",tr:"esher / barak",pr:"EH-sher",s:"H835",lang:"Hebrew",d:"Blessed; happy, fortunate \u2014 the deep well-being of one in right relationship with God. (Gk. makarios, G3107.)"},
+  "bless":{ref:"blessed"},"blessing":{ref:"blessed"},
+  "mercy":{o:"\u05D7\u05B6\u05E1\u05B6\u05D3",tr:"chesed",pr:"KHEH-sed",s:"H2617",lang:"Hebrew",d:"Mercy; steadfast covenant love, loving-kindness, faithfulness, and goodness. One of Scripture's richest words."},
+  "merciful":{ref:"mercy"},"lovingkindness":{ref:"mercy"},
+  "wisdom":{o:"\u05D7\u05B8\u05DB\u05B0\u05DE\u05B8\u05D4",tr:"chokmah",pr:"khok-MAW",s:"H2451",lang:"Hebrew",d:"Wisdom; skill, prudence, and practical understanding for living rightly before God. (Gk. sophia, G4678.)"},
+  "wise":{ref:"wisdom"},
+  "fear":{o:"\u05D9\u05B4\u05E8\u05B0\u05D0\u05B8\u05D4",tr:"yirah",pr:"yir-AW",s:"H3374",lang:"Hebrew",d:"Fear; reverence, awe, and respect \u2014 especially the reverent fear of the LORD that is the beginning of wisdom."},
+  "king":{o:"\u05DE\u05B6\u05DC\u05B6\u05DA",tr:"melek",pr:"MEH-lek",s:"H4428",lang:"Hebrew",d:"King; a ruler or sovereign; the one who reigns. (Gk. basileus, G935.)"},
+  "kingdom":{o:"\u03B2\u03B1\u03C3\u03B9\u03BB\u03B5\u03AF\u03B1",tr:"basileia",pr:"bas-il-Ī-ah",s:"G932",lang:"Greek",d:"Kingdom; royal reign, rule, and realm \u2014 the kingship and dominion of God."},
+  "covenant":{o:"\u05D1\u05B0\u05E8\u05B4\u05D9\u05EA",tr:"berith",pr:"ber-EETH",s:"H1285",lang:"Hebrew",d:"Covenant; a solemn, binding agreement or treaty, often sealed by sacrifice. (Gk. diathēkē, G1242.)"},
+  "redeem":{o:"\u05D2\u05B8\u05D0\u05B7\u05DC",tr:"gaal",pr:"gaw-AL",s:"H1350",lang:"Hebrew",d:"To redeem; to act as kinsman \u2014 to buy back, ransom, and reclaim. (Gk. lytroō, G3084.)"},
+  "redeemer":{ref:"redeem"},"redeemed":{ref:"redeem"},"redemption":{ref:"redeem"},
+  "worship":{o:"\u05E9\u05C1\u05B8\u05D7\u05B8\u05D4",tr:"shachah",pr:"shaw-KHAW",s:"H7812",lang:"Hebrew",d:"To worship; to bow down, prostrate oneself in homage and reverence. (Gk. proskyneō, G4352.)"},
+  "pray":{o:"\u03C0\u03C1\u03BF\u03C3\u03B5\u03CD\u03C7\u03BF\u03BC\u03B1\u03B9",tr:"proseuchomai",pr:"pros-YOO-khom-ahee",s:"G4336",lang:"Greek",d:"To pray; to address God in worship, petition, and communion. (Heb. palal, H6419.)"},
+  "prayer":{ref:"pray"},"prayed":{ref:"pray"},
+  "sin":{o:"\u1F01\u03BC\u03B1\u03C1\u03C4\u03AF\u03B1",tr:"hamartia",pr:"ham-ar-TEE-ah",s:"G266",lang:"Greek",d:"Sin; to miss the mark, an offense, failure, and wrongdoing against God. (Heb. chatta'ah, H2403.)"},
+  "forgive":{o:"\u1F00\u03C6\u03AF\u03B7\u03BC\u03B9",tr:"aphiēmi",pr:"af-EE-ay-mee",s:"G863",lang:"Greek",d:"To forgive; to send away, release, let go, and pardon a debt or offense."},
+  "forgiveness":{ref:"forgive"},"forgiven":{ref:"forgive"},
+  "hope":{o:"\u1F10\u03BB\u03C0\u03AF\u03C2",tr:"elpis",pr:"el-PECE",s:"G1680",lang:"Greek",d:"Hope; confident expectation and trust in what God has promised \u2014 not mere wishing. (Heb. tiqvah, H8615.)"},
+  "joy":{o:"\u03C7\u03B1\u03C1\u03AC",tr:"chara",pr:"khar-AH",s:"G5479",lang:"Greek",d:"Joy; gladness and delight, rooted in God rather than circumstances. (Heb. simchah, H8057.)"},
+  "rejoice":{ref:"joy"},
+  "power":{o:"\u03B4\u03CD\u03BD\u03B1\u03BC\u03B9\u03C2",tr:"dynamis",pr:"DOO-nam-is",s:"G1411",lang:"Greek",d:"Power; inherent strength, ability, and might; the source of the word 'dynamite.'"},
+  "name":{o:"\u05E9\u05C1\u05B5\u05DD",tr:"shem",pr:"shame",s:"H8034",lang:"Hebrew",d:"Name; reputation, character, honor, and authority \u2014 far more than a label. (Gk. onoma, G3686.)"},
+  "earth":{o:"\u05D0\u05B6\u05E8\u05B6\u05E5",tr:"erets",pr:"EH-rets",s:"H776",lang:"Hebrew",d:"Earth; land, ground, country, and the whole world. (Gk. gē, G1093.)"},
+  "heaven":{o:"\u05E9\u05C1\u05B8\u05DE\u05B7\u05D9\u05B4\u05DD",tr:"shamayim",pr:"shaw-MAH-yim",s:"H8064",lang:"Hebrew",d:"Heaven(s); the sky, the visible heavens, and the dwelling of God. (Gk. ouranos, G3772.)"},
+  "heavens":{ref:"heaven"},
+  "create":{o:"\u05D1\u05B8\u05E8\u05B8\u05D0",tr:"bara",pr:"baw-RAW",s:"H1254",lang:"Hebrew",d:"To create; to shape and bring into being \u2014 used in Scripture only of God's creative work."},
+  "created":{ref:"create"},"creation":{ref:"create"},"beginning":{o:"\u05E8\u05B5\u05D0\u05E9\u05C1\u05B4\u05D9\u05EA",tr:"reshith",pr:"ray-SHEETH",s:"H7225",lang:"Hebrew",d:"Beginning; first, chief, the firstfruits \u2014 the foremost point in time or rank. (Gk. archē, G746.)"},
+  "good":{o:"\u05D8\u05D5\u05B9\u05D1",tr:"tob",pr:"tobe",s:"H2896",lang:"Hebrew",d:"Good; pleasant, agreeable, beneficial, and morally right \u2014 what is fitting and beautiful."},
+  "evil":{o:"\u05E8\u05B7\u05E2",tr:"ra",pr:"rah",s:"H7451",lang:"Hebrew",d:"Evil; bad, harmful, distress, and moral wrong \u2014 the opposite of good. (Gk. ponēros, G4190.)"},
+  "angel":{o:"\u05DE\u05B7\u05DC\u05B0\u05D0\u05B8\u05DA",tr:"malak",pr:"mal-AWK",s:"H4397",lang:"Hebrew",d:"Angel; a messenger, one sent on an errand \u2014 human or heavenly. (Gk. angelos, G32.)"},
+  "angels":{ref:"angel"},
+  "prophet":{o:"\u05E0\u05B8\u05D1\u05B4\u05D9\u05D0",tr:"nabi",pr:"naw-BEE",s:"H5030",lang:"Hebrew",d:"Prophet; a spokesman who speaks for God by inspiration. (Gk. prophētēs, G4396.)"},
+  "praise":{o:"\u05D4\u05B8\u05DC\u05B7\u05DC",tr:"halal",pr:"haw-LAL",s:"H1984",lang:"Hebrew",d:"To praise; to shine, boast, celebrate, and be clamorously foolish in adoration. Root of 'hallelujah.'"},
+  "hallelujah":{ref:"praise"},"alleluia":{ref:"praise"},
+  "everlasting":{o:"\u05E2\u05D5\u05B9\u05DC\u05B8\u05DD",tr:"olam",pr:"o-LAWM",s:"H5769",lang:"Hebrew",d:"Everlasting; long duration, antiquity, the distant past or future \u2014 perpetual, eternal."},
+  "eternal":{ref:"everlasting"},"forever":{ref:"everlasting"},
+  "shepherd":{o:"\u05E8\u05B8\u05E2\u05B8\u05D4",tr:"raah",pr:"raw-AW",s:"H7462",lang:"Hebrew",d:"Shepherd; to tend, pasture, and feed a flock \u2014 used of God's care for His people. (Gk. poimēn, G4166.)"}
+};
+function lookupStrongs(word){
+  if(!word)return null;
+  var k=word.toLowerCase().replace(/[^a-z']/g,"");
+  if(!k)return null;
+  var e=STRONGS[k];
+  if(!e&&k.length>4&&STRONGS[k.replace(/s$/,"")])e=STRONGS[k.replace(/s$/,"")]; /* simple plural */
+  if(!e&&STRONGS[k.replace(/eth$/,"")])e=STRONGS[k.replace(/eth$/,"")];
+  while(e&&e.ref)e=STRONGS[e.ref];
+  return e||null;
+}
+
 var BIBLE_BOOKS = [
   [1,"Genesis","old",50],[2,"Exodus","old",40],[3,"Leviticus","old",27],[4,"Numbers","old",36],
   [5,"Deuteronomy","old",34],[6,"Joshua","old",24],[7,"Judges","old",21],[8,"Ruth","old",4],
@@ -1565,12 +1808,58 @@ for (var bi=0; bi<BIBLE_BOOKS.length; bi++){ BOOK_BY_NAME[BIBLE_BOOKS[bi][1]] = 
 var chapterCache = {};
 function isBibleBook(name){ return !!BOOK_BY_NAME[name]; }
 
-function urlPrimary(num,chap){ return "https://api.getbible.net/v2/web/"+num+"/"+chap+".json"; }
+/* ===== Translations (all public domain) ===== */
+var TRANSLATIONS = [
+  {code:"web", abbr:"WEB", name:"World English Bible"},
+  {code:"kjv", abbr:"KJV", name:"King James Version"},
+  {code:"asv", abbr:"ASV", name:"American Standard Version"},
+  {code:"ylt", abbr:"YLT", name:"Young's Literal Translation"}
+];
+var TRANSLATION = (function(){try{return localStorage.getItem("translation")||"web";}catch(e){return "web";}})();
+function setTranslation(code){
+  TRANSLATION=code;
+  try{localStorage.setItem("translation",code);}catch(e){}
+}
+function buildTransBar(){
+  var bar=document.getElementById("transBar");if(!bar)return;
+  bar.innerHTML="";
+  TRANSLATIONS.forEach(function(t){
+    var b=document.createElement("button");
+    b.className="trans-pill"+(t.code===TRANSLATION?" active":"");
+    b.type="button";b.textContent=t.abbr;b.title=t.name;
+    b.setAttribute("aria-pressed",t.code===TRANSLATION?"true":"false");
+    b.addEventListener("click",function(){
+      if(t.code===TRANSLATION)return;
+      setTranslation(t.code);
+      var pills=bar.querySelectorAll(".trans-pill");
+      for(var i=0;i<pills.length;i++){var on=pills[i]===b;pills[i].classList.toggle("active",on);pills[i].setAttribute("aria-pressed",on?"true":"false");}
+      reloadCurrent();
+    });
+    bar.appendChild(b);
+  });
+}
+/* Re-fetch whatever verse is currently shown, in the active translation */
+function reloadCurrent(){
+  if(!current||!current.ref){return;}
+  var p=parseRef(current.ref);
+  if(!BOOK_BY_NAME[p.book]){return;} /* non-canonical (Enoch/Jubilees) stay as-is */
+  setPassageLoading();
+  var theme=current.theme,t=current.t;
+  fetchChapter(p.book,p.chap).then(function(verses){
+    var v=verses.filter(function(x){return x.verse===p.verse;})[0];
+    if(!v){return;}
+    var e={t:t,ref:current.ref,text:v.text};if(theme)e.theme=theme;
+    show(e);
+  }).catch(function(){showFetchError(reloadCurrent);});
+}
+
+function urlPrimary(num,chap){ return "https://api.getbible.net/v2/"+TRANSLATION+"/"+num+"/"+chap+".json"; }
 function urlFallback(num,chap){
   var b=BIBLE_BOOKS[num-1]; var slug=b[1].toLowerCase().replace(/\s+/g,"-");
-  return "https://cdn.jsdelivr.net/gh/wldeh/bible-api/bibles/en-web/books/"+slug+"/chapters/"+chap+".json";
+  var ed=(TRANSLATION==="web")?"en-web":(TRANSLATION==="kjv")?"en-kjv":(TRANSLATION==="asv")?"en-asv":"en-web";
+  return "https://cdn.jsdelivr.net/gh/wldeh/bible-api/bibles/"+ed+"/books/"+slug+"/chapters/"+chap+".json";
 }
-function urlBibleApi(num,chap){ var b=BIBLE_BOOKS[num-1]; return "https://bible-api.com/"+encodeURIComponent(b[1]+" "+chap)+"?translation=web"; }
+function urlBibleApi(num,chap){ var b=BIBLE_BOOKS[num-1]; var t=(TRANSLATION==="ylt")?"web":TRANSLATION; return "https://bible-api.com/"+encodeURIComponent(b[1]+" "+chap)+"?translation="+t; }
 function parsePrimary(data){ return (data&&data.verses)?data.verses.map(function(v){return{verse:+v.verse,text:(v.text||"").replace(/\s+/g," ").trim()};}):[];}
 function parseFallback(data){ var arr=(data&&(data.data||data.verses))||[]; return arr.map(function(v){return{verse:+(v.verse),text:(v.text||"").replace(/\s+/g," ").trim()};}).filter(function(v){return v.verse&&v.text;}); }
 function parseBibleApi(data){ var arr=(data&&data.verses)||[]; return arr.map(function(v){return{verse:+(v.verse),text:(v.text||"").replace(/\s+/g," ").trim()};}).filter(function(v){return v.verse&&v.text;}); }
@@ -1603,7 +1892,7 @@ function loadBibleFile(file){
       var map=ingestBible(json); var n=Object.keys(map).length;
       if(!n)throw new Error("no chapters found");
       LOADED_BIBLE=map;
-      Object.keys(map).forEach(function(k){chapterCache[k]=map[k];idbSet(k,map[k]);});
+      Object.keys(map).forEach(function(k){chapterCache["web:"+k]=map[k];idbSet("web:"+k,map[k]);});
       info.textContent="Loaded "+n+" chapters \u2014 full Bible now available offline.";
       next();
     }catch(e){info.textContent="Couldn\u2019t read that file ("+e.message+").";}
@@ -1630,7 +1919,7 @@ function idbCount(){ return openDB().then(function(d){return new Promise(functio
 var LOADED_BIBLE=null;
 function netFetchChapter(num,chap){
   var key=num+"/"+chap;
-  if(LOADED_BIBLE&&LOADED_BIBLE[key]&&LOADED_BIBLE[key].length)return Promise.resolve(LOADED_BIBLE[key]);
+  if(TRANSLATION==="web"&&LOADED_BIBLE&&LOADED_BIBLE[key]&&LOADED_BIBLE[key].length)return Promise.resolve(LOADED_BIBLE[key]);
   function tryJson(url,parser){
     var controller=("AbortController"in window)?new AbortController():null;
     var opts=controller?{signal:controller.signal}:{};
@@ -1641,7 +1930,7 @@ function netFetchChapter(num,chap){
 }
 function fetchChapter(bookName,chap){
   var b=BOOK_BY_NAME[bookName];if(!b)return Promise.reject("unknown book");
-  var num=b[0],key=num+"/"+chap;
+  var num=b[0],key=TRANSLATION+":"+num+"/"+chap;
   if(chapterCache[key])return Promise.resolve(chapterCache[key]);
   return idbGet(key).then(function(stored){
     if(stored&&stored.length){chapterCache[key]=stored;return stored;}
@@ -1671,7 +1960,7 @@ function downloadAll(){
     while(active<CONC&&idx<jobs.length){
       var job=jobs[idx++];active++;
       (function(j){
-        var num=j[2],chap=j[1],k=num+"/"+chap;
+        var num=j[2],chap=j[1],k=TRANSLATION+":"+num+"/"+chap;
         idbGet(k).then(function(stored){if(stored&&stored.length)return stored;return netFetchChapter(num,chap).then(function(v){idbSet(k,v);return v;});}).then(function(){done++;}).catch(function(){failed++;done++;}).then(function(){active--;updateBtn();pump();});
       })(job);
     }
@@ -1702,7 +1991,7 @@ function show(entry){
     var pn=$("book-page-num");
     if(pn){var m=(current.ref||"").match(/(\d+):(\d+)/);pn.textContent=m?("ch. "+m[1]):"\u2726";}
     passage.classList.remove("hint","verse-leave");
-    passage.textContent=current.text;
+    renderVerseWords(passage,current.text);
     passage.classList.remove("verse-enter");void passage.offsetWidth;passage.classList.add("verse-enter");
     refEl.classList.remove("ref-enter");void refEl.offsetWidth;refEl.classList.add("ref-enter");
     if(autoOn)scheduleAuto();
@@ -1716,6 +2005,47 @@ function show(entry){
     passage.addEventListener("animationend",go,{once:true});
     setTimeout(go,300);
   }else{render();}
+}
+
+/* Render verse text as tappable words; words with a Strong's entry get underlined */
+function renderVerseWords(el,text){
+  el.innerHTML="";
+  var tokens=String(text||"").split(/(\s+)/);
+  for(var i=0;i<tokens.length;i++){
+    var tok=tokens[i];
+    if(/^\s+$/.test(tok)||tok===""){el.appendChild(document.createTextNode(tok));continue;}
+    var span=document.createElement("span");
+    span.className="vw";
+    span.textContent=tok;
+    if(lookupStrongs(tok))span.classList.add("has-study");
+    (function(word){
+      span.addEventListener("click",function(e){e.stopPropagation();openWordStudy(word);});
+    })(tok);
+    el.appendChild(span);
+  }
+}
+
+function openWordStudy(word){
+  if("speechSynthesis" in window)speechSynthesis.cancel();
+  var clean=String(word||"").replace(/[^A-Za-z']/g,"");
+  var e=lookupStrongs(word);
+  $("sheetTitle").textContent="Word Study";
+  var body=$("sheetBody");body.innerHTML="";
+  if(!e){
+    var none=document.createElement("div");none.className="ws-tip";
+    none.innerHTML="<b>\u201C"+escapeHtml(clean||word)+"\u201D</b><br>No Hebrew or Greek entry for this word yet.<br>Tap an <span style=\"border-bottom:1px dotted var(--accent,#c8a96e)\">underlined</span> word to see its original-language meaning.";
+    body.appendChild(none);openSheet();return;
+  }
+  var html=
+    '<div class="ws-orig" dir="auto">'+e.o+'</div>'+
+    '<div class="ws-translit">'+escapeHtml(e.tr)+'</div>'+
+    '<div class="ws-strong">'+escapeHtml(e.lang)+' \u00B7 Strong\u2019s '+escapeHtml(e.s)+'</div>'+
+    '<div class="ws-row"><div class="ws-label">English word</div><div class="ws-val">'+escapeHtml(clean||word)+'</div></div>'+
+    (e.pr?'<div class="ws-row"><div class="ws-label">Pronunciation</div><div class="ws-val ws-pron">'+escapeHtml(e.pr)+'</div></div>':'')+
+    '<div class="ws-row"><div class="ws-label">Meaning</div><div class="ws-val">'+escapeHtml(e.d)+'</div></div>'+
+    '<div class="ws-tip">Definitions from Strong\u2019s Concordance (public domain). Tap any underlined word to explore its original meaning.</div>';
+  body.innerHTML=html;
+  openSheet();
 }
 
 function showHeavensEntry(entry){
@@ -1960,15 +2290,136 @@ function openBookmarks(){
 }
 
 function todayStamp(){var d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();}
-function markReadToday(){
-  var s=lsGet("streak",{last:null,count:0});var today=todayStamp();
-  if(s.last===today)return;
-  var y=new Date();y.setDate(y.getDate()-1);var yStamp=y.getFullYear()+"-"+(y.getMonth()+1)+"-"+y.getDate();
-  s.count=(s.last===yStamp)?(s.count+1):1;s.last=today;lsSet("streak",s);showStreak();
+
+/* ===== Reading badges =====
+   Tiers earned by TOTAL days read. Streak milestones add flair separately.
+   Names drawn from Scripture & the celestial theme of 1 Enoch. */
+var BADGES = [
+  {days:1,   emoji:"\uD83C\uDF31", name:"First Light",      tag:"You opened the Word"},
+  {days:3,   emoji:"\uD83D\uDD6F\uFE0F", name:"Kindled Lamp",     tag:"A lamp unto my feet"},
+  {days:7,   emoji:"\uD83D\uDCDC", name:"Faithful Scroll",  tag:"One week in the Word"},
+  {days:14,  emoji:"\uD83D\uDD4E", name:"Lampstand",        tag:"Two weeks of light"},
+  {days:30,  emoji:"\uD83C\uDF3F", name:"Olive Branch",     tag:"A month of faithfulness"},
+  {days:60,  emoji:"\uD83C\uDF3E", name:"Fruitful Vine",    tag:"Rooted and growing"},
+  {days:100, emoji:"\uD83C\uDF33", name:"Cedar of Lebanon", tag:"100 days \u2014 planted by the waters"},
+  {days:180, emoji:"\u2728", name:"Morning Star",      tag:"Half a year of light"},
+  {days:270, emoji:"\uD83D\uDCAB", name:"Heavenly Host",    tag:"Among the shining ones"},
+  {days:365, emoji:"\uD83D\uDC51", name:"Crown of Life",    tag:"A full year in the Word"},
+  {days:500, emoji:"\uD83C\uDF1F", name:"Watcher of Enoch",  tag:"500 days \u2014 a true watcher"},
+  {days:730, emoji:"\uD83D\uDD4A\uFE0F", name:"Ancient of Days",   tag:"Two years of faithfulness"}
+];
+function currentBadge(totalDays){
+  var b=null;for(var i=0;i<BADGES.length;i++){if(totalDays>=BADGES[i].days)b=BADGES[i];else break;}return b;
 }
+function nextBadge(totalDays){
+  for(var i=0;i<BADGES.length;i++){if(totalDays<BADGES[i].days)return BADGES[i];}return null;
+}
+
+function getProgress(){
+  /* {last, count, total, best, earned:[days...]} */
+  var s=lsGet("streak",{last:null,count:0});
+  if(typeof s.total!=="number")s.total=s.count||0;
+  if(typeof s.best!=="number")s.best=s.count||0;
+  if(!Array.isArray(s.earned)){
+    /* migrate: mark all already-reached tiers as earned so we don't re-toast them */
+    s.earned=[];
+    for(var i=0;i<BADGES.length;i++){if(s.total>=BADGES[i].days)s.earned.push(BADGES[i].days);}
+    lsSet("streak",s);
+  }
+  return s;
+}
+
+function markReadToday(){
+  var s=getProgress();var today=todayStamp();
+  if(s.last===today){return;}
+  var y=new Date();y.setDate(y.getDate()-1);var yStamp=y.getFullYear()+"-"+(y.getMonth()+1)+"-"+y.getDate();
+  s.count=(s.last===yStamp)?(s.count+1):1;
+  s.last=today;
+  s.total=(s.total||0)+1;
+  if(s.count>(s.best||0))s.best=s.count;
+  /* detect newly earned badges */
+  var newly=[];
+  for(var i=0;i<BADGES.length;i++){
+    if(s.total>=BADGES[i].days && s.earned.indexOf(BADGES[i].days)===-1){
+      s.earned.push(BADGES[i].days);newly.push(BADGES[i]);
+    }
+  }
+  lsSet("streak",s);
+  showStreak();
+  if(newly.length)showBadgeToast(newly[newly.length-1]);
+}
+
 function showStreak(){
-  var s=lsGet("streak",{count:0});var el=$("streak");if(!el)return;
-  el.textContent=s.count>1?("\u2728 "+s.count+"-day reading streak \u2728"):"";
+  var s=getProgress();var el=$("streak");if(!el)return;
+  var badge=currentBadge(s.total);
+  if(!s.total){el.innerHTML="";el.style.display="none";return;}
+  el.style.display="flex";
+  var emoji=badge?badge.emoji:"\u2728";
+  var rank=badge?badge.name:"Reader";
+  var streakTxt=s.count>1?(s.count+"-day streak"):"Read today";
+  el.innerHTML=
+    '<span class="streak-badge-emoji">'+emoji+'</span>'+
+    '<span class="streak-main"><span class="streak-rank">'+escapeHtml(rank)+'</span>'+
+    '<span class="streak-sub">'+escapeHtml(streakTxt)+' \u00B7 '+s.total+' day'+(s.total===1?"":"s")+' read</span></span>'+
+    '<span class="streak-chev">\u203A</span>';
+}
+
+var badgeToastTimer=null;
+function showBadgeToast(badge){
+  var t=$("badgeToast");if(!t||!badge)return;
+  $("badgeToastEmoji").textContent=badge.emoji;
+  $("badgeToastName").textContent=badge.name;
+  t.classList.add("show");
+  clearTimeout(badgeToastTimer);
+  badgeToastTimer=setTimeout(function(){t.classList.remove("show");},4200);
+}
+
+function openBadges(){
+  if("speechSynthesis" in window)speechSynthesis.cancel();
+  var s=getProgress();
+  var cur=currentBadge(s.total),nxt=nextBadge(s.total);
+  $("sheetTitle").textContent="Reading Badges";
+  var body=$("sheetBody");
+  var html="";
+  /* hero */
+  html+='<div class="badge-hero">'+
+    '<div class="badge-hero-emoji">'+(cur?cur.emoji:"\uD83C\uDF31")+'</div>'+
+    '<div class="badge-hero-rank">'+escapeHtml(cur?cur.name:"Begin your journey")+'</div>'+
+    '<div class="badge-hero-tag">'+escapeHtml(cur?cur.tag:"Read today to earn your first badge")+'</div>'+
+    '</div>';
+  /* stats */
+  html+='<div class="badge-stats">'+
+    '<div class="badge-stat"><div class="badge-stat-num">'+s.total+'</div><div class="badge-stat-lbl">Days Read</div></div>'+
+    '<div class="badge-stat"><div class="badge-stat-num">'+(s.count||0)+'</div><div class="badge-stat-lbl">Current Streak</div></div>'+
+    '<div class="badge-stat"><div class="badge-stat-num">'+(s.best||0)+'</div><div class="badge-stat-lbl">Best Streak</div></div>'+
+    '</div>';
+  /* progress to next */
+  if(nxt){
+    var prevDays=cur?cur.days:0;
+    var span=nxt.days-prevDays;var into=s.total-prevDays;
+    var pct=Math.max(0,Math.min(100,Math.round(into/span*100)));
+    var left=nxt.days-s.total;
+    html+='<div class="badge-progress-wrap">'+
+      '<div class="badge-progress-top"><span>Next: '+escapeHtml(nxt.name)+' '+nxt.emoji+'</span><span>'+left+' day'+(left===1?"":"s")+' to go</span></div>'+
+      '<div class="badge-progress-track"><div class="badge-progress-fill" style="width:'+pct+'%"></div></div>'+
+      '</div>';
+  }else{
+    html+='<div class="badge-progress-wrap"><div class="badge-progress-top"><span>All badges earned \u2014 faithful and true \u2728</span></div>'+
+      '<div class="badge-progress-track"><div class="badge-progress-fill" style="width:100%"></div></div></div>';
+  }
+  /* grid */
+  html+='<div class="badge-section-label">All Badges</div><div class="badge-grid">';
+  for(var i=0;i<BADGES.length;i++){
+    var b=BADGES[i];var earned=s.total>=b.days;
+    html+='<div class="badge-cell '+(earned?"earned":"locked")+'">'+
+      '<span class="badge-cell-emoji">'+b.emoji+'</span>'+
+      '<span class="badge-cell-meta"><span class="badge-cell-name">'+escapeHtml(b.name)+'</span>'+
+      '<span class="badge-cell-req">'+(earned?"Earned \u2713":(b.days+" days"))+'</span></span>'+
+      '</div>';
+  }
+  html+='</div>';
+  body.innerHTML=html;
+  openSheet();
 }
 
 function openSearch(){
@@ -2117,6 +2568,106 @@ function renderTestimonies(list){
 
 function escapeHtml(s){return String(s||"").replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c];});}
 
+/* ===== Live date & time ===== */
+function tickClock(){
+  var now=new Date();
+  var t=$("cbTime"),d=$("cbDate");
+  if(t){
+    var h=now.getHours(),m=now.getMinutes();
+    var ampm=h>=12?"PM":"AM";var h12=h%12;if(h12===0)h12=12;
+    var mm=(m<10?"0":"")+m;
+    t.innerHTML=h12+":"+mm+'<span class="cb-ampm">'+ampm+'</span>';
+  }
+  if(d){
+    var days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    var months=["January","February","March","April","May","June","July","August","September","October","November","December"];
+    d.textContent=days[now.getDay()]+", "+now.getDate()+" "+months[now.getMonth()]+" "+now.getFullYear();
+  }
+}
+
+/* ===== Weather (Open-Meteo — no API key, works on GitHub Pages) ===== */
+var WX_KEY="wx-last";
+function wxIcon(code,isDay){
+  /* WMO weather codes -> emoji */
+  if(code===0)return isDay?"\u2600\uFE0F":"\uD83C\uDF11";        /* clear */
+  if(code===1||code===2)return isDay?"\uD83C\uDF24\uFE0F":"\u2601\uFE0F"; /* mainly clear / partly */
+  if(code===3)return "\u2601\uFE0F";                              /* overcast */
+  if(code>=45&&code<=48)return "\uD83C\uDF2B\uFE0F";              /* fog */
+  if(code>=51&&code<=57)return "\uD83C\uDF26\uFE0F";              /* drizzle */
+  if(code>=61&&code<=67)return "\uD83C\uDF27\uFE0F";              /* rain */
+  if(code>=71&&code<=77)return "\u2744\uFE0F";                    /* snow */
+  if(code>=80&&code<=82)return "\uD83C\uDF27\uFE0F";              /* showers */
+  if(code>=85&&code<=86)return "\uD83C\uDF28\uFE0F";              /* snow showers */
+  if(code>=95)return "\u26C8\uFE0F";                              /* thunderstorm */
+  return "\uD83C\uDF21\uFE0F";
+}
+function wxDesc(code){
+  if(code===0)return "Clear sky";
+  if(code===1)return "Mainly clear";
+  if(code===2)return "Partly cloudy";
+  if(code===3)return "Overcast";
+  if(code>=45&&code<=48)return "Foggy";
+  if(code>=51&&code<=57)return "Drizzle";
+  if(code>=61&&code<=67)return "Rain";
+  if(code>=71&&code<=77)return "Snow";
+  if(code>=80&&code<=82)return "Rain showers";
+  if(code>=85&&code<=86)return "Snow showers";
+  if(code>=95)return "Thunderstorm";
+  return "Weather";
+}
+function renderWeather(w){
+  var box=$("cbWeather");if(!box)return;
+  box.innerHTML=
+    '<span class="cb-wx-icon">'+wxIcon(w.code,w.isDay)+'</span>'+
+    '<span class="cb-wx-meta"><span class="cb-wx-temp">'+Math.round(w.temp)+'\u00B0</span>'+
+    '<span class="cb-wx-place">'+escapeHtml(w.place||wxDesc(w.code))+'</span></span>';
+}
+function fetchWeatherAt(lat,lon,placeHint){
+  var box=$("cbWeather");if(box)box.innerHTML='<span class="cb-wx-loading">Loading\u2026</span>';
+  var url="https://api.open-meteo.com/v1/forecast?latitude="+lat+"&longitude="+lon+"&current=temperature_2m,weather_code,is_day&timezone=auto";
+  return fetch(url).then(function(r){if(!r.ok)throw new Error("wx");return r.json();}).then(function(d){
+    var c=d.current||{};
+    var w={temp:c.temperature_2m,code:c.weather_code,isDay:c.is_day!==0,place:placeHint||"",lat:lat,lon:lon};
+    if(!placeHint){
+      /* reverse-geocode for a friendly place name (best effort) */
+      return reverseGeocode(lat,lon).then(function(name){w.place=name||"";finishWeather(w);return w;}).catch(function(){finishWeather(w);return w;});
+    }
+    finishWeather(w);return w;
+  });
+}
+function finishWeather(w){
+  renderWeather(w);
+  try{localStorage.setItem(WX_KEY,JSON.stringify({t:Date.now(),w:w}));}catch(e){}
+}
+function reverseGeocode(lat,lon){
+  /* Open-Meteo's geocoding has no reverse endpoint; use a light nominatim call, but fall back silently. */
+  var url="https://nominatim.openstreetmap.org/reverse?format=json&zoom=10&lat="+lat+"&lon="+lon;
+  return fetch(url,{headers:{}}).then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(d){
+    var a=d.address||{};return a.city||a.town||a.village||a.suburb||a.county||a.state||"";
+  }).catch(function(){return "";});
+}
+function loadWeather(force){
+  /* use cached weather if fresh (<30 min) and not forced */
+  if(!force){
+    try{
+      var raw=localStorage.getItem(WX_KEY);
+      if(raw){var o=JSON.parse(raw);if(o&&o.w&&(Date.now()-o.t)<30*60*1000){renderWeather(o.w);return;}}
+    }catch(e){}
+  }
+  var box=$("cbWeather");
+  if(!("geolocation" in navigator)){
+    fetchWeatherAt(-26.2041,28.0473,"Johannesburg").catch(function(){if(box)box.innerHTML='<span class="cb-wx-loading">Weather unavailable</span>';});
+    return;
+  }
+  if(box)box.innerHTML='<span class="cb-wx-loading">Locating\u2026</span>';
+  navigator.geolocation.getCurrentPosition(function(pos){
+    fetchWeatherAt(pos.coords.latitude,pos.coords.longitude,"").catch(function(){if(box)box.innerHTML='<span class="cb-wx-loading">Weather unavailable</span>';});
+  },function(){
+    /* permission denied / unavailable — fall back to Johannesburg */
+    fetchWeatherAt(-26.2041,28.0473,"Johannesburg").catch(function(){if(box)box.innerHTML='<span class="cb-wx-enable">Weather unavailable</span>';});
+  },{enableHighAccuracy:false,timeout:9000,maximumAge:600000});
+}
+
 function openTestimonies(){
   if("speechSynthesis" in window)speechSynthesis.cancel();
   $("sheetTitle").textContent="Watch Testimonies";
@@ -2164,7 +2715,7 @@ function toggleAuto(){
   var page=document.querySelector(".book-page");
   if(page){
     page.addEventListener("click",function(e){
-      if(e.target.closest(".bookmark-btn,a,button"))return;
+      if(e.target.closest(".bookmark-btn,a,button,.vw"))return;
       var sel=window.getSelection&&window.getSelection().toString();
       if(sel&&sel.length>0)return;
       flipPage(1);next();
@@ -2246,14 +2797,25 @@ $("loadfile").addEventListener("click",function(){$("fileinput").click();});
 $("testimonies").addEventListener("click",openTestimonies);
 $("fileinput").addEventListener("change",function(){if(this.files&&this.files[0])loadBibleFile(this.files[0]);});
 
-$("langsel").addEventListener("change",function(){lang=this.value;if(current){var book=L().names[current.t]||"";$("ref").textContent=current.ref+(book?"  \u00B7  "+book:"");}populateVoices();});
-$("voicesel").addEventListener("change",function(){chosenVoiceURI=this.value;});
-
 $("booksel").addEventListener("change",refreshChapters);
 $("chapsel").addEventListener("change",refreshVerses);
 $("goto").addEventListener("click",function(){scrollToVerseCard();gotoSelected();});
 refreshPicker(false);
 refreshOfflineLabel();
+buildTransBar();
+
+/* Live clock */
+tickClock();
+setInterval(tickClock,1000);
+
+/* Weather: show cached immediately if present; otherwise wait for a tap (geolocation needs a gesture) */
+(function(){
+  var box=$("cbWeather");if(!box)return;
+  try{var raw=localStorage.getItem(WX_KEY);if(raw){var o=JSON.parse(raw);if(o&&o.w){renderWeather(o.w);if((Date.now()-o.t)>=30*60*1000)loadWeather(false);}}}catch(e){}
+  function trigger(){loadWeather(true);}
+  box.addEventListener("click",trigger);
+  box.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();trigger();}});
+})();
 
 $("sheetClose").addEventListener("click",closeSheet);
 $("overlay").addEventListener("click",function(e){if(e.target===this)closeSheet();});
@@ -2267,13 +2829,9 @@ $("seqToggle").setAttribute("aria-pressed",seqMode?"true":"false");
 $("seqLabel").textContent="In Order: "+(seqMode?"On":"Off");
 
 showStreak();
+(function(){var el=$("streak");if(el)el.addEventListener("click",openBadges);})();
 resumeLastRead();
 
-if("speechSynthesis" in window){
-  speechSynthesis.onvoiceschanged=populateVoices;
-  setTimeout(populateVoices,0);
-  setTimeout(populateVoices,400);
-}
 
 /* ---- Theme ---- */
 (function(){
@@ -2310,15 +2868,6 @@ if("speechSynthesis" in window){
   });
 })();
 
-/* ---- Credits ---- */
-(function(){
-  var tap=$("creditsTap"),panel=$("creditsPanel");if(!tap||!panel)return;
-  tap.addEventListener("click",function(){
-    var open=panel.classList.toggle("open");
-    if(open){panel.hidden=false;}else{setTimeout(function(){if(!panel.classList.contains("open"))panel.hidden=true;},450);}
-    tap.setAttribute("aria-expanded",open?"true":"false");
-  });
-})();
 </script>
 </body>
 </html>
