@@ -9,7 +9,7 @@
 <meta name="description" content="Read the whole Bible with the Books of Enoch and Jubilees. Engineered by Tebogo Maruping.">
 
 <!-- PWA -->
-  <link rel="manifest" href="manifest.json">
+<link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f1117">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4374,8 +4374,12 @@ function openSettings(){
     bar.classList.add("show");
     var btn=document.getElementById("pwaUpdateBtn");
     btn.onclick=function(){
-      bar.classList.remove("show");
-      worker.postMessage({type:"SKIP_WAITING"});
+      btn.textContent="Updating…";
+      try{ worker.postMessage({type:"SKIP_WAITING"}); }catch(e){}
+      /* Safety net: if controllerchange doesn't fire quickly, force a hard reload anyway. */
+      setTimeout(function(){
+        if(!refreshing){ refreshing=true; location.reload(); }
+      },1200);
     };
   }
 })();
