@@ -5,23 +5,27 @@
    to installed apps. The cache name is tied to this version, so
    a new version creates a fresh cache and retires the old one.
    ============================================================ */
-const APP_VERSION = "2026-06-13-02";
+const APP_VERSION = "2026-06-13-03";
 const CACHE = "voth-" + APP_VERSION;
 
 /* Core files that make the app shell work offline */
 const CORE = [
   "./",
   "./index.html",
-  "./manifest.webmanifest",
+  "./manifest.json",
   "./icons/icon.svg",
   "./icons/icon-192.png",
   "./icons/icon-512.png"
 ];
 
-/* ---- Install: pre-cache the shell ---- */
+/* ---- Install: pre-cache the shell (resilient — one missing file won't abort the install) ---- */
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE).then((cache) => cache.addAll(CORE)).catch(() => {})
+    caches.open(CACHE).then((cache) =>
+      Promise.all(CORE.map((url) =>
+        cache.add(url).catch(() => { /* ignore a single failed file */ })
+      ))
+    )
   );
   /* do NOT skipWaiting here — we wait for the user's "Update" tap (see message handler) */
 });
