@@ -156,10 +156,12 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
   display: flex; align-items: center; gap: 10px;
 }
 .navbar-icon {
-  width: 32px; height: 32px; border-radius: 8px;
-  background: linear-gradient(135deg, var(--accent) 0%, #8a6e3e 100%);
+  width: 34px; height: 34px; border-radius: 10px;
+  background: radial-gradient(circle at 50% 38%, rgba(231,184,90,.28), rgba(20,17,10,.6));
+  border: 1px solid rgba(255,224,150,.25);
+  box-shadow: inset 0 1px 0 rgba(255,240,180,.25), 0 2px 10px rgba(0,0,0,.3);
   display: flex; align-items: center; justify-content: center;
-  font-size: 16px; flex-shrink: 0;
+  flex-shrink: 0;
 }
 .navbar-title { font-size: .92rem; font-weight: 600; color: var(--text-primary); letter-spacing: .01em; }
 .navbar-sub   { font-size: .68rem; color: var(--text-sec); letter-spacing: .02em; }
@@ -990,26 +992,25 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
   padding-bottom: max(8px, var(--safe-b));
 }
 .tab-item {
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
-  padding: 4px 16px; cursor: pointer; border: none; background: transparent;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 5px 8px 2px; cursor: pointer; border: none; background: transparent;
   font-family: inherit; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
-  flex: 1; border-radius: 12px; transition: background .15s;
-  position: relative;
+  flex: 1; position: relative;
 }
-.tab-item.active::before {
-  content: '';
-  position: absolute; inset: 0;
-  border-radius: 12px;
-  background: rgba(200,169,110,.12);
-  border: 1px solid rgba(200,169,110,.18);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+.tab-icon-wrap {
+  display: flex; align-items: center; justify-content: center;
+  width: 56px; height: 30px; border-radius: 16px;
+  transition: background .2s, box-shadow .2s;
 }
-.tab-icon { font-size: 1.35rem; line-height: 1; color: var(--text-muted); transition: color .15s, transform .15s; }
-.tab-label { font-size: .62rem; font-weight: 500; letter-spacing: .02em; color: var(--text-muted); transition: color .15s; }
-.tab-item.active .tab-icon { color: var(--accent); transform: scale(1.08); }
+.tab-item.active .tab-icon-wrap {
+  background: rgba(200,169,110,.16);
+  box-shadow: inset 0 0 0 1px rgba(200,169,110,.22), 0 0 16px rgba(200,169,110,.12);
+}
+.tab-icon { font-size: 1.3rem; line-height: 1; color: var(--text-muted); transition: color .18s, transform .18s; }
+.tab-label { font-size: .62rem; font-weight: 600; letter-spacing: .02em; color: var(--text-muted); transition: color .18s; }
+.tab-item.active .tab-icon { color: var(--accent); transform: translateY(-1px) scale(1.05); }
 .tab-item.active .tab-label { color: var(--accent); }
+.tab-item:active .tab-icon { transform: scale(.9); }
 
 /* ===== BOTTOM SHEET OVERLAY ===== */
 .overlay {
@@ -1297,6 +1298,29 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
   box-shadow: 0 6px 20px rgba(95,210,232,.35);
 }
 .pwa-install-fab.show { display: inline-flex; }
+
+/* Install instruction sheet */
+.install-hero { text-align:center; padding:6px 0 18px; }
+.install-hero-icon {
+  width:64px; height:64px; margin:0 auto 12px; border-radius:18px;
+  display:flex; align-items:center; justify-content:center; font-size:2rem;
+  background:linear-gradient(135deg, var(--accent), #8a6e3e);
+  box-shadow:0 8px 26px rgba(200,169,110,.35);
+}
+.install-hero-title { font-family:'EB Garamond',Georgia,serif; font-size:1.3rem; font-weight:700; color:var(--text-primary); }
+.install-hero-sub { font-size:.82rem; color:var(--text-sec); margin-top:5px; line-height:1.5; max-width:320px; margin-left:auto; margin-right:auto; }
+.install-step {
+  display:flex; gap:13px; align-items:flex-start; padding:12px 4px;
+  border-top:1px solid rgba(255,224,150,.08); font-size:.9rem; color:var(--text-primary); line-height:1.5;
+}
+.install-step:first-of-type { border-top:none; }
+.install-step-n {
+  flex-shrink:0; width:26px; height:26px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.82rem; font-weight:700; color:#1a1407;
+  background:linear-gradient(135deg, var(--accent), var(--gold-hi));
+}
+.install-note { font-size:.76rem; color:var(--text-muted); line-height:1.55; padding:12px 4px 4px; }
 
 
 .set-group { margin-bottom: 20px; }
@@ -1862,7 +1886,17 @@ try {
 <!-- Top Nav -->
 <nav class="navbar">
   <div class="navbar-brand">
-    <div class="navbar-icon">✦</div>
+    <div class="navbar-icon" aria-hidden="true">
+      <svg viewBox="0 0 40 40" width="22" height="22">
+        <defs>
+          <radialGradient id="navHalo" cx="50%" cy="42%" r="55%">
+            <stop offset="0%" stop-color="#fff3d2"/><stop offset="60%" stop-color="#e7b85a"/><stop offset="100%" stop-color="#9c6a22"/>
+          </radialGradient>
+        </defs>
+        <path d="M20 3 L23 16 L37 20 L23 24 L20 37 L17 24 L3 20 L17 16 Z" fill="url(#navHalo)"/>
+        <circle cx="20" cy="20" r="3.2" fill="#fffaf0"/>
+      </svg>
+    </div>
     <div>
       <div class="navbar-title">Vision of the Heavens</div>
       <div class="navbar-sub">Scripture · Enoch · Jubilees</div>
@@ -1888,7 +1922,7 @@ try {
 </nav>
 
 <!-- ===== BIBLE VIEW (the reader) ===== -->
-<div class="app-view active" id="view-bible">
+<div class="app-view" id="view-bible">
 <!-- Main scroll area -->
 <div class="scroll-area">
 
@@ -2106,7 +2140,7 @@ try {
 </div><!-- end view-bible -->
 
 <!-- ===== HOME VIEW ===== -->
-<div class="app-view" id="view-home">
+<div class="app-view active" id="view-home">
   <div class="page-view">
     <div class="home-greeting">
       <div class="home-greeting-hi" id="homeGreeting">Peace be with you ✦</div>
@@ -2199,6 +2233,7 @@ try {
 
     <div class="pv-section-label">App</div>
     <div class="menu-list">
+      <button class="menu-item" onclick="openInstallSheet()"><span class="menu-item-emoji">⤓</span><span class="menu-item-label">Install app on device</span><span class="menu-item-arrow">›</span></button>
       <button class="menu-item" onclick="openSettings()"><span class="menu-item-emoji">⚙️</span><span class="menu-item-label">Settings</span><span class="menu-item-arrow">›</span></button>
       <button class="menu-item" onclick="openAbout()"><span class="menu-item-emoji">✦</span><span class="menu-item-label">About</span><span class="menu-item-arrow">›</span></button>
     </div>
@@ -2207,20 +2242,20 @@ try {
 
 <!-- Bottom Tab Bar — section navigation -->
 <nav class="tab-bar" aria-label="App navigation">
-  <button class="tab-item" id="tab-home" onclick="goSection('home')">
-    <span class="tab-icon">🏠</span>
+  <button class="tab-item active" id="tab-home" onclick="goSection('home')">
+    <span class="tab-icon-wrap"><span class="tab-icon">🏠</span></span>
     <span class="tab-label">Home</span>
   </button>
-  <button class="tab-item active" id="tab-bible" onclick="goSection('bible')">
-    <span class="tab-icon">📖</span>
+  <button class="tab-item" id="tab-bible" onclick="goSection('bible')">
+    <span class="tab-icon-wrap"><span class="tab-icon">📖</span></span>
     <span class="tab-label">Bible</span>
   </button>
   <button class="tab-item" id="tab-search" onclick="goSection('search')">
-    <span class="tab-icon">🔍</span>
+    <span class="tab-icon-wrap"><span class="tab-icon">🔍</span></span>
     <span class="tab-label">Search</span>
   </button>
   <button class="tab-item" id="tab-more" onclick="goSection('more')">
-    <span class="tab-icon">✦</span>
+    <span class="tab-icon-wrap"><span class="tab-icon">✦</span></span>
     <span class="tab-label">More</span>
   </button>
 </nav>
@@ -4413,21 +4448,71 @@ function openSettings(){
   }
 })();
 
-/* Install-to-home-screen prompt (Android/Chrome). iOS users use Share → Add to Home Screen. */
+/* Install-to-home-screen prompt — platform aware, always available.
+   Android/Chrome: native prompt via beforeinstallprompt.
+   iOS / others: clear manual instructions. */
 var _pwaDeferred=null;
+function isStandalone(){
+  return window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches
+    || window.navigator.standalone===true;
+}
+function detectPlatform(){
+  var ua=navigator.userAgent||"";
+  if(/iPad|iPhone|iPod/.test(ua) && !window.MSStream) return "ios";
+  if(/Android/.test(ua)) return "android";
+  return "desktop";
+}
 function showInstallButton(){
-  if(!_pwaDeferred)return;
+  /* Show an Install entry in the More account area unless already installed */
   var slot=document.getElementById("accountSlot");
   if(!slot||document.getElementById("pwaInstallFab"))return;
+  if(isStandalone())return; /* already installed */
   var b=document.createElement("button");
   b.className="pwa-install-fab show";b.id="pwaInstallFab";
-  b.innerHTML="⤓ Install Vision of the Heavens";
-  b.addEventListener("click",function(){
-    if(!_pwaDeferred)return;
-    _pwaDeferred.prompt();
-    _pwaDeferred.userChoice.finally(function(){_pwaDeferred=null;b.remove();});
-  });
+  b.innerHTML="⤓ Install app on your device";
+  b.addEventListener("click",openInstallSheet);
   slot.parentNode.insertBefore(b,slot);
+}
+function openInstallSheet(){
+  /* If we have the native Android prompt ready, use it directly */
+  if(_pwaDeferred){
+    _pwaDeferred.prompt();
+    _pwaDeferred.userChoice.finally(function(){
+      _pwaDeferred=null;
+      var f=document.getElementById("pwaInstallFab");if(f)f.remove();
+    });
+    return;
+  }
+  /* Otherwise show platform instructions */
+  var plat=detectPlatform();
+  $("sheetTitle").textContent="Install Vision of the Heavens";
+  var body=$("sheetBody");
+  var steps="";
+  if(plat==="ios"){
+    steps=
+      '<div class="install-step"><span class="install-step-n">1</span><div>Tap the <b>Share</b> button <span style="font-size:1.1em">􀈂</span> at the bottom of Safari.</div></div>'+
+      '<div class="install-step"><span class="install-step-n">2</span><div>Scroll down and tap <b>Add to Home Screen</b>.</div></div>'+
+      '<div class="install-step"><span class="install-step-n">3</span><div>Tap <b>Add</b> in the top corner. The app appears on your home screen.</div></div>'+
+      '<div class="install-note">On iPhone &amp; iPad, apps install through Safari\u2019s Share menu.</div>';
+  }else if(plat==="android"){
+    steps=
+      '<div class="install-step"><span class="install-step-n">1</span><div>Tap the <b>⋮</b> menu (top-right of Chrome).</div></div>'+
+      '<div class="install-step"><span class="install-step-n">2</span><div>Tap <b>Install app</b> or <b>Add to Home screen</b>.</div></div>'+
+      '<div class="install-step"><span class="install-step-n">3</span><div>Confirm <b>Install</b>. The app opens fullscreen like a native app.</div></div>'+
+      '<div class="install-note">If you don\u2019t see \u201CInstall app,\u201D refresh the page and wait a few seconds, then try again.</div>';
+  }else{
+    steps=
+      '<div class="install-step"><span class="install-step-n">1</span><div>Click the <b>install icon</b> ⊕ in your browser\u2019s address bar.</div></div>'+
+      '<div class="install-step"><span class="install-step-n">2</span><div>Or open the browser menu and choose <b>Install Vision of the Heavens</b>.</div></div>'+
+      '<div class="install-note">Works in Chrome, Edge, and most modern browsers.</div>';
+  }
+  body.innerHTML=
+    '<div class="install-hero">'+
+      '<div class="install-hero-icon">✦</div>'+
+      '<div class="install-hero-title">Add to your home screen</div>'+
+      '<div class="install-hero-sub">Use it like a real app — works offline, opens fullscreen, no browser bars.</div>'+
+    '</div>'+steps;
+  openSheet();
 }
 (function(){
   window.addEventListener("beforeinstallprompt",function(e){
