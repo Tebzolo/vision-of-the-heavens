@@ -4437,6 +4437,8 @@ function openSettings(){
     if(closeBtn)closeBtn.onclick=function(e){e.stopPropagation();hideBanner();};
     btn.onclick=function(){
       hideBanner();
+      /* Also remove the install button so the UI is clean during update. */
+      var fab=document.getElementById("pwaInstallFab");if(fab)fab.remove();
       /* Mark that the next reload is an update, so the banner is suppressed after. */
       try{ sessionStorage.setItem("sw_just_updated","1"); }catch(e){}
       if(worker){ try{ worker.postMessage({type:"SKIP_WAITING"}); }catch(e){} }
