@@ -5,7 +5,7 @@
    to installed apps. The cache name is tied to this version, so
    a new version creates a fresh cache and retires the old one.
    ============================================================ */
-const APP_VERSION = "2026-06-13-04";
+const APP_VERSION = "2026-06-13-05";
 const CACHE = "voth-" + APP_VERSION;
 
 /* Core files that make the app shell work offline */
@@ -22,13 +22,9 @@ const CORE = [
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE).then((cache) =>
-      Promise.all(
-        CORE.map((url) =>
-          cache.add(url).catch(() => {
-            /* ignore a single failed file */
-          })
-        )
-      )
+      Promise.all(CORE.map((url) =>
+        cache.add(url).catch(() => { /* ignore a single failed file */ })
+      ))
     )
   );
   /* do NOT skipWaiting here — we wait for the user's "Update" tap (see message handler) */
@@ -37,16 +33,9 @@ self.addEventListener("install", (event) => {
 /* ---- Activate: clean up old version caches ---- */
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches
-      .keys()
-      .then((keys) =>
-        Promise.all(
-          keys
-            .filter((k) => k.startsWith("voth-") && k !== CACHE)
-            .map((k) => caches.delete(k))
-        )
-      )
-      .then(() => self.clients.claim())
+    caches.keys().then((keys) =>
+      Promise.all(keys.filter((k) => k.startsWith("voth-") && k !== CACHE).map((k) => caches.delete(k)))
+    ).then(() => self.clients.claim())
   );
 });
 
@@ -59,7 +48,6 @@ self.addEventListener("message", (event) => {
 function isFont(url) {
   return url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com";
 }
-
 function isBibleApi(url) {
   return (
     url.hostname === "api.getbible.net" ||
@@ -74,11 +62,7 @@ self.addEventListener("fetch", (event) => {
   if (req.method !== "GET") return; /* Cache API only handles GET */
 
   let url;
-  try {
-    url = new URL(req.url);
-  } catch (e) {
-    return;
-  }
+  try { url = new URL(req.url); } catch (e) { return; }
 
   /* Navigations / the HTML document: NETWORK-FIRST so a new deploy always wins online,
      fall back to the cached shell when offline. */
@@ -94,9 +78,7 @@ self.addEventListener("fetch", (event) => {
           return res;
         })
         .catch(() =>
-          caches
-            .match("./index.html")
-            .then((r) => r || caches.match("./"))
+          caches.match("./index.html").then((r) => r || caches.match("./") )
             .then((r) => r || fetch("./index.html"))
         )
     );
@@ -108,13 +90,11 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       caches.match(req).then((cached) =>
         cached ||
-        fetch(req)
-          .then((res) => {
-            const copy = res.clone();
-            caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {});
-            return res;
-          })
-          .catch(() => cached)
+        fetch(req).then((res) => {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {});
+          return res;
+        }).catch(() => cached)
       )
     );
     return;
@@ -127,10 +107,7 @@ self.addEventListener("fetch", (event) => {
       caches.open(CACHE).then((cache) =>
         cache.match(req).then((cached) => {
           const network = fetch(req)
-            .then((res) => {
-              cache.put(req, res.clone()).catch(() => {});
-              return res;
-            })
+            .then((res) => { cache.put(req, res.clone()).catch(() => {}); return res; })
             .catch(() => cached);
           return cached || network;
         })
@@ -144,13 +121,11 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       caches.match(req).then((cached) =>
         cached ||
-        fetch(req)
-          .then((res) => {
-            const copy = res.clone();
-            caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {});
-            return res;
-          })
-          .catch(() => cached)
+        fetch(req).then((res) => {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {});
+          return res;
+        }).catch(() => cached)
       )
     );
   }
