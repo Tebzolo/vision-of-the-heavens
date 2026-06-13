@@ -4426,15 +4426,17 @@ function openSettings(){
     }).catch(function(){});
   });
 
+  var bannerDismissed=false;
   function hideBanner(){
     var bar=document.getElementById("pwaUpdate");if(bar)bar.classList.remove("show");
   }
   function showUpdateBanner(worker){
+    if(bannerDismissed)return; /* user closed it — don't nag again this session */
     var bar=document.getElementById("pwaUpdate");if(!bar)return;
     bar.classList.add("show");
     var btn=document.getElementById("pwaUpdateBtn");
     var closeBtn=document.getElementById("pwaUpdateClose");
-    if(closeBtn)closeBtn.onclick=function(e){e.stopPropagation();hideBanner();};
+    if(closeBtn)closeBtn.onclick=function(e){e.preventDefault();e.stopPropagation();bannerDismissed=true;hideBanner();};
     btn.onclick=function(){
       hideBanner();
       /* Also remove the install button so the UI is clean during update. */
