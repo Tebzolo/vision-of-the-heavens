@@ -2286,11 +2286,7 @@ try {
 </div>
 
 <!-- PWA update banner -->
-<div class="pwa-update" id="pwaUpdate" role="status" aria-live="polite">
-  <span class="pwa-update-txt">✦ A new version is ready</span>
-  <button class="pwa-update-btn" id="pwaUpdateBtn">Update</button>
-  <button class="pwa-update-close" id="pwaUpdateClose" aria-label="Dismiss">✕</button>
-</div>
+<!-- PWA update banner removed — updates apply silently -->
 
 <!-- ===== ALL ORIGINAL JAVASCRIPT (unchanged logic) ===== -->
 <script>
@@ -4434,25 +4430,11 @@ function openSettings(){
   function hideBanner(){
     var bar=document.getElementById("pwaUpdate");if(bar)bar.classList.remove("show");
   }
+  /* Banner disabled: apply updates silently. A waiting worker is told to take over;
+     the controllerchange handler reloads once. No popup is ever shown. */
   function showUpdateBanner(worker){
-    if(bannerDismissed)return; /* user closed it — don't nag again this session */
-    var bar=document.getElementById("pwaUpdate");if(!bar)return;
-    bar.classList.add("show");
-    var btn=document.getElementById("pwaUpdateBtn");
-    var closeBtn=document.getElementById("pwaUpdateClose");
-    if(closeBtn)closeBtn.onclick=function(e){e.preventDefault();e.stopPropagation();bannerDismissed=true;hideBanner();};
-    btn.onclick=function(){
-      hideBanner();
-      /* Also remove the install button so the UI is clean during update. */
-      var fab=document.getElementById("pwaInstallFab");if(fab)fab.remove();
-      /* Mark that the next reload is an update, so the banner is suppressed after. */
-      try{ sessionStorage.setItem("sw_just_updated","1"); }catch(e){}
-      if(worker){ try{ worker.postMessage({type:"SKIP_WAITING"}); }catch(e){} }
-      /* Safety net only if controllerchange never fires. */
-      setTimeout(function(){
-        if(!refreshing){ refreshing=true; location.reload(); }
-      },1500);
-    };
+    hideBanner();
+    if(worker){ try{ worker.postMessage({type:"SKIP_WAITING"}); }catch(e){} }
   }
 })();
 
