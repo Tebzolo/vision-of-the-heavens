@@ -70,7 +70,7 @@ body {
 /* Deep amber-night base */
 body {
   background:
-    radial-gradient(1100px 800px at 50% 38%, rgba(60,90,180,.30) 0%, rgba(40,50,120,.12) 34%, transparent 64%),
+    radial-gradient(1100px 800px at 50% 38%, rgba(200,150,60,.22) 0%, rgba(120,90,40,.10) 34%, transparent 64%),
     radial-gradient(1200px 700px at 50% -10%, #1a2150 0%, #121838 36%, #0a0e1a 66%, #06080f 100%);
 }
 
@@ -97,9 +97,9 @@ body::after {
   content:""; position:fixed; left:0; right:0; bottom:0; height:55vh; z-index:0;
   pointer-events:none;
   background:
-    radial-gradient(60% 120% at 50% 120%, rgba(70,110,210,.20), transparent 70%),
-    radial-gradient(40% 90%  at 20% 130%, rgba(90,90,200,.14), transparent 70%),
-    radial-gradient(45% 100% at 80% 130%, rgba(80,140,230,.14), transparent 70%);
+    radial-gradient(60% 120% at 50% 120%, rgba(231,162,60,.18), transparent 70%),
+    radial-gradient(40% 90%  at 20% 130%, rgba(201,113,45,.12), transparent 70%),
+    radial-gradient(45% 100% at 80% 130%, rgba(201,161,78,.12), transparent 70%);
   opacity:0; transform:translateY(40%);
   animation: auroraRise 1.8s 1s cubic-bezier(.2,.7,.2,1) forwards,
              drift 16s 2.8s ease-in-out infinite alternate;
@@ -123,7 +123,7 @@ body::after {
   animation: throneBreathe 9s 3.8s ease-in-out infinite;
 }
 @keyframes throneReveal   { from{opacity:0;transform:translateY(3%) scale(1.04)} to{opacity:.45;transform:none} }
-@keyframes throneBreathe  { 0%,100%{filter:drop-shadow(0 0 50px rgba(70,120,220,.25))} 50%{filter:drop-shadow(0 0 80px rgba(150,190,255,.42))} }
+@keyframes throneBreathe  { 0%,100%{filter:drop-shadow(0 0 50px rgba(231,162,60,.25))} 50%{filter:drop-shadow(0 0 80px rgba(255,217,138,.42))} }
 
 .ambient { display:none; } /* replaced by throne system */
 
@@ -661,11 +661,23 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
 /* Footer rule + swipe hint */
 .book-footer {
   margin-top: 18px;
-  padding-top: 10px;
+  padding-top: 14px;
   border-top: 1px solid rgba(110,150,245,.15);
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: center; justify-content: center;
   gap: 8px;
 }
+.read-full-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: inherit; font-size: .8rem; font-weight: 600; letter-spacing: .02em;
+  color: var(--accent); cursor: pointer;
+  background: rgba(95,150,255,.10);
+  border: 1px solid rgba(120,160,255,.3);
+  border-radius: 30px; padding: 9px 18px;
+  -webkit-tap-highlight-color: transparent;
+  transition: background .16s, border-color .16s, transform .1s;
+}
+.read-full-btn:hover { background: rgba(95,150,255,.18); border-color: rgba(120,160,255,.5); }
+.read-full-btn:active { transform: scale(.97); }
 .book-footer-rule {
   text-align: center;
   font-family: 'EB Garamond', Georgia, serif;
@@ -1983,20 +1995,20 @@ try {
   <svg viewBox="0 0 760 760" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <radialGradient id="halo" cx="50%" cy="40%" r="55%">
-        <stop offset="0%"   stop-color="#eaf2ff" stop-opacity="0.9"/>
-        <stop offset="35%"  stop-color="#9cc4ff" stop-opacity="0.5"/>
-        <stop offset="70%"  stop-color="#4f86e0" stop-opacity="0.18"/>
-        <stop offset="100%" stop-color="#4f86e0" stop-opacity="0"/>
+        <stop offset="0%"   stop-color="#fff3d2" stop-opacity="0.9"/>
+        <stop offset="35%"  stop-color="#ffd98a" stop-opacity="0.5"/>
+        <stop offset="70%"  stop-color="#e7a23c" stop-opacity="0.18"/>
+        <stop offset="100%" stop-color="#e7a23c" stop-opacity="0"/>
       </radialGradient>
       <linearGradient id="goldV" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%"   stop-color="#cfe0ff"/>
-        <stop offset="55%"  stop-color="#4f86e0"/>
-        <stop offset="100%" stop-color="#2a4a86"/>
+        <stop offset="0%"   stop-color="#ffe6a8"/>
+        <stop offset="55%"  stop-color="#e7a23c"/>
+        <stop offset="100%" stop-color="#9c6a22"/>
       </linearGradient>
       <linearGradient id="goldEdge" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%"   stop-color="#2a4a86"/>
-        <stop offset="50%"  stop-color="#cfe0ff"/>
-        <stop offset="100%" stop-color="#2a4a86"/>
+        <stop offset="0%"   stop-color="#9c6a22"/>
+        <stop offset="50%"  stop-color="#ffe6a8"/>
+        <stop offset="100%" stop-color="#9c6a22"/>
       </linearGradient>
     </defs>
     <circle cx="380" cy="300" r="300" fill="url(#halo)"/>
@@ -2149,14 +2161,12 @@ try {
             <p class="verse-text hint" id="passage">The whole Bible is here — choose a passage below, or tap Next to begin reading. Take your time.</p>
           </div>
 
-          <!-- Footer rule + swipe hint -->
+          <!-- Footer: open full chapter -->
           <div class="book-footer">
-            <span class="book-footer-rule" aria-hidden="true">· · ✦ · ·</span>
-            <div class="swipe-hint" aria-hidden="true">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9 7H2M2 7l3-3M2 7l3 3"/></svg>
-              <span style="font-size:.65rem;color:rgba(120,160,255,.45);letter-spacing:.04em;">swipe to navigate</span>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 7h7M12 7l-3-3M12 7l-3 3"/></svg>
-            </div>
+            <button class="read-full-btn" id="readFullBtn" type="button">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6V2h4M14 6V2h-4M2 10v4h4M14 10v4h-4"/></svg>
+              Tap to read full chapter
+            </button>
           </div>
         </div>
       </div>
@@ -2846,21 +2856,46 @@ var LOADED_BIBLE=null;
 function netFetchChapter(num,chap){
   var key=num+"/"+chap;
   if(TRANSLATION==="web"&&LOADED_BIBLE&&LOADED_BIBLE[key]&&LOADED_BIBLE[key].length)return Promise.resolve(LOADED_BIBLE[key]);
+  var bookName=BIBLE_BOOKS[num-1]?BIBLE_BOOKS[num-1][1]:null;
+  var expected=bookName?chapterVerseCount(bookName,chap):null; /* known full count, or null */
+  function isComplete(v){
+    if(!v||!v.length)return false;
+    if(!expected)return true; /* unknown expected — accept non-empty */
+    /* complete if we got the expected number of verses (allow a small slack of 1 for versification differences) */
+    return v.length>=expected-1;
+  }
   function tryJson(url,parser){
     var controller=("AbortController"in window)?new AbortController():null;
     var opts=controller?{signal:controller.signal}:{};
     var timer=controller?setTimeout(function(){controller.abort();},12000):null;
     return fetch(url,opts).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();}).then(function(d){if(timer)clearTimeout(timer);var v=parser(d);if(!v.length)throw new Error("empty");return v;}).catch(function(e){if(timer)clearTimeout(timer);throw e;});
   }
-  return tryJson(urlPrimary(num,chap),parsePrimary).catch(function(){return tryJson(urlFallback(num,chap),parseFallback);}).catch(function(){return tryJson(urlBibleApi(num,chap),parseBibleApi);}).catch(function(e){lastFetchError=(e&&e.message)||"network blocked";throw e;});
+  /* Try each source; keep the best (most complete) result. Prefer a fully complete chapter. */
+  var best=null;
+  function consider(v){ if(v&&(!best||v.length>best.length))best=v; return v; }
+  return tryJson(urlPrimary(num,chap),parsePrimary).then(function(v){consider(v);if(isComplete(v))return v;throw new Error("incomplete");})
+    .catch(function(){return tryJson(urlFallback(num,chap),parseFallback).then(function(v){consider(v);if(isComplete(v))return v;throw new Error("incomplete");});})
+    .catch(function(){return tryJson(urlBibleApi(num,chap),parseBibleApi).then(function(v){consider(v);if(isComplete(v))return v;throw new Error("incomplete");});})
+    .catch(function(e){
+      /* No source returned a fully complete chapter — return the most complete we got, if any. */
+      if(best&&best.length)return best;
+      lastFetchError=(e&&e.message)||"network blocked";throw e;
+    });
 }
 function fetchChapter(bookName,chap){
   var b=BOOK_BY_NAME[bookName];if(!b)return Promise.reject("unknown book");
   var num=b[0],key=TRANSLATION+":"+num+"/"+chap;
-  if(chapterCache[key])return Promise.resolve(chapterCache[key]);
+  var expected=chapterVerseCount(bookName,chap);
+  function complete(v){ return v&&v.length&&(!expected||v.length>=expected-1); }
+  if(chapterCache[key]&&complete(chapterCache[key]))return Promise.resolve(chapterCache[key]);
   return idbGet(key).then(function(stored){
-    if(stored&&stored.length){chapterCache[key]=stored;return stored;}
-    return netFetchChapter(num,chap).then(function(verses){chapterCache[key]=verses;idbSet(key,verses);return verses;});
+    if(stored&&complete(stored)){chapterCache[key]=stored;return stored;}
+    return netFetchChapter(num,chap).then(function(verses){
+      chapterCache[key]=verses;
+      /* only persist complete chapters to offline storage */
+      if(complete(verses))idbSet(key,verses);
+      return verses;
+    });
   });
 }
 
@@ -4429,11 +4464,7 @@ function toggleAuto(){
       if(e.target.closest(".bookmark-btn,a,button,.vw"))return;
       var sel=window.getSelection&&window.getSelection().toString();
       if(sel&&sel.length>0)return;
-      if(current&&current.ref){
-        var p=parseRef(current.ref);
-        if(BOOK_BY_NAME[p.book]){ openReader(p.book,p.chap,p.verse); return; }
-        if(current.t==="enoch"||current.t==="jubilees"){ openReaderCollection(current.t,current.ref); return; }
-      }
+      if(current&&current.ref){ openCurrentInReader(); return; }
       /* no verse yet — fall back to next */
       flipPage(1);next();
     });
@@ -4523,6 +4554,15 @@ $("goto").addEventListener("click",function(){scrollToVerseCard();gotoSelected()
 $("plansBtn").addEventListener("click",openPlans);
 $("highlightsBtn").addEventListener("click",openHighlightsList);
 $("notesBtn").addEventListener("click",openNotesList);
+
+/* "Tap to read full chapter" — opens the full-screen reader for any book */
+function openCurrentInReader(){
+  if(!current||!current.ref){next();return;}
+  var p=parseRef(current.ref);
+  if(BOOK_BY_NAME[p.book]){ openReader(p.book,p.chap,p.verse); return; }
+  if(current.t==="enoch"||current.t==="jubilees"){ openReaderCollection(current.t,current.ref); return; }
+}
+(function(){var b=$("readFullBtn");if(b)b.addEventListener("click",function(e){e.stopPropagation();openCurrentInReader();});})();
 
 /* Book cover — tap to open the book and reveal the verses */
 (function(){
