@@ -5,7 +5,7 @@
    to installed apps. The cache name is tied to this version, so
    a new version creates a fresh cache and retires the old one.
    ============================================================ */
-const APP_VERSION = "2026-06-13-06";
+const APP_VERSION = "2026-06-13-07";
 const CACHE = "voth-" + APP_VERSION;
 
 /* Core files that make the app shell work offline */
