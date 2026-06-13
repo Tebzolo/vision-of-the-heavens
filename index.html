@@ -4471,15 +4471,9 @@ function detectPlatform(){
   return "desktop";
 }
 function showInstallButton(){
-  /* Show an Install entry in the More account area unless already installed */
-  var slot=document.getElementById("accountSlot");
-  if(!slot||document.getElementById("pwaInstallFab"))return;
-  if(isStandalone())return; /* already installed */
-  var b=document.createElement("button");
-  b.className="pwa-install-fab show";b.id="pwaInstallFab";
-  b.innerHTML="⤓ Install app on your device";
-  b.addEventListener("click",openInstallSheet);
-  slot.parentNode.insertBefore(b,slot);
+  /* Auto-injected install button disabled — the "Install app on device"
+     menu item in More handles this on demand. Do nothing. */
+  return;
 }
 function openInstallSheet(){
   /* If we have the native Android prompt ready, use it directly */
