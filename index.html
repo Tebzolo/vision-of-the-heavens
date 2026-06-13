@@ -10,7 +10,7 @@
 
 <!-- PWA -->
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0a0e1a">
+<meta name="theme-color" content="#0e2a52">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -25,26 +25,27 @@
 /* ===== DESIGN TOKENS ===== */
 :root {
   /* Core palette */
-  --bg:          #0a0e1a;
-  --bg-card:     rgba(18,22,40,.82);
-  --bg-elevated: rgba(24,30,52,.88);
-  --bg-sheet:    rgba(16,20,38,.94);
-  --accent:      #5b9dff;
-  --accent-dim:  #3a6fc4;
-  --accent-glow: rgba(91,157,255,.20);
-  --accent-soft: rgba(91,157,255,.09);
-  --gold-hi:     #8fc2ff;
-  --text-primary: #eef3fb;
-  --text-sec:    #aebdd6;
-  --text-muted:  #6b7793;
-  --border:      rgba(120,160,255,.16);
-  --border-soft: rgba(255,255,255,.06);
+  /* ===== DEFAULT: "Heavens" — a luminous sky theme ===== */
+  --bg:          #0e2a52;
+  --bg-card:     rgba(40,80,140,.74);
+  --bg-elevated: rgba(52,98,164,.82);
+  --bg-sheet:    rgba(24,56,104,.94);
+  --accent:      #58c4ff;
+  --accent-dim:  #3a93de;
+  --accent-glow: rgba(88,196,255,.28);
+  --accent-soft: rgba(88,196,255,.12);
+  --gold-hi:     #bfe8ff;
+  --text-primary: #f4fbff;
+  --text-sec:    #c8e0f4;
+  --text-muted:  #86a6c6;
+  --border:      rgba(150,210,255,.22);
+  --border-soft: rgba(255,255,255,.08);
   --red:         #ff6b6b;
   --green:       #46d6a0;
-  /* Liquid Glass accent (used on the verse card) */
-  --ai-cyan:     #5fd2e8;
-  --ai-cyan-dim: rgba(95,210,232,.55);
-  --ai-glow:     rgba(95,210,232,.30);
+  /* sky accent (used on the verse card) */
+  --ai-cyan:     #6fe0f0;
+  --ai-cyan-dim: rgba(111,224,240,.55);
+  --ai-glow:     rgba(111,224,240,.32);
   /* Layout */
   --nav-h:       68px;
   --tab-h:       calc(60px + env(safe-area-inset-bottom));
@@ -70,8 +71,8 @@ body {
 /* Deep amber-night base */
 body {
   background:
-    radial-gradient(1100px 800px at 50% 38%, rgba(200,150,60,.22) 0%, rgba(120,90,40,.10) 34%, transparent 64%),
-    radial-gradient(1200px 700px at 50% -10%, #1a2150 0%, #121838 36%, #0a0e1a 66%, #06080f 100%);
+    radial-gradient(1100px 800px at 50% 26%, rgba(150,220,255,.30) 0%, rgba(90,170,235,.14) 38%, transparent 66%),
+    radial-gradient(1300px 800px at 50% -14%, #5aa8e8 0%, #3a82cf 22%, #1f5499 46%, #143a72 68%, #0e2a52 88%, #0a1e3e 100%);
 }
 
 /* Star field */
@@ -97,9 +98,9 @@ body::after {
   content:""; position:fixed; left:0; right:0; bottom:0; height:55vh; z-index:0;
   pointer-events:none;
   background:
-    radial-gradient(60% 120% at 50% 120%, rgba(231,162,60,.18), transparent 70%),
-    radial-gradient(40% 90%  at 20% 130%, rgba(201,113,45,.12), transparent 70%),
-    radial-gradient(45% 100% at 80% 130%, rgba(201,161,78,.12), transparent 70%);
+    radial-gradient(60% 120% at 50% 120%, rgba(120,200,255,.18), transparent 70%),
+    radial-gradient(40% 90%  at 20% 130%, rgba(90,160,240,.13), transparent 70%),
+    radial-gradient(45% 100% at 80% 130%, rgba(140,210,255,.13), transparent 70%);
   opacity:0; transform:translateY(40%);
   animation: auroraRise 1.8s 1s cubic-bezier(.2,.7,.2,1) forwards,
              drift 16s 2.8s ease-in-out infinite alternate;
@@ -1733,6 +1734,26 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
 #fileinput { display: none; }
 
 /* ===== THEMES ===== */
+/* Midnight — deep night sky */
+body.theme-midnight {
+  --bg:          #0a0e1a;
+  --bg-card:     rgba(18,22,40,.82); --bg-elevated: rgba(24,30,52,.88); --bg-sheet: rgba(16,20,38,.94);
+  --accent:      #5b9dff; --accent-dim: #3a6fc4; --accent-glow: rgba(91,157,255,.20); --accent-soft: rgba(91,157,255,.09);
+  --gold-hi:     #8fc2ff;
+  --text-primary: #eef3fb; --text-sec: #aebdd6; --text-muted: #6b7793;
+  --border: rgba(120,160,255,.16);
+}
+body.theme-midnight {
+  background:
+    radial-gradient(1100px 800px at 50% 38%, rgba(60,90,180,.26) 0%, rgba(40,50,120,.10) 34%, transparent 64%),
+    radial-gradient(1200px 700px at 50% -10%, #1a2150 0%, #121838 36%, #0a0e1a 66%, #06080f 100%);
+}
+body.theme-midnight::after {
+  background:
+    radial-gradient(60% 120% at 50% 120%, rgba(70,110,210,.18), transparent 70%),
+    radial-gradient(45% 100% at 80% 130%, rgba(80,140,230,.12), transparent 70%);
+}
+
 /* Sepia */
 body.theme-sepia {
   --bg:          #f0e8d4; --bg-card: #f8f2e4; --bg-elevated: #ede3cc;
@@ -1981,12 +2002,13 @@ body.no-anim *, body.no-anim *::before, body.no-anim *::after {
 <body>
 
 <script>
-/* Apply saved preferences before paint */
+/* Apply saved preferences before paint (index order: 0 Heavens, 1 Midnight, 2 Dawn/sepia, 3 Day/light) */
 try {
   if (localStorage.getItem("animOff") === "1") document.body.classList.add("no-anim");
   var ti = parseInt(localStorage.getItem("themeIndex"), 10);
-  if (ti === 1) document.body.classList.add("theme-sepia");
-  else if (ti === 2) document.body.classList.add("theme-light");
+  if (ti === 1) document.body.classList.add("theme-midnight");
+  else if (ti === 2) document.body.classList.add("theme-sepia");
+  else if (ti === 3) document.body.classList.add("theme-light");
 } catch(e){}
 </script>
 
@@ -2103,6 +2125,15 @@ try {
       <button class="filter-chip" data-t="new"      aria-pressed="false">New Testament</button>
       <button class="filter-chip" data-t="enoch"    aria-pressed="false">1 Enoch</button>
       <button class="filter-chip" data-t="jubilees" aria-pressed="false">Jubilees</button>
+      <button class="filter-chip" data-extra="1enoch">1 Enoch (full)</button>
+      <button class="filter-chip" data-extra="2enoch">2 Enoch</button>
+      <button class="filter-chip" data-extra="3enoch">3 Enoch</button>
+      <button class="filter-chip" data-extra="jubilees2">Jubilees (full)</button>
+      <button class="filter-chip" data-extra="wisdom">Wisdom</button>
+      <button class="filter-chip" data-extra="baruch">Baruch</button>
+      <button class="filter-chip" data-extra="2esdras">2 Esdras</button>
+      <button class="filter-chip" data-extra="thomas">Gospel of Thomas</button>
+      <button class="filter-chip" data-extra="apocpeter">Apocalypse of Peter</button>
       <button class="filter-chip" data-t="heavens"  aria-pressed="false">Heavens</button>
       <button class="filter-chip" data-t="comfort"  aria-pressed="false">Comfort &amp; Peace</button>
       <button class="filter-chip" data-t="faith"    aria-pressed="false">Faith &amp; Trust</button>
@@ -2524,6 +2555,68 @@ var SCRIPTURE = [
   {t:"jubilees", ref:"Jubilees 22:6", text:"Blessed be the Most High God, the God of all, who hath created me; and he created all, and to him will I cleave."},
   {t:"jubilees", ref:"Jubilees 36:7", text:"That ye fear him and worship him, and that each love his brother with affection and righteousness, and that neither desire evil against his brother from henceforth for ever."}
 ];
+
+/* ============================================================
+   EXTRA BOOKS — full texts fetched from the scrollmapper
+   deuterocanonical library via jsDelivr (cached offline by SW).
+   Verse format in source: "[chapter:verse] text"
+   ============================================================ */
+var EXTRA_BOOKS = {
+  "1enoch":    {name:"1 Enoch",            path:"sources/en/1-enoch/1-enoch.md"},
+  "2enoch":    {name:"2 Enoch",            path:"sources/en/2-enoch/2-enoch.md"},
+  "3enoch":    {name:"3 Enoch",            path:"sources/en/3-enoch/3-enoch.md"},
+  "jubilees2": {name:"Jubilees (full)",    path:"sources/en/book-of-jubilees/book-of-jubilees.md"},
+  "wisdom":    {name:"Wisdom of Solomon",  path:"sources/en/wisdom-of-solomon/wisdom-of-solomon.md"},
+  "baruch":    {name:"Baruch",             path:"sources/en/1-baruch/1-baruch.md"},
+  "2esdras":   {name:"2 Esdras",           path:"sources/en/2-esdras/2-esdras.md"},
+  "thomas":    {name:"Gospel of Thomas",   path:"etc/en/church_history/ante-nicene/apocrypha-gospel-of-thomas/apocrypha-gospel-of-thomas.md"},
+  "apocpeter": {name:"Apocalypse of Peter",path:"etc/en/church_history/ante-nicene/the-apocalypse-of-peter/the-apocalypse-of-peter.md"}
+};
+var EXTRA_BASE = "https://cdn.jsdelivr.net/gh/scrollmapper/bible_databases_deuterocanonical@master/";
+var extraCache = {}; /* id -> {chapters:{1:[{verse,text}],...}, order:[1,2,...]} */
+
+function extraUrl(id){ var b=EXTRA_BOOKS[id]; return b?(EXTRA_BASE+b.path):null; }
+
+/* Parse the scrollmapper markdown: lines/segments marked "[C:V] text".
+   Returns {chapters:{chapNum:[{verse,text}]}, order:[chapNums...]} */
+function parseExtraText(raw){
+  var chapters={}, order=[];
+  if(!raw)return {chapters:chapters, order:order};
+  /* strip code fences / front-matter if present */
+  raw=raw.replace(/\r/g,"");
+  /* Global regex for [C:V] markers; capture text up to the next marker */
+  var re=/\[(\d+):(\d+)\]\s*([\s\S]*?)(?=\[\d+:\d+\]|$)/g;
+  var m;
+  while((m=re.exec(raw))!==null){
+    var c=parseInt(m[1],10), v=parseInt(m[2],10);
+    var text=(m[3]||"").replace(/\s+/g," ").trim();
+    /* drop stray markdown artifacts */
+    text=text.replace(/^[#>*\-\s]+/,"").trim();
+    if(!text)continue;
+    if(!chapters[c]){chapters[c]=[];order.push(c);}
+    chapters[c].push({verse:v, text:text});
+  }
+  order.sort(function(a,b){return a-b;});
+  return {chapters:chapters, order:order};
+}
+
+function fetchExtraBook(id){
+  if(extraCache[id])return Promise.resolve(extraCache[id]);
+  return idbGet("extra:"+id).then(function(stored){
+    if(stored&&stored.order&&stored.order.length){extraCache[id]=stored;return stored;}
+    var url=extraUrl(id);
+    if(!url)return Promise.reject("unknown book");
+    var controller=("AbortController"in window)?new AbortController():null;
+    var opts=controller?{signal:controller.signal}:{};
+    var timer=controller?setTimeout(function(){controller.abort();},20000):null;
+    return fetch(url,opts).then(function(r){if(timer)clearTimeout(timer);if(!r.ok)throw new Error("HTTP "+r.status);return r.text();}).then(function(raw){
+      var parsed=parseExtraText(raw);
+      if(!parsed.order.length)throw new Error("parse failed");
+      extraCache[id]=parsed; idbSet("extra:"+id, parsed);
+      return parsed;
+    });
+  });
+}
 
 var LANGS = {
   en:{label:"English", locale:"en-ZA", names:{old:"Old Testament", new:"New Testament", enoch:"Book of Enoch", jubilees:"Book of Jubilees"}},
@@ -3931,6 +4024,67 @@ function closeReader(){
   document.body.style.overflow="";
   setTimeout(function(){fs.hidden=true;},320);
 }
+
+/* ===== EXTRA-BOOK READER (Enoch, Jubilees full, Wisdom, Baruch, 2 Esdras, Thomas, Apoc. Peter) ===== */
+function openExtraBook(id,chap){
+  if(!EXTRA_BOOKS[id])return;
+  if("speechSynthesis" in window)speechSynthesis.cancel();
+  readerState={extra:id, chap:chap||1};
+  var fs=$("readerFs");fs.hidden=false;
+  void fs.offsetWidth;fs.classList.add("open");
+  document.body.style.overflow="hidden";
+  loadExtraChapter();
+}
+function loadExtraChapter(){
+  var st=readerState;if(!st||!st.extra)return;
+  var book=EXTRA_BOOKS[st.extra];
+  $("readerTitle").textContent=book.name+(st.chap?" "+st.chap:"");
+  $("readerSub").textContent="Loading\u2026";
+  var scroll=$("readerScroll");
+  scroll.innerHTML='<div class="reader-loading">Loading '+escapeHtml(book.name)+'\u2026</div>';
+  fetchExtraBook(st.extra).then(function(data){
+    if(!data.order.length){scroll.innerHTML='<div class="reader-loading">Couldn\u2019t load this book.</div>';return;}
+    /* clamp chapter to available range */
+    if(st.chap<data.order[0])st.chap=data.order[0];
+    if(data.order.indexOf(st.chap)===-1)st.chap=data.order[0];
+    var verses=data.chapters[st.chap]||[];
+    var pos=data.order.indexOf(st.chap), total=data.order.length;
+    $("readerTitle").textContent=book.name+" "+st.chap;
+    $("readerSub").textContent="Chapter "+(pos+1)+" of "+total+" \u00B7 swipe to turn";
+    var html='<div class="reader-chapter-title">'+escapeHtml(book.name)+' '+st.chap+'</div>'+
+             '<div class="reader-chapter-orn">\u2766 \u2726 \u2766</div>';
+    verses.forEach(function(v){
+      html+='<div class="reader-verse" data-v="'+v.verse+'"><span class="rv-num">'+v.verse+'</span>'+escapeHtml(v.text)+'</div>';
+    });
+    html+='<div class="reader-swipe-hint">\u2190 swipe to turn chapter \u2192</div>';
+    scroll.innerHTML=html;scroll.scrollTop=0;
+    /* tap a verse to set it on the card */
+    scroll.querySelectorAll(".reader-verse").forEach(function(row){
+      row.addEventListener("click",function(){
+        var vn=+row.getAttribute("data-v");
+        show({t:"extra",ref:book.name+" "+st.chap+":"+vn,text:row.textContent.replace(/^\d+\s*/,"")});
+        scroll.querySelectorAll(".reader-verse").forEach(function(r){r.classList.remove("current");});
+        row.classList.add("current");
+      });
+    });
+    /* enable/disable nav */
+    var pv=$("readerPrev"),nx=$("readerNext");
+    if(pv)pv.disabled=(pos<=0);
+    if(nx)nx.disabled=(pos>=total-1);
+  }).catch(function(){
+    scroll.innerHTML='<div class="reader-loading">Couldn\u2019t load this book. Check your connection and try again.</div>';
+  });
+}
+function extraGo(dir){
+  var st=readerState;if(!st||!st.extra)return;
+  var data=extraCache[st.extra];if(!data)return;
+  var pos=data.order.indexOf(st.chap);
+  pos+=dir;
+  if(pos<0)pos=0;if(pos>=data.order.length)pos=data.order.length-1;
+  st.chap=data.order[pos];
+  loadExtraChapter();
+}
+
 function loadReaderChapter(){
   var st=readerState;if(!st)return;
   $("readerTitle").textContent=st.book+" "+st.chap;
@@ -3970,6 +4124,7 @@ function loadReaderChapter(){
 }
 function readerGo(dir){
   var st=readerState;if(!st)return;
+  if(st.extra){ extraGo(dir); return; }
   if(st.collection){
     var list=SCRIPTURE.filter(function(s){return s.t===st.collection;});
     var idx=0;
@@ -4476,10 +4631,12 @@ function toggleAuto(){
 var chips=document.querySelectorAll(".filter-chip");
 for(var c=0;c<chips.length;c++){
   chips[c].addEventListener("click",function(){
-    for(var k=0;k<chips.length;k++)chips[k].setAttribute("aria-pressed","false");
-    this.setAttribute("aria-pressed","true");
+    var ex=this.getAttribute("data-extra");
     var btn=this;btn.classList.remove("rippling");void btn.offsetWidth;btn.classList.add("rippling");
     btn.addEventListener("animationend",function clr(ev){if(ev.animationName==="chip-ripple"){btn.classList.remove("rippling");btn.removeEventListener("animationend",clr);}});
+    if(ex){ openExtraBook(ex,1); return; }
+    for(var k=0;k<chips.length;k++)chips[k].setAttribute("aria-pressed","false");
+    this.setAttribute("aria-pressed","true");
     filter=this.getAttribute("data-t");
     refreshPicker(false);next();
   });
@@ -4616,7 +4773,7 @@ goSection("home");
 
 
 /* ---- Theme ---- */
-var THEMES=[{cls:"",name:"Dark"},{cls:"theme-sepia",name:"Sepia"},{cls:"theme-light",name:"Light"}];
+var THEMES=[{cls:"",name:"Heavens"},{cls:"theme-midnight",name:"Midnight"},{cls:"theme-sepia",name:"Dawn"},{cls:"theme-light",name:"Day"}];
 var themeIdx=0;
 function applyTheme(i){
   themeIdx=i;
