@@ -4355,25 +4355,42 @@ function openSettings(){
 (function(){
   if(!("serviceWorker" in navigator))return;
   var refreshing=false;
-  /* When the new SW takes control, reload once to get the fresh app */
+
+  /* Did we JUST reload to apply an update? If so, suppress the banner this load
+     so it can't immediately re-appear and loop. */
+  var justUpdated=false;
+  try{ justUpdated = sessionStorage.getItem("sw_just_updated")==="1"; }catch(e){}
+  try{ sessionStorage.removeItem("sw_just_updated"); }catch(e){}
+
+  /* When the new SW takes control, reload once to get the fresh app. */
   navigator.serviceWorker.addEventListener("controllerchange",function(){
-    if(refreshing)return;refreshing=true;location.reload();
+    if(refreshing)return;
+    refreshing=true;
+    try{ sessionStorage.setItem("sw_just_updated","1"); }catch(e){}
+    location.reload();
   });
+
   window.addEventListener("load",function(){
     navigator.serviceWorker.register("sw.js").then(function(reg){
-      if(reg.waiting)showUpdateBanner(reg.waiting);
+      /* Only offer an update if we didn't just reload for one. */
+      if(reg.waiting && navigator.serviceWorker.controller && !justUpdated){
+        showUpdateBanner(reg.waiting);
+      }
       reg.addEventListener("updatefound",function(){
         var nw=reg.installing;if(!nw)return;
         nw.addEventListener("statechange",function(){
-          if(nw.state==="installed" && navigator.serviceWorker.controller){
+          /* a genuinely new worker installed alongside an existing one = real update */
+          if(nw.state==="installed" && navigator.serviceWorker.controller && !refreshing){
             showUpdateBanner(nw);
           }
         });
       });
-      setInterval(function(){reg.update().catch(function(){});},60*1000);
+      /* check for updates occasionally and when the app regains focus */
+      setInterval(function(){reg.update().catch(function(){});},5*60*1000);
       document.addEventListener("visibilitychange",function(){if(!document.hidden)reg.update().catch(function(){});});
     }).catch(function(){});
   });
+
   function hideBanner(){
     var bar=document.getElementById("pwaUpdate");if(bar)bar.classList.remove("show");
   }
@@ -4382,17 +4399,16 @@ function openSettings(){
     bar.classList.add("show");
     var btn=document.getElementById("pwaUpdateBtn");
     var closeBtn=document.getElementById("pwaUpdateClose");
-    /* X dismisses without updating */
     if(closeBtn)closeBtn.onclick=function(e){e.stopPropagation();hideBanner();};
     btn.onclick=function(){
-      /* Hide the banner straight away so it never feels stuck, then update. */
       hideBanner();
-      btn.textContent="Update";
-      try{ worker.postMessage({type:"SKIP_WAITING"}); }catch(e){}
-      /* Safety net: if the worker doesn't take control quickly, reload anyway. */
+      /* Mark that the next reload is an update, so the banner is suppressed after. */
+      try{ sessionStorage.setItem("sw_just_updated","1"); }catch(e){}
+      if(worker){ try{ worker.postMessage({type:"SKIP_WAITING"}); }catch(e){} }
+      /* Safety net only if controllerchange never fires. */
       setTimeout(function(){
         if(!refreshing){ refreshing=true; location.reload(); }
-      },800);
+      },1500);
     };
   }
 })();
