@@ -142,17 +142,21 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
 .navbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   height: var(--nav-h);
-  background: rgba(130,170,255,.04);
-  backdrop-filter: blur(40px) saturate(3) brightness(1.05);
-  -webkit-backdrop-filter: blur(40px) saturate(3) brightness(1.05);
-  border-bottom: 1px solid rgba(150,190,255,.15);
+  background: rgba(120,165,255,.08);
+  backdrop-filter: blur(44px) saturate(2.6) brightness(1.1);
+  -webkit-backdrop-filter: blur(44px) saturate(2.6) brightness(1.1);
+  border-bottom: 1px solid rgba(180,215,255,.20);
   box-shadow:
-    inset 0 1px 0 rgba(200,225,255,.20),
+    inset 0 1px 0 rgba(220,235,255,.32),
     0 1px 32px rgba(0,0,0,.18);
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 20px;
   padding-top: env(safe-area-inset-top, 0px);
+  transition: height .3s cubic-bezier(.4,0,.2,1), background .3s;
 }
+body.nav-shrink .navbar { height: calc(var(--nav-h) - 14px); background: rgba(120,165,255,.12); }
+body.nav-shrink .navbar-sub { opacity: 0; max-height: 0; }
+.navbar-sub { transition: opacity .25s, max-height .25s; max-height: 16px; overflow: hidden; }
 .navbar-brand {
   display: flex; align-items: center; gap: 10px;
 }
@@ -206,11 +210,11 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   padding-top: 6px;
-  padding-bottom: calc(var(--tab-h) + 20px);
-  /* subtle inset edge to signal the scroll boundary */
+  padding-bottom: calc(env(safe-area-inset-bottom,0px) + 96px);
+  /* subtle inset edge at top + fade under the floating dock at bottom */
   border-top: 1px solid rgba(95,210,232,.12);
-  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 10px);
-          mask-image: linear-gradient(180deg, transparent 0, #000 10px);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 10px, #000 calc(100% - 40px), transparent 100%);
+          mask-image: linear-gradient(180deg, transparent 0, #000 10px, #000 calc(100% - 40px), transparent 100%);
 }
 .lower-scroll::-webkit-scrollbar { width: 8px; }
 .lower-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,.03); border-radius: 8px; }
@@ -223,7 +227,7 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
 
 /* On shorter screens, fall back to normal page scroll so nothing gets cut off or cramped */
 @media (max-height: 780px) {
-  .scroll-area { height: auto; min-height: 100dvh; overflow: visible; display: block; padding-bottom: calc(var(--tab-h) + 20px); }
+  .scroll-area { height: auto; min-height: 100dvh; overflow: visible; display: block; padding-bottom: calc(env(safe-area-inset-bottom,0px) + 96px); }
   .lower-scroll { overflow: visible; height: auto; min-height: 0; border-top: none; -webkit-mask-image: none; mask-image: none; padding-bottom: 0; }
 }
 
@@ -990,40 +994,77 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
 }
 
 /* ===== BOTTOM TAB BAR ===== */
-.tab-bar {
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
-  height: var(--tab-h);
-  background: rgba(130,170,255,.04);
-  backdrop-filter: blur(48px) saturate(4) brightness(1.08);
-  -webkit-backdrop-filter: blur(48px) saturate(4) brightness(1.08);
-  border-top: 1px solid rgba(150,190,255,.16);
-  box-shadow:
-    inset 0 1px 0 rgba(200,225,255,.18),
-    0 -2px 24px rgba(0,0,0,.12);
-  display: flex; align-items: flex-start; justify-content: space-around;
-  padding: 8px 0;
-  padding-bottom: max(8px, var(--safe-b));
+/* ===== iOS 26 floating tab dock ===== */
+.tab-dock {
+  position: fixed; z-index: 100;
+  left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+  display: flex; justify-content: center; align-items: center; gap: 10px;
+  padding: 0 16px; pointer-events: none;
+  transition: transform .3s cubic-bezier(.4,0,.2,1), opacity .3s;
 }
+.tab-dock > * { pointer-events: auto; }
+.tab-bar {
+  display: flex; align-items: center; justify-content: space-around;
+  gap: 4px; padding: 7px 10px;
+  border-radius: 30px;
+  background: rgba(120,165,255,.10);
+  backdrop-filter: blur(40px) saturate(2.4) brightness(1.12);
+  -webkit-backdrop-filter: blur(40px) saturate(2.4) brightness(1.12);
+  border: 1px solid rgba(180,215,255,.28);
+  box-shadow:
+    inset 0 1px 0 rgba(220,235,255,.45),
+    inset 0 -1px 6px rgba(60,100,180,.15),
+    0 8px 32px rgba(0,0,0,.34),
+    0 2px 8px rgba(0,0,0,.2);
+  transition: padding .3s cubic-bezier(.4,0,.2,1);
+}
+.tab-search-island {
+  flex-shrink: 0; width: 54px; height: 54px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  background: rgba(120,165,255,.10);
+  backdrop-filter: blur(40px) saturate(2.4) brightness(1.12);
+  -webkit-backdrop-filter: blur(40px) saturate(2.4) brightness(1.12);
+  border: 1px solid rgba(180,215,255,.28);
+  box-shadow:
+    inset 0 1px 0 rgba(220,235,255,.45),
+    0 8px 32px rgba(0,0,0,.34);
+  -webkit-tap-highlight-color: transparent;
+  transition: transform .15s, box-shadow .2s;
+}
+.tab-search-island:active { transform: scale(.92); }
+.tab-search-island.active {
+  background: linear-gradient(135deg, rgba(91,157,255,.5), rgba(77,184,255,.4));
+  box-shadow: inset 0 1px 0 rgba(220,235,255,.5), 0 0 22px rgba(91,157,255,.4), 0 8px 32px rgba(0,0,0,.34);
+}
+.tab-search-island .tab-icon { font-size: 1.35rem; }
 .tab-item {
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
-  padding: 5px 8px 2px; cursor: pointer; border: none; background: transparent;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 4px 4px 2px; cursor: pointer; border: none; background: transparent;
   font-family: inherit; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
-  flex: 1; position: relative;
+  position: relative; min-width: 58px;
 }
 .tab-icon-wrap {
   display: flex; align-items: center; justify-content: center;
-  width: 56px; height: 30px; border-radius: 16px;
+  width: 50px; height: 30px; border-radius: 15px;
   transition: background .2s, box-shadow .2s;
 }
 .tab-item.active .tab-icon-wrap {
-  background: rgba(120,160,255,.16);
-  box-shadow: inset 0 0 0 1px rgba(120,160,255,.22), 0 0 16px rgba(120,160,255,.12);
+  background: rgba(120,160,255,.22);
+  box-shadow: inset 0 0 0 1px rgba(150,190,255,.3), 0 0 16px rgba(120,160,255,.18);
 }
-.tab-icon { font-size: 1.3rem; line-height: 1; color: var(--text-muted); transition: color .18s, transform .18s; }
-.tab-label { font-size: .62rem; font-weight: 600; letter-spacing: .02em; color: var(--text-muted); transition: color .18s; }
+.tab-icon { font-size: 1.28rem; line-height: 1; color: var(--text-muted); transition: color .18s, transform .18s; }
+.tab-label { font-size: .6rem; font-weight: 600; letter-spacing: .02em; color: var(--text-muted); transition: color .18s, opacity .25s, max-height .25s; max-height: 14px; overflow: hidden; }
 .tab-item.active .tab-icon { color: var(--accent); transform: translateY(-1px) scale(1.05); }
 .tab-item.active .tab-label { color: var(--accent); }
 .tab-item:active .tab-icon { transform: scale(.9); }
+
+/* shrink-on-scroll: hide labels, tighten the dock */
+.tab-dock.shrink .tab-label { opacity: 0; max-height: 0; }
+.tab-dock.shrink .tab-bar { padding-top: 9px; padding-bottom: 9px; }
+.tab-dock.shrink .tab-icon-wrap { height: 28px; }
+
+/* content peeks/fades under the dock */
+.scroll-area::after, .app-view::after { content: none; }
 
 /* ===== BOTTOM SHEET OVERLAY ===== */
 .overlay {
@@ -1989,7 +2030,7 @@ body.theme-light::after    { opacity: .20!important; }
   height: 100dvh;
   overflow-y: auto; overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  padding: calc(var(--nav-h) + 18px) 18px calc(var(--tab-h) + 24px);
+  padding: calc(var(--nav-h) + 18px) 18px calc(env(safe-area-inset-bottom,0px) + 100px);
   max-width: 600px; margin: 0 auto;
 }
 .page-view::-webkit-scrollbar { width: 8px; }
@@ -2611,22 +2652,23 @@ try {
 </div><!-- end view-more -->
 
 <!-- Bottom Tab Bar — section navigation -->
-<nav class="tab-bar" aria-label="App navigation">
-  <button class="tab-item active" id="tab-home" onclick="goSection('home')">
-    <span class="tab-icon-wrap"><span class="tab-icon">🏠</span></span>
-    <span class="tab-label">Home</span>
-  </button>
-  <button class="tab-item" id="tab-bible" onclick="goSection('bible')">
-    <span class="tab-icon-wrap"><span class="tab-icon">📖</span></span>
-    <span class="tab-label">Bible</span>
-  </button>
-  <button class="tab-item" id="tab-search" onclick="goSection('search')">
-    <span class="tab-icon-wrap"><span class="tab-icon">🔍</span></span>
-    <span class="tab-label">Search</span>
-  </button>
-  <button class="tab-item" id="tab-more" onclick="goSection('more')">
-    <span class="tab-icon-wrap"><span class="tab-icon">✦</span></span>
-    <span class="tab-label">More</span>
+<nav class="tab-dock" aria-label="App navigation" id="tabDock">
+  <div class="tab-bar">
+    <button class="tab-item active" id="tab-home" onclick="goSection('home')">
+      <span class="tab-icon-wrap"><span class="tab-icon">🏠</span></span>
+      <span class="tab-label">Home</span>
+    </button>
+    <button class="tab-item" id="tab-bible" onclick="goSection('bible')">
+      <span class="tab-icon-wrap"><span class="tab-icon">📖</span></span>
+      <span class="tab-label">Bible</span>
+    </button>
+    <button class="tab-item" id="tab-more" onclick="goSection('more')">
+      <span class="tab-icon-wrap"><span class="tab-icon">✦</span></span>
+      <span class="tab-label">More</span>
+    </button>
+  </div>
+  <button class="tab-search-island" id="tab-search" onclick="goSection('search')" aria-label="Search">
+    <span class="tab-icon">🔍</span>
   </button>
 </nav>
 
@@ -5430,6 +5472,26 @@ initSearchView();
 renderAccount();
 /* start on Home so users see the landing section first */
 goSection("home");
+
+/* ===== iOS 26: tab dock shrinks on scroll down, expands on scroll up ===== */
+(function(){
+  var dock=document.getElementById("tabDock");if(!dock)return;
+  var lastY={}, ticking=false;
+  function onScroll(e){
+    var el=e.target;
+    var y=(el===document||el===window)?(window.scrollY||document.documentElement.scrollTop):el.scrollTop;
+    var key=el.id||el.className||"win";
+    var prev=lastY[key]||0;
+    if(ticking)return;ticking=true;
+    requestAnimationFrame(function(){
+      if(y>prev+6 && y>40){ dock.classList.add("shrink"); document.body.classList.add("nav-shrink"); }
+      else if(y<prev-6){ dock.classList.remove("shrink"); document.body.classList.remove("nav-shrink"); }
+      lastY[key]=y; ticking=false;
+    });
+  }
+  /* listen on all scrollable surfaces (capture catches inner scrollers) */
+  document.addEventListener("scroll",onScroll,true);
+})();
 
 
 /* ---- Theme ---- */
