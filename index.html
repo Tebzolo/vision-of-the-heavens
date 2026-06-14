@@ -1323,6 +1323,86 @@ body.no-anim .throne-bg { opacity:.45!important; transform:none!important; }
 .cmp-abbr { flex-shrink: 0; width: 42px; font-size: .72rem; font-weight: 700; color: var(--accent); letter-spacing: .04em; padding-top: 2px; }
 .cmp-text { flex: 1; font-family: 'EB Garamond', Georgia, serif; font-size: 1.02rem; line-height: 1.6; color: var(--text-sec); }
 
+/* ===== Dashboard ===== */
+.dash-hero { display: flex; align-items: center; gap: 18px; margin-bottom: 18px; }
+.dash-ring {
+  --p: 0; width: 84px; height: 84px; flex-shrink: 0; border-radius: 50%;
+  background: conic-gradient(var(--accent) calc(var(--p)*1%), rgba(120,160,255,.14) 0);
+  display: flex; align-items: center; justify-content: center; position: relative;
+}
+.dash-ring::before { content:''; position:absolute; inset:8px; border-radius:50%; background: var(--bg-sheet); }
+.dash-ring span { position: relative; font-weight: 700; font-size: 1.1rem; color: var(--text-primary); }
+.dash-hero-stats { display: flex; gap: 18px; flex: 1; }
+.dash-hero-stats div { display: flex; flex-direction: column; }
+.dash-hero-stats b { font-size: 1.3rem; color: var(--text-primary); }
+.dash-hero-stats span { font-size: .68rem; color: var(--text-muted); }
+.dash-bar-row { margin-bottom: 12px; }
+.dash-bar-top { display: flex; justify-content: space-between; font-size: .78rem; color: var(--text-sec); margin-bottom: 5px; }
+.dash-bar { height: 8px; border-radius: 5px; background: rgba(120,160,255,.12); overflow: hidden; }
+.dash-bar-fill { height: 100%; border-radius: 5px; background: linear-gradient(90deg, var(--accent), var(--gold-hi)); }
+.dash-label { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin: 18px 0 10px; }
+.dash-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(82px,1fr)); gap: 7px; }
+.dash-book {
+  font-family: inherit; font-size: .68rem; cursor: pointer; text-align: left; line-height: 1.2;
+  padding: 8px 9px; border-radius: 9px; color: var(--text-muted);
+  display: flex; flex-direction: column; gap: 3px; border: 1px solid rgba(120,160,255,.12);
+  background: rgba(120,160,255,.05); -webkit-tap-highlight-color: transparent;
+}
+.dash-book-frac { font-size: .62rem; opacity: .8; }
+.dash-book.part { color: var(--text-sec); border-color: rgba(120,160,255,.3); background: rgba(120,160,255,.12); }
+.dash-book.full { color: #06182f; background: linear-gradient(135deg,#4db8ff,#5b9dff); border: none; font-weight: 700; }
+
+/* ===== Memorize ===== */
+.mem-intro, .mem-label { font-size: .82rem; color: var(--text-sec); margin-bottom: 12px; line-height: 1.5; }
+.mem-label { font-weight: 700; color: var(--accent); letter-spacing: .04em; margin-top: 18px; }
+.mem-start-btn { width: 100%; font-family: inherit; cursor: pointer; padding: 14px; border-radius: 14px; color: #06182f; border: none; background: linear-gradient(135deg,#4db8ff,#5b9dff); font-weight: 700; font-size: .9rem; line-height: 1.4; }
+.mem-start-btn span { font-weight: 500; font-size: .76rem; opacity: .8; }
+.mem-saved-list { display: flex; flex-wrap: wrap; gap: 7px; }
+.mem-saved { font-family: inherit; font-size: .78rem; cursor: pointer; padding: 7px 12px; border-radius: 20px; color: var(--text-sec); background: rgba(120,160,255,.08); border: 1px solid rgba(120,160,255,.2); }
+.mem-ref { font-family: 'EB Garamond', Georgia, serif; font-weight: 700; color: var(--accent); margin: 18px 0 10px; }
+.mem-verse { font-family: 'EB Garamond', Georgia, serif; font-size: 1.25rem; line-height: 2; color: var(--text-primary); }
+.mem-word { }
+.mem-blank { color: var(--accent); letter-spacing: 1px; cursor: pointer; border-bottom: 1px dashed var(--accent); }
+.mem-progress { font-size: .76rem; color: var(--text-muted); margin: 14px 0; }
+.mem-controls { display: flex; gap: 8px; }
+.mem-btn { flex: 1; font-family: inherit; font-size: .82rem; cursor: pointer; padding: 11px; border-radius: 11px; color: var(--text-sec); background: rgba(120,160,255,.08); border: 1px solid rgba(120,160,255,.2); }
+.mem-btn.primary { background: linear-gradient(135deg,#4db8ff,#5b9dff); color: #06182f; border: none; font-weight: 700; }
+
+/* ===== Cross-refs ===== */
+.xref-note { font-size: .78rem; color: var(--text-muted); margin-bottom: 10px; }
+.xref-row { display: block; width: 100%; text-align: left; cursor: pointer; padding: 12px; margin-bottom: 8px; border-radius: 12px; background: rgba(120,160,255,.06); border: 1px solid rgba(120,160,255,.16); font-family: inherit; }
+.xref-ref { display: block; font-weight: 700; color: var(--accent); font-size: .85rem; margin-bottom: 3px; }
+.xref-text { display: block; font-family: 'EB Garamond', Georgia, serif; font-size: .96rem; line-height: 1.5; color: var(--text-sec); }
+
+/* ===== Prayer ===== */
+.pray-add { display: flex; gap: 8px; margin-bottom: 14px; }
+.pray-label { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin: 16px 0 9px; }
+.pray-item { display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 12px; background: rgba(120,160,255,.06); border: 1px solid rgba(120,160,255,.14); margin-bottom: 8px; }
+.pray-item.done { opacity: .7; }
+.pray-body { flex: 1; min-width: 0; }
+.pray-text { font-size: .9rem; color: var(--text-primary); line-height: 1.4; }
+.pray-item.done .pray-text { text-decoration: line-through; }
+.pray-date { font-size: .68rem; color: var(--text-muted); margin-top: 3px; }
+.pray-answer, .pray-del { flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 1px solid rgba(120,160,255,.25); background: rgba(120,160,255,.08); color: var(--accent); font-size: .9rem; }
+.pray-del { color: var(--text-muted); border-color: rgba(255,107,107,.25); }
+
+/* ===== Plan ===== */
+.plan-hero, .plan-jump { margin-bottom: 14px; }
+.plan-hero { display: flex; align-items: center; gap: 16px; }
+.plan-hero-text { display: flex; flex-direction: column; }
+.plan-hero-text b { font-size: 1.05rem; color: var(--text-primary); }
+.plan-hero-text span { font-size: .72rem; color: var(--text-muted); }
+.plan-jump { width: 100%; font-family: inherit; cursor: pointer; padding: 12px; border-radius: 12px; color: #06182f; border: none; background: linear-gradient(135deg,#4db8ff,#5b9dff); font-weight: 700; font-size: .85rem; }
+.plan-day { display: flex; gap: 12px; padding: 12px; border-radius: 12px; margin-bottom: 8px; background: rgba(120,160,255,.05); border: 1px solid rgba(120,160,255,.12); }
+.plan-day.current { border-color: var(--accent); background: rgba(91,157,255,.1); }
+.plan-day.done { opacity: .65; }
+.plan-check { flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid rgba(120,160,255,.35); background: transparent; color: #06182f; font-weight: 700; }
+.plan-day.done .plan-check { background: linear-gradient(135deg,#4db8ff,#5b9dff); border: none; }
+.plan-day-title { font-size: .82rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+.plan-day-readings { display: flex; flex-wrap: wrap; gap: 6px; }
+.plan-read { font-family: inherit; font-size: .74rem; cursor: pointer; padding: 5px 10px; border-radius: 8px; color: var(--accent); background: rgba(91,157,255,.1); border: 1px solid rgba(120,160,255,.2); }
+
+
 .reader-swipe-hint {
   text-align: center; font-size: .68rem; color: rgba(143,194,255,.5);
   letter-spacing: .1em; margin-top: 24px;
@@ -2329,6 +2409,10 @@ try {
       <span class="action-tile-icon">⇄</span>
       <span class="action-tile-label">Compare</span>
     </button>
+    <button class="action-tile" id="xrefBtn">
+      <span class="action-tile-icon">🔗</span>
+      <span class="action-tile-label">Related</span>
+    </button>
     <button class="action-tile" id="read">
       <span class="action-tile-icon">🔊</span>
       <span class="action-tile-label">Read Aloud</span>
@@ -2501,6 +2585,10 @@ try {
 
     <div class="pv-section-label">Library</div>
     <div class="menu-list">
+      <button class="menu-item" onclick="openDashboard()"><span class="menu-item-emoji">📊</span><span class="menu-item-label">My Progress</span><span class="menu-item-arrow">›</span></button>
+      <button class="menu-item" onclick="openYearPlan()"><span class="menu-item-emoji">📅</span><span class="menu-item-label">Bible in a Year</span><span class="menu-item-arrow">›</span></button>
+      <button class="menu-item" onclick="openMemorize()"><span class="menu-item-emoji">🧠</span><span class="menu-item-label">Memorize</span><span class="menu-item-arrow">›</span></button>
+      <button class="menu-item" onclick="openPrayer()"><span class="menu-item-emoji">🙏</span><span class="menu-item-label">Prayer Journal</span><span class="menu-item-arrow">›</span></button>
       <button class="menu-item" onclick="openBookmarks()"><span class="menu-item-emoji">🔖</span><span class="menu-item-label">Bookmarks</span><span class="menu-item-arrow">›</span></button>
       <button class="menu-item" onclick="openHighlightsList()"><span class="menu-item-emoji">🖍️</span><span class="menu-item-label">Highlights</span><span class="menu-item-arrow">›</span></button>
       <button class="menu-item" onclick="openNotesList()"><span class="menu-item-emoji">📓</span><span class="menu-item-label">My Notes</span><span class="menu-item-arrow">›</span></button>
@@ -3146,6 +3234,7 @@ function show(entry){
     refEl.classList.remove("ref-enter");void refEl.offsetWidth;refEl.classList.add("ref-enter");
     if(autoOn)scheduleAuto();
     saveLastRead(current);updateBookmarkStar();markReadToday();
+    logReadingActivity(current);
     applyHighlightToCard();updateNoteIndicator();
   }
   var hasContent=passage.textContent&&!passage.classList.contains("hint");
@@ -4156,6 +4245,283 @@ function openCompare(){
   });
 }
 
+/* ===================================================================
+   READING ACTIVITY LOG (feeds dashboard, history, plan auto-check)
+   =================================================================== */
+function logReadingActivity(entry){
+  if(!entry||!entry.ref)return;
+  try{
+    var p=parseRef(entry.ref);
+    /* chapters-read set: "Book chap" keys */
+    if(p && BOOK_BY_NAME[p.book]){
+      var chaps=lsGet("chaptersRead",{});
+      var ckey=p.book+" "+p.chap;
+      if(!chaps[ckey]){chaps[ckey]=Date.now();lsSet("chaptersRead",chaps);}
+    }
+    /* recent history: keep last 40 refs */
+    var hist=lsGet("readHistory",[]);
+    if(!hist.length||hist[0].ref!==entry.ref){
+      hist.unshift({ref:entry.ref,t:entry.t||"",at:Date.now()});
+      if(hist.length>40)hist=hist.slice(0,40);
+      lsSet("readHistory",hist);
+    }
+  }catch(e){}
+}
+
+/* ===================================================================
+   1) READING PROGRESS DASHBOARD
+   =================================================================== */
+function openDashboard(){
+  $("sheetTitle").textContent="My Progress";
+  var s=getProgress();
+  var chaps=lsGet("chaptersRead",{});
+  var readSet={};Object.keys(chaps).forEach(function(k){readSet[k]=1;});
+  /* totals */
+  var otTotal=0,ntTotal=0,otRead=0,ntRead=0;
+  BIBLE_BOOKS.forEach(function(b){
+    for(var c=1;c<=b[3];c++){
+      var key=b[1]+" "+c;
+      if(b[2]==="old"){otTotal++;if(readSet[key])otRead++;}
+      else{ntTotal++;if(readSet[key])ntRead++;}
+    }
+  });
+  var allTotal=otTotal+ntTotal, allRead=otRead+ntRead;
+  var pct=allTotal?Math.round(allRead/allTotal*100):0;
+  function bar(label,read,total){
+    var p=total?Math.round(read/total*100):0;
+    return '<div class="dash-bar-row"><div class="dash-bar-top"><span>'+label+'</span><span>'+read+' / '+total+'</span></div>'+
+      '<div class="dash-bar"><div class="dash-bar-fill" style="width:'+p+'%"></div></div></div>';
+  }
+  /* per-book mini grid */
+  function bookMap(testament){
+    var html='';
+    BIBLE_BOOKS.filter(function(b){return b[2]===testament;}).forEach(function(b){
+      var done=0;for(var c=1;c<=b[3];c++){if(readSet[b[1]+" "+c])done++;}
+      var cls=done===0?"none":(done>=b[3]?"full":"part");
+      html+='<button class="dash-book '+cls+'" data-book="'+escapeHtml(b[1])+'" title="'+escapeHtml(b[1])+' — '+done+'/'+b[3]+'">'+escapeHtml(b[1].length>10?b[1].slice(0,9)+"\u2026":b[1])+'<span class="dash-book-frac">'+done+'/'+b[3]+'</span></button>';
+    });
+    return html;
+  }
+  $("sheetBody").innerHTML=
+    '<div class="dash-hero"><div class="dash-ring" style="--p:'+pct+'"><span>'+pct+'%</span></div>'+
+      '<div class="dash-hero-stats"><div><b>'+allRead+'</b><span>chapters read</span></div>'+
+        '<div><b>'+s.total+'</b><span>days read</span></div>'+
+        '<div><b>'+(s.best||0)+'</b><span>best streak</span></div></div></div>'+
+    bar("Whole Bible",allRead,allTotal)+
+    bar("Old Testament",otRead,otTotal)+
+    bar("New Testament",ntRead,ntTotal)+
+    '<div class="dash-label">Old Testament</div><div class="dash-grid">'+bookMap("old")+'</div>'+
+    '<div class="dash-label">New Testament</div><div class="dash-grid">'+bookMap("new")+'</div>'+
+    '<div class="sheet-note">Chapters count as read once you view a verse from them. Tap a book to start reading it.</div>';
+  openSheet();
+  $("sheetBody").querySelectorAll(".dash-book").forEach(function(btn){
+    btn.addEventListener("click",function(){closeSheet();openReader(btn.getAttribute("data-book"),1,null);});
+  });
+}
+
+/* ===================================================================
+   2) VERSE MEMORIZATION
+   =================================================================== */
+var memoState=null;
+function openMemorize(){
+  $("sheetTitle").textContent="Memorize";
+  var saved=lsGet("memVerses",[]);
+  var cur=(current&&current.ref&&current.text)?current:null;
+  var html='<div class="mem-intro">Practice memorizing Scripture. Words hide step by step — recall the verse, then reveal.</div>';
+  if(cur){
+    html+='<button class="mem-start-btn" id="memStartCurrent">Memorize current verse<br><span>'+escapeHtml(cur.ref)+'</span></button>';
+  }
+  if(saved.length){
+    html+='<div class="mem-label">Saved verses</div><div class="mem-saved-list">';
+    saved.forEach(function(v,i){html+='<button class="mem-saved" data-i="'+i+'">'+escapeHtml(v.ref)+'</button>';});
+    html+='</div>';
+  }
+  html+='<div id="memArea"></div>';
+  $("sheetBody").innerHTML=html;
+  openSheet();
+  var sc=$("memStartCurrent");if(sc)sc.addEventListener("click",function(){startMemorize(cur);});
+  $("sheetBody").querySelectorAll(".mem-saved").forEach(function(b){
+    b.addEventListener("click",function(){startMemorize(saved[+b.getAttribute("data-i")]);});
+  });
+}
+function startMemorize(v){
+  if(!v)return;
+  memoState={ref:v.ref,words:v.text.split(/\s+/),level:0};
+  /* save to memory list if not present */
+  var saved=lsGet("memVerses",[]);
+  if(!saved.some(function(x){return x.ref===v.ref;})){saved.unshift({ref:v.ref,text:v.text});if(saved.length>20)saved=saved.slice(0,20);lsSet("memVerses",saved);}
+  renderMemorize();
+}
+function renderMemorize(){
+  var area=$("memArea");if(!area||!memoState)return;
+  var total=memoState.words.length;
+  /* level 0 = all shown; each level hides ~20% more (deterministic by index) */
+  var hideCount=Math.round(total*(memoState.level*0.2));
+  var hidden={};
+  /* hide every Nth word progressively, spread out */
+  var order=[];for(var i=0;i<total;i++)order.push(i);
+  /* stable pseudo-spread: hide words at positions stepping through */
+  for(var h=0;h<hideCount;h++){var idx=Math.floor((h*ratioGolden(total))%total);hidden[idx]=true;}
+  var hideReal=Object.keys(hidden).length;
+  var html='<div class="mem-ref">'+escapeHtml(memoState.ref)+'</div><div class="mem-verse">';
+  memoState.words.forEach(function(w,i){
+    if(hidden[i]){html+='<span class="mem-blank" data-i="'+i+'">'+w.replace(/[A-Za-z\u00C0-\u017F]/g,"_")+'</span> ';}
+    else{html+='<span class="mem-word">'+escapeHtml(w)+'</span> ';}
+  });
+  html+='</div>';
+  var lvlPct=Math.min(100,Math.round(memoState.level*20));
+  html+='<div class="mem-progress">Hidden: '+lvlPct+'%</div>';
+  html+='<div class="mem-controls">'+
+    '<button class="mem-btn" id="memEasier">Reveal more</button>'+
+    '<button class="mem-btn primary" id="memHarder">Hide more</button>'+
+    '<button class="mem-btn" id="memReveal">Show all</button></div>';
+  area.innerHTML=html;
+  /* tap a blank to reveal that word */
+  area.querySelectorAll(".mem-blank").forEach(function(sp){
+    sp.addEventListener("click",function(){sp.outerHTML='<span class="mem-word">'+escapeHtml(memoState.words[+sp.getAttribute("data-i")])+'</span> ';});
+  });
+  $("memHarder").addEventListener("click",function(){if(memoState.level<5)memoState.level++;renderMemorize();});
+  $("memEasier").addEventListener("click",function(){if(memoState.level>0)memoState.level--;renderMemorize();});
+  $("memReveal").addEventListener("click",function(){memoState.level=0;renderMemorize();});
+}
+function ratioGolden(n){return Math.max(2,Math.round(n*0.618));}
+
+/* ===================================================================
+   3) CROSS-REFERENCES / RELATED VERSES
+   =================================================================== */
+var CROSS_REFS = {
+  "John 3:16":["Romans 5:8","1 John 4:9","John 3:17","Ephesians 2:4"],
+  "Genesis 1:1":["John 1:1","Hebrews 11:3","Psalms 33:6","Colossians 1:16"],
+  "Psalms 23:1":["Isaiah 40:11","John 10:11","Ezekiel 34:15","1 Peter 2:25"],
+  "Romans 8:28":["Genesis 50:20","Ephesians 1:11","Jeremiah 29:11","Philippians 1:6"],
+  "Philippians 4:13":["2 Corinthians 12:9","Isaiah 40:31","Ephesians 3:16","Colossians 1:11"],
+  "Jeremiah 29:11":["Romans 8:28","Proverbs 16:9","Psalms 33:11","Isaiah 55:8"],
+  "Proverbs 3:5":["Psalms 37:5","Isaiah 26:3","Jeremiah 17:7","Proverbs 16:3"],
+  "Isaiah 41:10":["Deuteronomy 31:6","Psalms 46:1","Joshua 1:9","Isaiah 43:1"],
+  "Matthew 6:33":["Luke 12:31","Psalms 37:4","1 Kings 3:13","Matthew 6:25"],
+  "Romans 12:2":["Ephesians 4:23","2 Corinthians 5:17","Colossians 3:10","1 Peter 1:14"]
+};
+function openCrossRefs(){
+  $("sheetTitle").textContent="Related Verses";
+  if(!current||!current.ref){$("sheetBody").innerHTML='<div class="sheet-note">Open a verse first.</div>';openSheet();return;}
+  var refs=CROSS_REFS[current.ref];
+  /* fallback: thematic by book keyword if no exact entry */
+  var body=$("sheetBody");
+  if(!refs){
+    body.innerHTML='<div class="cmp-ref">'+escapeHtml(current.ref)+'</div>'+
+      '<div class="sheet-note">No curated cross-references for this verse yet. Try a well-known verse like John 3:16, Psalms 23:1, or Romans 8:28 — more are being added over time.</div>';
+    openSheet();return;
+  }
+  body.innerHTML='<div class="cmp-ref">'+escapeHtml(current.ref)+'</div><div class="xref-note">Related passages:</div><div id="xrefList"></div>';
+  openSheet();
+  var list=$("xrefList");
+  refs.forEach(function(r){
+    var row=document.createElement("button");row.className="xref-row";
+    row.innerHTML='<span class="xref-ref">'+escapeHtml(r)+'</span><span class="xref-text" id="xr-'+r.replace(/[^a-z0-9]/gi,"")+'">…</span>';
+    list.appendChild(row);
+    var p=parseReference(r);
+    if(p&&p.book&&BOOK_BY_NAME[p.book]){
+      fetchChapter(p.book,p.chap).then(function(vs){
+        var hit=null;for(var i=0;i<vs.length;i++){if(vs[i].verse===p.verse){hit=vs[i];break;}}
+        var cell=$("xr-"+r.replace(/[^a-z0-9]/gi,""));if(cell)cell.textContent=hit?hit.text:"(tap to open)";
+      }).catch(function(){});
+    }
+    row.addEventListener("click",function(){
+      closeSheet();
+      if(p&&p.book){openReader(p.book,p.chap,p.verse);}
+    });
+  });
+}
+
+/* ===================================================================
+   4) PRAYER JOURNAL
+   =================================================================== */
+function openPrayer(){
+  $("sheetTitle").textContent="Prayer Journal";
+  renderPrayer();
+  openSheet();
+}
+function renderPrayer(){
+  var prayers=lsGet("prayers",[]);
+  var body=$("sheetBody");
+  var html='<div class="pray-add"><input id="prayInput" class="goto-input" type="text" placeholder="Write a prayer or request…"><button id="prayAddBtn" class="goto-btn">Add</button></div>';
+  if(!prayers.length){
+    html+='<div class="sheet-note">Your prayers are kept privately on this device. Add one above; mark it answered when God moves. 🙏</div>';
+  }else{
+    var active=prayers.filter(function(p){return !p.answered;});
+    var answered=prayers.filter(function(p){return p.answered;});
+    if(active.length){html+='<div class="pray-label">Praying for</div>';active.forEach(function(p){html+=prayRow(p);});}
+    if(answered.length){html+='<div class="pray-label">Answered 🙌</div>';answered.forEach(function(p){html+=prayRow(p);});}
+  }
+  body.innerHTML=html;
+  $("prayAddBtn").addEventListener("click",addPrayer);
+  $("prayInput").addEventListener("keydown",function(e){if(e.key==="Enter")addPrayer();});
+  body.querySelectorAll(".pray-answer").forEach(function(b){b.addEventListener("click",function(){togglePrayer(+b.getAttribute("data-id"));});});
+  body.querySelectorAll(".pray-del").forEach(function(b){b.addEventListener("click",function(){delPrayer(+b.getAttribute("data-id"));});});
+}
+function prayRow(p){
+  var date=new Date(p.id);var ds=date.toLocaleDateString();
+  return '<div class="pray-item'+(p.answered?" done":"")+'">'+
+    '<div class="pray-body"><div class="pray-text">'+escapeHtml(p.text)+'</div><div class="pray-date">'+ds+(p.answered?" · answered":"")+'</div></div>'+
+    '<button class="pray-answer" data-id="'+p.id+'" title="Mark answered">'+(p.answered?"↺":"✓")+'</button>'+
+    '<button class="pray-del" data-id="'+p.id+'" title="Delete">✕</button></div>';
+}
+function addPrayer(){
+  var inp=$("prayInput");var t=(inp.value||"").trim();if(!t)return;
+  var prayers=lsGet("prayers",[]);prayers.unshift({id:Date.now(),text:t,answered:false});lsSet("prayers",prayers);
+  renderPrayer();
+}
+function togglePrayer(id){var prayers=lsGet("prayers",[]);prayers.forEach(function(p){if(p.id===id)p.answered=!p.answered;});lsSet("prayers",prayers);renderPrayer();}
+function delPrayer(id){if(!confirm("Delete this prayer?"))return;var prayers=lsGet("prayers",[]).filter(function(p){return p.id!==id;});lsSet("prayers",prayers);renderPrayer();}
+
+/* ===================================================================
+   5) BIBLE-IN-A-YEAR PLAN (canonical, 365 days, ~3-4 chapters/day)
+   =================================================================== */
+function buildYearPlan(){
+  /* flatten all chapters in canonical order, split into 365 days */
+  var all=[];
+  BIBLE_BOOKS.forEach(function(b){for(var c=1;c<=b[3];c++)all.push(b[1]+" "+c);});
+  var perDay=Math.ceil(all.length/365); /* ~3-4 */
+  var days=[];
+  for(var i=0;i<all.length;i+=perDay)days.push(all.slice(i,i+perDay));
+  return days;
+}
+var YEAR_PLAN=null;
+function openYearPlan(){
+  $("sheetTitle").textContent="Bible in a Year";
+  if(!YEAR_PLAN)YEAR_PLAN=buildYearPlan();
+  var done=lsGet("planDone",{});
+  var doneCount=Object.keys(done).length;
+  var pct=Math.round(doneCount/YEAR_PLAN.length*100);
+  /* find current day = first not done */
+  var curDay=0;for(var d=0;d<YEAR_PLAN.length;d++){if(!done[d]){curDay=d;break;}}
+  var body=$("sheetBody");
+  function dayRow(i){
+    var chs=YEAR_PLAN[i];
+    return '<div class="plan-day'+(done[i]?" done":"")+(i===curDay?" current":"")+'">'+
+      '<button class="plan-check" data-day="'+i+'">'+(done[i]?"✓":"")+'</button>'+
+      '<div class="plan-day-body"><div class="plan-day-title">Day '+(i+1)+'</div>'+
+      '<div class="plan-day-readings">'+chs.map(function(c){return '<button class="plan-read" data-ref="'+escapeHtml(c)+'">'+escapeHtml(c)+'</button>';}).join("")+'</div></div></div>';
+  }
+  var html='<div class="plan-hero"><div class="dash-ring" style="--p:'+pct+'"><span>'+pct+'%</span></div>'+
+    '<div class="plan-hero-text"><b>'+doneCount+' / '+YEAR_PLAN.length+' days</b><span>Canonical, Genesis → Revelation</span></div></div>';
+  html+='<button class="plan-jump" id="planJumpToday">Jump to Day '+(curDay+1)+'</button>';
+  html+='<div id="planList">';
+  /* render a window around current day for performance: current ± 20, plus first/last */
+  var start=Math.max(0,curDay-3),end=Math.min(YEAR_PLAN.length,curDay+25);
+  for(var i=start;i<end;i++)html+=dayRow(i);
+  html+='</div>';
+  if(end<YEAR_PLAN.length)html+='<div class="sheet-note">Showing your current stretch. Complete days to reveal more.</div>';
+  body.innerHTML=html;
+  openSheet();
+  body.querySelectorAll(".plan-check").forEach(function(b){b.addEventListener("click",function(){
+    var dd=+b.getAttribute("data-day");var dn=lsGet("planDone",{});if(dn[dd])delete dn[dd];else dn[dd]=Date.now();lsSet("planDone",dn);openYearPlan();
+  });});
+  body.querySelectorAll(".plan-read").forEach(function(b){b.addEventListener("click",function(){
+    var r=parseReference(b.getAttribute("data-ref"));closeSheet();if(r&&r.book)openReader(r.book,r.chap,null);
+  });});
+}
+
 function openAbout(){
   $("sheetTitle").textContent="About";
   $("sheetBody").innerHTML=
@@ -4959,7 +5325,7 @@ $("bookmarksBtn").addEventListener("click",openBookmarks);
 $("searchBtn").addEventListener("click",openSearch);
 $("aboutBtn").addEventListener("click",openAbout);
 $("read").addEventListener("click",read);
-(function(){var l=$("libraryBtn");if(l)l.addEventListener("click",openLibrary);var c=$("compareBtn");if(c)c.addEventListener("click",openCompare);})();
+(function(){var l=$("libraryBtn");if(l)l.addEventListener("click",openLibrary);var c=$("compareBtn");if(c)c.addEventListener("click",openCompare);var x=$("xrefBtn");if(x)x.addEventListener("click",openCrossRefs);})();
 $("votd").addEventListener("click",function(){scrollToVerseCard();verseOfTheDay();});
 $("share").addEventListener("click",shareVerse);
 $("shareImage").addEventListener("click",openShareImage);
@@ -5028,7 +5394,7 @@ $("seqToggle").setAttribute("aria-pressed",seqMode?"true":"false");
 $("seqLabel").textContent="In Order: "+(seqMode?"On":"Off");
 
 showStreak();
-(function(){var el=$("streak");if(el)el.addEventListener("click",openBadges);})();
+(function(){var el=$("streak");if(el)el.addEventListener("click",openDashboard);})();
 resumeLastRead();
 
 /* ---- App sections init ---- */
